@@ -4,8 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "node_modules/electron/dist/electron ."
   },
   "repository": {
     "type": "git",
@@ -18,6 +17,11 @@
   },
   "homepage": "https://github.com/martijnbroekman/OfficeHeatlth#readme",
   "devDependencies": {
-    "electron": "^2.0.9"
+    "electron": "^2.0.9",
+    "electron-packager": "^12.1.1"
+  },
+  "dependencies": {
+    "electron-rebuild": "^1.8.2",
+    "zerorpc": "^0.9.8"
   }
 }
