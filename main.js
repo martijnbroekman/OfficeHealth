@@ -56,7 +56,6 @@ const selectPort = () => {
 }
 
 const pythonExec = path.join(__dirname, 'python_modules', 'env', 'bin', 'python');
-console.log(pythonExec);
 
 const createPyProc = () => {
     let port = '' + selectPort()

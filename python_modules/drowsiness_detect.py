@@ -1,7 +1,6 @@
 from scipy.spatial import distance as dist
 from imutils.video import VideoStream
 from imutils import face_utils
-import argparse
 import imutils
 import time
 import dlib
@@ -12,7 +11,7 @@ import zerorpc
 
 class SocketRPC(object):
     def start(self):
-        start_process()
+        return start_process()
 
 
 def eye_aspect_ratio(eye):
@@ -45,12 +44,6 @@ def checkIntersect(rect):
 
 
 def start_process():
-    print("test")
-    # parse commannd line arguments. This will be replaced by a settings menu in production
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-w", "--webcam", type=int, default=0, help="Index of webcam on system")
-    args = vars(ap.parse_args())
-
     # define two constants, one for the eye aspect ratio to indicate
     # blink and then a second constant for the number of consecutive
     # frames the eye must be below the threshold for to sent a notification
@@ -71,7 +64,7 @@ def start_process():
 
     # Start video stream thread
     print("[INFO] starting video stream thread")
-    vs = VideoStream(src=args["webcam"]).start()
+    vs = VideoStream(0).start()
 
     # Time for camera to initialize
     time.sleep(1.0)
