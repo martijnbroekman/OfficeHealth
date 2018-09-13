@@ -55,10 +55,13 @@ const selectPort = () => {
     return pyPort
 }
 
+const pythonExec = path.join(__dirname, 'python_modules', 'env', 'bin', 'python');
+console.log(pythonExec);
+
 const createPyProc = () => {
     let port = '' + selectPort()
-    let script = path.join(__dirname, 'python_modules', 'api.py')
-    pyProc = require('child_process').spawn('python3', [script, port])
+    let script = path.join(__dirname, 'python_modules', 'drowsiness_detect.py')
+    pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
