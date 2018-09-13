@@ -1,7 +1,8 @@
 const electron = require('electron')
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
 const path = require('path')
+const fitbit = require('./javascript/fitbit.js')
+
+const { app, BrowserWindow } = electron;
 
 let mainWinow = null
 const createWindow = () => {
@@ -15,6 +16,23 @@ const createWindow = () => {
     mainWinow.on('closed', () => {
         mainWinow = null
     })
+
+    fitbit.fitbitSignIn().then(function(val){
+        fitbit.getHeartBeat('2018-09-11', '10:00', '11:00').then(function(val){
+            console.log(val);
+        }).catch(function(err){
+
+        });
+
+        fitbit.getSteps('2018-09-11').then(function(val){
+            console.log('steps');
+            console.log(val);
+        }).catch(function(err){
+
+        });
+    }).catch(function(err){
+        console.log(err);
+    });
 }
 
 app.on('ready', createWindow)
