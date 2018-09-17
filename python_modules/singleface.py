@@ -1,5 +1,5 @@
 import cv2
-from em_model import EMR
+from main import EMR
 import numpy as np
 import dlib
 
