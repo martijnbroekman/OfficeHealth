@@ -1,8 +1,10 @@
 const electron = require('electron');
 const path = require('path');
 const fitbit = require('./javascript/fitbit.js');
+const server = require('./javascript/zerorpc-server');
+const client = require('./javascript/zerorpc-client');
 
-const { app, BrowserWindow } = electron;
+const { app, BrowserWindow, ipcMain } = electron;
 
 let mainWinow = null;
 const createWindow = () => {
@@ -16,34 +18,17 @@ const createWindow = () => {
     mainWinow.on('closed', () => {
         mainWinow = null
     });
-
-    fitbit.fitbitSignIn().then(function(val){
-        fitbit.getHeartBeat('2018-09-11', '10:00', '11:00').then(function(val){
-            console.log(val);
-        }).catch(function(err){
-
-        });
-
-        fitbit.getSteps('2018-09-11').then(function(val){
-            console.log('steps');
-            console.log(val);
-        }).catch(function(err){
-
-        });
-    }).catch(function(err){
-        console.log(err);
-    });
 };
 
 app.on('ready', createWindow);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
 });
 app.on('activate', () => {
     if (mainWinow === null) {
-        createWindow()
+        createWindow();
     }
 });
 
@@ -56,14 +41,18 @@ const selectPort = () => {
 };
 
 const pythonExec = path.join(__dirname, 'python_modules', 'env', 'bin', 'python');
+const script = path.join(__dirname, 'python_modules', 'api.py')
 
 const createPyProc = () => {
     let port = '' + selectPort()
-    let script = path.join(__dirname, 'python_modules', 'drowsiness_detect.py')
+
     pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
+
+    server.start(postureCallback, emotionsCallback, drowsinessCallback, stressCallback);
+    client.start().then((res)=> console.log(res));
 };
 
 const exitPyProc = () => {
@@ -72,5 +61,30 @@ const exitPyProc = () => {
     pyPort = null;
 };
 
-app.on('ready', createPyProc)
-app.on('will-quit', exitPyProc)
+app.on('ready', createPyProc);
+app.on('will-quit', exitPyProc);
+
+const postureCallback = (res) => {
+    mainWinow.webContents.send('py:posture', res);
+}
+
+const emotionsCallback = (res) => {
+    mainWinow.webContents.send('py:emotions', res);
+}
+
+const drowsinessCallback = (res) => {
+    mainWinow.webContents.send('py:drowsiness', res);
+}
+
+const stressCallback = (res) => {
+    mainWinow.webContents.send('py:stress', res);
+}
+
+ipcMain.on('fitbit:signin', (event) => {
+    fitbit.fitbitSignIn()
+        .then((res) => {
+            console.log(res)
+        }).catch((error) => {
+            console.log(error);
+        })
+});
