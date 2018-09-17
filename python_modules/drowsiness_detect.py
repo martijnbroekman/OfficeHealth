@@ -1,6 +1,4 @@
-from scipy.spatial import distance as dist
 from imutils.video import VideoStream
-from imutils import face_utils
 import imutils
 import time
 import dlib
@@ -8,22 +6,13 @@ import cv2
 import sys
 import zerorpc
 
+from detection import fatigue
+from detection import posture
+
 
 class SocketRPC(object):
     def start(self):
         return start_process()
-
-
-def eye_aspect_ratio(eye):
-    # calculate euclidean distance between the two sets of vertical eye landmarks (x y coordinates)
-    A = dist.euclidean(eye[1], eye[5])
-    B = dist.euclidean(eye[2], eye[4])
-
-    # calculate euclidean distance between horizontal eye landmarks
-    C = dist.euclidean(eye[0], eye[3])
-
-    # Calculate and return eye aspect ratio (ear)
-    return (A + B) / (2.0 * C)
 
 
 def rect_to_bb(rect):
@@ -34,13 +23,6 @@ def rect_to_bb(rect):
 
     # return a tuple of (x, y, w, h)
     return (x, y, w, h)
-
-
-def checkIntersect(rect):
-    settingrect = dlib.rectangle(120, 120, 280, 280)
-
-    return rect.tr_corner().x > settingrect.tr_corner().x or rect.tl_corner().x < settingrect.tl_corner().x or \
-           rect.br_corner().y > settingrect.br_corner().y or rect.tl_corner().y < settingrect.tl_corner().y
 
 
 def start_process():
@@ -59,8 +41,7 @@ def start_process():
 
     # grab the indexes of the facial landmarks for the left and
     # right eye, respectively
-    (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
-    (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+    (lStart, lEnd, rStart, rEnd) = fatigue.calculate_landmarks()
 
     # Start video stream thread
     print("[INFO] starting video stream thread")
@@ -85,31 +66,16 @@ def start_process():
 
         # Iterate over faces which have been found
         for rect in rects:
-            if checkIntersect(rect):
+            if posture.check_posture(rect):
+                #TODO return bad posture
                 cv2.putText(frame, "Wrong posture", (30, 300),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
             (x, y, w, h) = rect_to_bb(rect)
+
+            # Draw face region for debugging
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-            # Determine facial landmark coordinates for the face region and convert to NumPy array
-            shape = predictor(gray, rect)
-            shape = face_utils.shape_to_np(shape)
-
-            # Extract both eyes and compute EAR for both eyes
-            leftEye = shape[lStart:lEnd]
-            rightEye = shape[rStart:rEnd]
-            leftEAR = eye_aspect_ratio(leftEye)
-            rightEAR = eye_aspect_ratio(rightEye)
-
-            # Calculate average EAR for both eyes (suggested by pros so better probably haha)
-            ear = (leftEAR + rightEAR) / 2
-
-            # Drawing convex hull for both eyes (Visualization)
-            leftEyeHull = cv2.convexHull(leftEye)
-            rightEyeHull = cv2.convexHull(rightEye)
-            cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
-            cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
+            ear = fatigue.calculate_ear(predictor(gray, rect), lStart, lEnd, rStart, rEnd)
 
             # Check if EAR is below blink treshold. If true, increase blink frame counter
             if ear < EYE_AR_THRESH:
@@ -118,6 +84,7 @@ def start_process():
                 # If eyes were closed for a sufficient number of frames, drowsiness is detected
                 if COUNTER >= EYE_AR_CONSEC_FRAMES:
 
+                    #TODO return drowsiness detected. On hold for now
                     cv2.putText(frame, "Drowsiness detected", (10, 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             else:
