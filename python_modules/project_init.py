@@ -23,6 +23,11 @@ def rect_to_bb(rect):
 
 
 def start():
+    print("[INFO] loading facial landmark predictor")
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+    emd = EMD(predictor, detector)
+
     # define two constants, one for the eye aspect ratio to indicate
     # blink and then a second constant for the number of consecutive
     # frames the eye must be below the threshold for to sent a notification
@@ -107,11 +112,3 @@ def start():
 
     cap.release()
     cv2.destroyAllWindows()
-
-
-if __name__ == "__main__":
-    print("[INFO] loading facial landmark predictor")
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-    emd = EMD(predictor, detector)
-    start()

@@ -1,16 +1,19 @@
 import zerorpc
 import client
 import sys
+import project_init as pi
+
 
 class SocketRPC(object):
     def start(self):
-        return client.send_drowsiness("test")
+        pi.start()
+        return "Started successfully"
 
     def settings(self):
-        return "ok"
+        return "settings"
 
     def emotion(self):
-        return "ok"
+        return "emotion"
 
 def parse_port():
     port = 4242
