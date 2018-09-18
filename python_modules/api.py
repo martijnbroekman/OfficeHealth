@@ -1,12 +1,12 @@
 import zerorpc
 import client
 import sys
-import project_init as pi
+from detector import Detector
 
 
 class SocketRPC(object):
     def start(self):
-        pi.start()
+        detector.start()
         return "Started successfully"
 
     def settings(self):
@@ -34,4 +34,5 @@ def main():
 
 
 if __name__ == '__main__':
+    detector = Detector()
     main()
