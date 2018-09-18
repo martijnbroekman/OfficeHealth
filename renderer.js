@@ -1,14 +1,25 @@
-const zerorpc = require("zerorpc");
-let client = new zerorpc.Client();
-client.connect("tcp://127.0.0.1:4242");
+electron = require('electron')
 
-const start = () => {
-    client.invoke("start", (error, res) => {
-        if (error) {
-            console.error(error)
-        } else {
-            console.log(res)
-        }
-    })
+const { ipcRenderer } = electron;
+
+module.exports = {
+    fitbitSignin: function() {
+        ipcRenderer.send('fitbit:signin');
+    }
 }
 
+ipcRenderer.on('py:posture', function(e, res){
+    console.log('posture: ', res)
+});
+
+ipcRenderer.on('py:emotions', function(e, res){
+    console.log('emotions: ', res)
+});
+
+ipcRenderer.on('py:drowsiness', function(e, res){
+    console.log('drowsiness: ', res)
+});
+
+ipcRenderer.on('py:stress', function(e, res){
+    console.log('stress: ', res)
+});
