@@ -1,60 +1,50 @@
-from __future__ import division, absolute_import
-import tflearn
-from tflearn.layers.core import input_data, dropout, fully_connected
-from tflearn.layers.conv import conv_2d, max_pool_2d
-from tflearn.layers.estimator import regression
-from os.path import isfile
+from models.Emotion import EMR
+import cv2
+import numpy as np
+import dlib
+from detection.emotion_detection import EMD
+
+EMOTIONS = ['angry', 'disgusted', 'fearful', 'happy', 'sad', 'surprised', 'neutral']
 
 
-class EMR:
+def start():
+    # Initialize object of EMR class
+    network = EMR()
+    network.build_network()
 
-    def __init__(self):
-        self.target_classes = ['angry', 'disgusted', 'fearful', 'happy', 'sad', 'surprised', 'neutral']
+    cap = cv2.VideoCapture(0)
 
-    def build_network(self):
-        """
-        Build the convnet.
-        Input is 48x48
-        3072 nodes in fully connected layer
-        """
-        self.network = input_data(shape=[None, 48, 48, 1])
-        self.network = conv_2d(self.network, 64, 5, activation='relu')
-        self.network = max_pool_2d(self.network, 3, strides=2)
-        self.network = conv_2d(self.network, 64, 5, activation='relu')
-        self.network = max_pool_2d(self.network, 3, strides=2)
-        self.network = conv_2d(self.network, 128, 4, activation='relu')
-        self.network = dropout(self.network, 0.3)
-        self.network = fully_connected(self.network, 3072, activation='relu')
-        self.network = fully_connected(self.network, len(self.target_classes), activation='softmax')
-        # Generates a TrainOp which contains the information about optimization process - optimizer, loss function, etc
-        self.network = regression(self.network, optimizer='momentum', metric='accuracy',
-                                  loss='categorical_crossentropy')
-        # Creates a model instance.
-        self.model = tflearn.DNN(self.network, checkpoint_path='model_1_atul', max_checkpoints=1, tensorboard_verbose=2)
-        # Loads the model weights from the checkpoint
-        self.load_model()
+    while True:
+        # Again find haar cascade to draw bounding box around face
+        ret, frame = cap.read()
 
-    def predict(self, image):
-        """
-        Image is resized to 48x48, and predictions are returned.
-        """
-        if image is None:
-            return None
-        image = image.reshape([-1, 48, 48, 1])
-        return self.model.predict(image)
+        # compute softmax probabilities
+        result = network.predict(emd.format_image(frame))
+        if result is not None:
 
-    def load_model(self):
-        """
-        Loads pre-trained model.
-        """
-        if isfile("model_1_atul.tflearn.meta"):
-            self.model.load("model_1_atul.tflearn")
-            print('\n---> Pre-trained model loaded')
-        else:
-            print("---> Couldn't find model")
+            # Draw emotions for debugging
+            #TODO send data to electron app
+            for index, emotion in enumerate(EMOTIONS):
+                cv2.putText(frame, emotion, (10, index * 20 + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1);
+                cv2.rectangle(frame, (130, index * 20 + 10), (130 + int(result[0][index] * 100), (index + 1) * 20 + 4),
+                              (255, 0, 0), -1)
+
+            # find the emotion with maximum probability and display it
+            maxindex = np.argmax(result[0])
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(frame, EMOTIONS[maxindex], (10, 360), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
+
+        cv2.imshow('Video', cv2.resize(frame, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC))
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
-    print("\n------------Emotion Detection Program------------\n")
-    network = EMR()
-    import singleface
+    print("[INFO] loading facial landmark predictor")
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+    emd = EMD(predictor, detector)
+    start()
