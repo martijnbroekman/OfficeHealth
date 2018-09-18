@@ -17,18 +17,7 @@ class EMD:
         # return a np array of (x, y, w, h)
         return np.array([x, y, w, h], np.int32)
 
-    def format_image(self, image):
-        """
-        Function to format frame
-        """
-        if len(image.shape) > 2 and image.shape[2] == 3:
-            # determine whether the image is color
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        else:
-            # Image read from buffer
-            image = cv2.imdecode(image, cv2.CV_LOAD_IMAGE_GRAYSCALE)
-
-        det_faces = self.detector(image, 0)
+    def format_image(self, image, det_faces):
 
         if not len(det_faces) > 0:
             return None
