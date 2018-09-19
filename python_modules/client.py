@@ -1,20 +1,20 @@
 import zerorpc
 
-c = zerorpc.Client()
-c.connect("tcp://127.0.0.1:4243")
 
+class Client:
 
-def send_posture(posture):
-    return c.posture(posture)
+    def __init__(self):
+        self.c = zerorpc.Client()
+        self.c.connect("tcp://127.0.0.1:4243")
 
+    def send_posture(self, posture):
+        return self.c.posture(posture)
 
-def send_emotions(emotions):
-    return c.emotions(emotions)
+    def send_emotions(self, emotions):
+        return self.c.emotions(emotions)
 
+    def send_drowsiness(self, drowsiness):
+        return self.c.drowsiness(drowsiness)
 
-def send_drowsiness(drowsiness):
-    return c.drowsiness(drowsiness)
-
-
-def send_stress(stress):
-    return c.stress(stress)
+    def send_stress(self, stress):
+        return self.c.stress(stress)

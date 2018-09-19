@@ -4,6 +4,8 @@ import cv2
 
 class EMD:
 
+    EMOTIONS = ['angry', 'disgusted', 'fearful', 'happy', 'sad', 'surprised', 'neutral']
+
     def __init__(self, predictor, detector):
         self.predictor = predictor
         self.detector = detector
@@ -45,3 +47,14 @@ class EMD:
             return None
 
         return image
+
+    def parse_emotions(self, emotions):
+        return {
+            self.EMOTIONS[0]: emotions.item(0),
+            self.EMOTIONS[1]: emotions.item(1),
+            self.EMOTIONS[2]: emotions.item(2),
+            self.EMOTIONS[3]: emotions.item(3),
+            self.EMOTIONS[4]: emotions.item(4),
+            self.EMOTIONS[5]: emotions.item(5),
+            self.EMOTIONS[6]: emotions.item(6),
+        }

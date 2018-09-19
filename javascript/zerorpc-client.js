@@ -36,5 +36,16 @@ module.exports =  {
                 }
             })
         });
+    },
+    startMeasure: function startMeasure(emitter) {
+        setInterval(function () {
+            client.invoke("measure", (error, res) => {
+                if (error) {
+                    emitter.emit("error", error);
+                } else {
+                    emitter.emit("measure_result", res);
+                }
+            });
+        }, 10000); 
     }
 }
