@@ -9,7 +9,7 @@ class SocketRPC(object):
         self.detector = Detector()
 
     def start(self):
-        return "started"
+        return self.detector.start()
 
     def settings(self):
         return "settings"

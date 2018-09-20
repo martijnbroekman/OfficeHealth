@@ -3,7 +3,7 @@ from collections import namedtuple
 from enum import Enum
 import datetime
 
-DIVIDER = 10
+DIVIDER = 15
 
 
 class PostureScore(Enum):
@@ -45,7 +45,7 @@ def check_posture(rect):
     elif topScore == 2 or bottomScore == 2 or leftScore == 2 or rightScore == 2:
         score = PostureScore.FINE
 
-    print("Score: {} time:{}".format(score, datetime.datetime.now()))
+    print("Score: {}".format(score))
 
 
 def save_face(faceFound):
