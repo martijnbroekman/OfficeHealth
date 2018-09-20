@@ -2,7 +2,7 @@ import json
 from collections import namedtuple
 from enum import Enum
 
-DIVIDER = 15
+DIVIDER = 10
 
 
 class PostureScore(Enum):
@@ -31,8 +31,7 @@ def rect_to_bb(rect):
 
 
 def check_posture(rect):
-    settingsfile = open("settings.json")
-    settings = json.loads(settingsfile.read(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    settings = load_settings()
     score = PostureScore.GOOD
 
     topScore = round((rect.tl_corner().y - settings.y) * -1 / DIVIDER)
@@ -45,6 +44,7 @@ def check_posture(rect):
     elif topScore == 2 or bottomScore == 2 or leftScore == 2 or rightScore == 2:
         score = PostureScore.FINE
 
+    print("Top: {} bottom:{} left:{} right:{}".format(topScore, bottomScore, leftScore, rightScore))
     print("Score: {}".format(score))
 
 
@@ -54,6 +54,8 @@ def save_face(faceFound):
 
     with open("settings.json", "w") as out:
         json.dump(settings.__dict__, out)
+
+    print("Saved settings")
 
 
 def load_settings():

@@ -56,7 +56,11 @@ class Detector:
         else:
             data["ready"] = self.save_settings()
 
-        return json.dumps(data)
+
+        while True:
+            self.start_reading()
+            time.sleep(10)
+        # return json.dumps(data)
 
     def settings_set(self):
         return Path("settings.json").exists()
@@ -107,7 +111,7 @@ class Detector:
         rects = self.detector(gray, 0)
 
         for rect in rects:
-            # POSTURE =  posture.check_posture(rect)
+            posture.check_posture(rect)
 
             EAR = fatigue.calculate_ear(self.predictor(gray, rect), lStart, lEnd, rStart, rEnd)
 
@@ -126,3 +130,5 @@ class Detector:
             result = self.network.predict(self.emd.format_image(gray, rects))
 
             return json.dumps(Result(self.emd.parse_emotions(result), True, FATIGUE).__dict__)
+
+        cv2.imshow("Posture", frame)
