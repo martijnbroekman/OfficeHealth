@@ -46,15 +46,17 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port])
+    // pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    client.start().then((res)=> console.log(res));
-
     const emitter = new EventEmitter();
-    client.startMeasure(emitter);
+    client.start().then((res) => {
+        if (JSON.parse(res).ready) {
+            client.startMeasure(emitter);
+        }
+    });
 
     emitter.on('measure_result', (result) => {
         mainWinow.webContents.send('py:measure', result);
