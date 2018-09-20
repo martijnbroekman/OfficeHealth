@@ -1,8 +1,8 @@
 const electron = require('electron');
 const path = require('path');
 const fitbit = require('./javascript/fitbit.js');
-const server = require('./javascript/zerorpc-server');
 const client = require('./javascript/zerorpc-client');
+const EventEmitter = require('events').EventEmitter
 
 const { app, BrowserWindow, ipcMain } = electron;
 
@@ -51,8 +51,18 @@ const createPyProc = () => {
         console.log('child process success')
     }
 
-    server.start(postureCallback, emotionsCallback, drowsinessCallback, stressCallback);
     client.start().then((res)=> console.log(res));
+
+    const emitter = new EventEmitter();
+    client.startMeasure(emitter);
+
+    emitter.on('measure_result', (result) => {
+        mainWinow.webContents.send('py:measure', result);
+    });
+
+    emitter.on('error', (error) => {
+        mainWinow.webContents.send('py:measure_error', error);
+    })
 };
 
 const exitPyProc = () => {
@@ -63,22 +73,6 @@ const exitPyProc = () => {
 
 app.on('ready', createPyProc);
 app.on('will-quit', exitPyProc);
-
-const postureCallback = (res) => {
-    mainWinow.webContents.send('py:posture', res);
-}
-
-const emotionsCallback = (res) => {
-    mainWinow.webContents.send('py:emotions', res);
-}
-
-const drowsinessCallback = (res) => {
-    mainWinow.webContents.send('py:drowsiness', res);
-}
-
-const stressCallback = (res) => {
-    mainWinow.webContents.send('py:stress', res);
-}
 
 ipcMain.on('fitbit:signin', (event) => {
     fitbit.fitbitSignIn()
