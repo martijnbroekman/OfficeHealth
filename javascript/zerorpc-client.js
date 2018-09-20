@@ -40,6 +40,7 @@ module.exports =  {
     startMeasure: function startMeasure(emitter) {
         setInterval(function () {
             client.invoke("measure", (error, res) => {
+                console.log(Date.now())
                 if (error) {
                     emitter.emit("error", error);
                 } else {

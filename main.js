@@ -53,10 +53,9 @@ const createPyProc = () => {
 
     const emitter = new EventEmitter();
     client.start().then((res) => {
-        if (JSON.parse(res).ready) {
-            console.log("Measuring invoked");
-            // client.startMeasure(emitter);
-        }
+        // if (JSON.parse(res).ready) {
+            client.startMeasure(emitter);
+        // }
     });
 
     emitter.on('measure_result', (result) => {

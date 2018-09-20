@@ -9,7 +9,7 @@ class SocketRPC(object):
         self.detector = Detector()
 
     def start(self):
-        return self.detector.start()
+        return "started"
 
     def settings(self):
         return "settings"
@@ -18,7 +18,7 @@ class SocketRPC(object):
         return "emotion"
 
     def measure(self):
-        return self.detector.start_reading()
+        return self.detector.measure()
 
 
 def parse_port():

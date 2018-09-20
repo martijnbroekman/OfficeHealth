@@ -1,6 +1,7 @@
 import json
 from collections import namedtuple
 from enum import Enum
+import datetime
 
 DIVIDER = 10
 
@@ -44,8 +45,7 @@ def check_posture(rect):
     elif topScore == 2 or bottomScore == 2 or leftScore == 2 or rightScore == 2:
         score = PostureScore.FINE
 
-    print("Top: {} bottom:{} left:{} right:{}".format(topScore, bottomScore, leftScore, rightScore))
-    print("Score: {}".format(score))
+    print("Score: {} time:{}".format(score, datetime.datetime.now()))
 
 
 def save_face(faceFound):
