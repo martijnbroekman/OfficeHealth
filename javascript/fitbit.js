@@ -90,22 +90,30 @@ module.exports = {
             }
         });
     },
-    getSteps: function getSteps(date) {
+    getSteps: function getSteps(date, startTime, endTime) {
         return new Promise((resolve, reject)=> {
             if (!moment(date, 'yyyy-MM-dd').isValid()) {
                 reject("date isn't a valid date use the yyyy-MM-dd format");
-            }
-            let stepsUrl = `https://api.fitbit.com/1/user/-/activities/steps/date/${date}/1d.json`;
+            } else if (!moment(startTime, 'HH:mm').isValid()) {
+                reject ("startTime isn't a valid time use the HH:mm format")
+            } else if (!moment(endTime, 'HH:mm').isValid()) {
+                reject ("endTime isn't a valid time use the HH:mm format")
+            } else {
+                ///1/user/-/activities/calories/date/2014-09-01/1d/15min/time/12:30/12:45.json
+                //let stepsUrl = `https://api.fitbit.com/1/user/-/activities/steps/date/${date}/1d.json`;
+                let stepsUrl = `https://api.fitbit.com/1/user/-/activities/steps/date/${date}/1d/15min/time/${startTime}/${endTime}.json`;
 
-            axios.get(stepsUrl, {
-                headers: {
-                    Authorization: 'Bearer ' + creditials.access_token 
-                }
-            }).then((response) => {
-                resolve(response.data['activities-steps-intraday'].dataset);
-            }).catch((error) => {
-                reject(error);
-            })
+                axios.get(stepsUrl, {
+                    headers: {
+                        Authorization: 'Bearer ' + creditials.access_token 
+                    }
+                }).then((response) => {
+                    resolve(response.data['activities-steps-intraday'].dataset);
+                }).catch((error) => {
+                    reject(error);
+                })
+            }
+            
         })
     }
 }
