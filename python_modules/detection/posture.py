@@ -1,7 +1,6 @@
 import json
 from collections import namedtuple
 from enum import Enum
-import datetime
 
 DIVIDER = 15
 
