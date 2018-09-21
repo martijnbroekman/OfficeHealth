@@ -45,8 +45,7 @@ def check_posture(rect):
     elif topScore == 2 or bottomScore == 2 or leftScore == 2 or rightScore == 2:
         score = PostureScore.FINE
 
-    print(score)
-    return score
+    return score.value
 
 
 def save_face(faceFound):

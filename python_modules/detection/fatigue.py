@@ -38,4 +38,4 @@ def check_drowsiness(shape, lStart, lEnd, rStart, rEnd):
     ear =  (leftEAR + rightEAR) / 2
 
     # Check if EAR is < ear treshold
-    return ear < EYE_AR_THRESH
+    return bool(ear < EYE_AR_THRESH)

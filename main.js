@@ -52,9 +52,10 @@ const createPyProc = () => {
     }
 
     const emitter = new EventEmitter();
-    client.start().then((res) => {
-        console.log(res)
-        if (JSON.parse(res).ready) {
+    client.start().then((res, err) => {
+        if (err) {
+            console.log(`Error: ${err} occured on startup`)
+        } else if (JSON.parse(res).ready) {
             client.startMeasure(emitter);
         }
     });

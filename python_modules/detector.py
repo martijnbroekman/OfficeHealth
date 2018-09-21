@@ -10,6 +10,7 @@ from detection import fatigue
 from detection import posture
 from detection.emotion_detection import EMD
 from models.Emotion import EMR
+from models.Result import Result
 
 
 class Settings:
@@ -77,9 +78,6 @@ class Detector:
         return Path("settings.json").exists()
 
     def measure(self):
-        # Initial values
-        Drowsy = False
-
 
         # Grab facial landmarks for both eyes
         (lStart, lEnd, rStart, rEnd) = fatigue.calculate_landmarks()
@@ -93,12 +91,12 @@ class Detector:
         faces = self.detector(gray, 0)
 
         for face in faces:
-            posture.check_posture(face)
+            posture_core = posture.check_posture(face)
 
-            Drowsy = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
+            drowsy_core = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
 
-            print(Drowsy)
+            emotion_score = self.network.predict(self.emd.format_image(gray, faces))
 
-            return "true"
+            return json.dumps(Result(self.emd.parse_emotions(emotion_score), posture_core, drowsy_core).__dict__)
 
 
