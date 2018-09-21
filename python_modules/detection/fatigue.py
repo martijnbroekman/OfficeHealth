@@ -4,7 +4,7 @@ from imutils import face_utils
 # define two constants, one for the eye aspect ratio to indicate
 # blink and then a second constant for the number of consecutive
 # frames the eye must be below the threshold for to sent a notification
-EYE_AR_THRESH = 0.3
+EYE_AR_THRESH = 0.2
 
 
 def calculate_landmarks():
