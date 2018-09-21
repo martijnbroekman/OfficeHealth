@@ -6,7 +6,10 @@ import time
 import json
 from pathlib import Path
 
+from detection import fatigue
 from detection import posture
+from detection.emotion_detection import EMD
+from models.Emotion import EMR
 
 
 class Settings:
@@ -22,6 +25,13 @@ class Detector:
 
     def __init__(self):
         self.detector = dlib.get_frontal_face_detector()
+        self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+        self.emd = EMD(self.predictor, self.detector)
+
+        #Initialize network
+        self.network = EMR()
+        self.network.build_network()
+
         print("[INFO] starting video stream thread")
         self.vs = VideoStream(0).start()
 
@@ -67,6 +77,13 @@ class Detector:
         return Path("settings.json").exists()
 
     def measure(self):
+        # Initial values
+        Drowsy = False
+
+
+        # Grab facial landmarks for both eyes
+        (lStart, lEnd, rStart, rEnd) = fatigue.calculate_landmarks()
+
         # Read frame + preprocessing
         frame = self.vs.read()
         frame = imutils.resize(frame, width=450)
@@ -77,5 +94,11 @@ class Detector:
 
         for face in faces:
             posture.check_posture(face)
+
+            Drowsy = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
+
+            print(Drowsy)
+
+            return "true"
 
 

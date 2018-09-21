@@ -45,7 +45,8 @@ def check_posture(rect):
     elif topScore == 2 or bottomScore == 2 or leftScore == 2 or rightScore == 2:
         score = PostureScore.FINE
 
-    print("Score: {}".format(score))
+    print(score)
+    return score
 
 
 def save_face(faceFound):
@@ -54,8 +55,6 @@ def save_face(faceFound):
 
     with open("settings.json", "w") as out:
         json.dump(settings.__dict__, out)
-
-    print("Saved settings")
 
 
 def load_settings():
