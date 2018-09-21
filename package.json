@@ -1,31 +1,35 @@
 {
-  "name": "officeheatlth",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
-  "scripts": {
-    "start": "node_modules/electron/dist/electron ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/martijnbroekman/OfficeHeatlth.git"
-  },
-  "author": "RSG",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/martijnbroekman/OfficeHeatlth/issues"
-  },
-  "homepage": "https://github.com/martijnbroekman/OfficeHeatlth#readme",
-  "devDependencies": {
-    "electron": "^2.0.9",
-    "electron-packager": "^12.1.1"
-  },
-  "dependencies": {
-    "axios": "^0.18.0",
-    "electron-rebuild": "^1.8.2",
-    "jwt-decode": "^2.2.0",
-    "moment": "^2.22.2",
-    "qs": "^6.5.2",
-    "zerorpc": "^0.9.8"
-  }
+    "name": "officeheatlth",
+    "version": "1.0.0",
+    "description": "Pots app made by Red Shed Gathering",
+    "productName": "Pots",
+    "main": "main.js",
+    "scripts": {
+        "start": "./node_modules/electron/dist/electron .",
+        "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+        "package-win": "electron-packager . pots --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Pots\"",
+        "package-linux": "electron-packager . pots --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/martijnbroekman/OfficeHeatlth.git"
+    },
+    "author": "RSG",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/martijnbroekman/OfficeHeatlth/issues"
+    },
+    "homepage": "https://github.com/martijnbroekman/OfficeHeatlth#readme",
+    "devDependencies": {
+        "electron": "^2.0.9",
+        "electron-packager": "^12.1.1"
+    },
+    "dependencies": {
+        "axios": "^0.18.0",
+        "electron-rebuild": "^1.8.2",
+        "jwt-decode": "^2.2.0",
+        "moment": "^2.22.2",
+        "qs": "^6.5.2",
+        "zerorpc": "^0.9.8"
+    }
 }

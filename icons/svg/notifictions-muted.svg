@@ -1,0 +1,17 @@
+<svg width="18px" height="20px" viewBox="0 0 18 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-Copy-11" transform="translate(-105.000000, -101.000000)" fill="#FFFFFF">
+            <g id="dashboard-copy" transform="translate(79.000000, 72.000000)">
+                <g id="settings-bar" transform="translate(0.000000, 22.000000)">
+                    <g id="notifcations-muted" transform="translate(26.000000, 7.000000)">
+                        <rect id="Rectangle-3" fill-rule="nonzero" transform="translate(9.151407, 10.240201) scale(1, -1) rotate(42.000000) translate(-9.151407, -10.240201) " x="8.02640723" y="-1.07230586" width="2.25" height="22.6250132"></rect>
+                        <path d="M15.1176795,13.2999629 L15.1176795,8.075 C15.1176795,5.13 13.1411676,2.755 10.4117863,2.09 L10.4117863,1.425 C10.4117863,0.665 9.75296129,0 9.00001838,0 C8.24707548,0 7.58825043,0.665 7.58825043,1.425 L7.58825043,2.09 C4.8588324,2.755 2.88235727,5.13 2.88235727,8.075 L2.88235727,13.2999629 L1,15.2 L1,16.15 L17,16.15 L17,15.2 L15.1176795,13.2999629 Z M9.00001838,19 C10.0353149,19 10.8823756,18.145 10.8823756,17.1 L7.11766112,17.1 C7.11766112,18.145 7.96472189,19 9.00001838,19 Z M13.2353222,14.25 L4.76471453,14.25 L4.76471453,8.075 C4.76471453,5.7 6.6470718,3.8 9.00001838,3.8 C11.352965,3.8 13.2353222,5.7 13.2353222,8.075 L13.2353222,14.25 Z" id="Fill-1" fill-rule="evenodd"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

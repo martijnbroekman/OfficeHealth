@@ -3,21 +3,30 @@ const path = require('path');
 const fitbit = require('./javascript/fitbit.js');
 const server = require('./javascript/zerorpc-server');
 const client = require('./javascript/zerorpc-client');
+var path = require('path')
 
-const { app, BrowserWindow, ipcMain } = electron;
+const {
+    app,
+    BrowserWindow,
+    ipcMain
+} = electron;
 
 let mainWinow = null;
 const createWindow = () => {
-    mainWinow = new BrowserWindow({width: 800, height: 600});
-    mainWinow.loadURL(require('url').format({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file',
-        slashes: true
-    }));
+width: 320,
+height: 390,
+resizable: false,
+icon: path.join(__dirname, 'icons/png/dark-icon-pngs/64x64.png')
+});
+mainWinow.loadURL(require('url').format({
+    pathname: path.join(__dirname, 'index.html'),
+    protocol: 'file',
+    slashes: true
+}));
 
-    mainWinow.on('closed', () => {
-        mainWinow = null
-    });
+mainWinow.on('closed', () => {
+    mainWinow = null
+});
 };
 
 app.on('ready', createWindow);
@@ -46,17 +55,17 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port])
+    //pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    server.start(postureCallback, emotionsCallback, drowsinessCallback, stressCallback);
-    client.start().then((res)=> console.log(res));
+    //server.start(postureCallback, emotionsCallback, drowsinessCallback, stressCallback);
+    //client.start().then((res)=> console.log(res));
 };
 
 const exitPyProc = () => {
-    pyProc.kill();
+    //pyProc.kill();
     pyProc = null;
     pyPort = null;
 };

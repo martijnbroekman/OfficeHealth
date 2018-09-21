@@ -1,0 +1,307 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #FCFAF8;
+}
+
+.not-selectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    user-drag: none;
+    -webkit-user-drag: none;
+
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+
+/* deel 1*/
+#topBar {
+    background-color: #22343E;
+    height: 60px;
+
+}
+
+#topBar h1 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 14.3px;
+    color: white;
+
+}
+
+#topBar h2 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: #22343E;
+}
+
+#topBar h3 {}
+
+#settingsBar {
+    height: 34px;
+    width: 100%;
+    display: inline-block;
+}
+
+#notifications {
+    width: 18px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 22px;
+}
+
+#profilePicture {
+    width: 21.8px;
+    height: 21.8px;
+    display: inline-block;
+    margin-left: 57px;
+
+}
+
+#profileName {
+    display: inline-block;
+}
+
+#settings {
+    display: inline-block;
+    margin-left: 50px;
+
+}
+
+
+
+/* navigatie */
+
+#navigationBar {
+    text-decoration: none;
+    width: 100%;
+    height: 25px;
+}
+
+#navigationBar ul {
+    list-style: none;
+    text-align: center;
+    display: table;
+    table-layout: fixed;
+    width: 320px;
+}
+
+#navigationBar ul li {
+    width: 33%;
+    display: table-cell;
+    height: auto;
+    vertical-align: bottom;
+}
+
+#navigationBar ul li p {
+    text-decoration: none;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.83);
+    display: block;
+    min-height: 26px;
+    padding-top: 4px;
+}
+
+/*
+#navigationBar ul li p:hover {
+    color: #22343E;
+    background-color: rgba(255, 255, 255, 0.83);
+    border-radius: 11px 11px 0 0;
+}
+*/
+
+/* deel 2 */
+
+#bottomBar {
+    background-color: #FCFAF8;
+    font-family: 'Raleway', sans-serif;
+    width: 320px;
+}
+
+.modal {
+    top: 80px;
+}
+
+/* status */
+#statusList {
+    margin-left: 28px;
+    margin-top: 8px;
+    list-style: none;
+    height: 100%;
+    width: 48px;
+    float: left;
+}
+
+.status {
+    width: 48px;
+    height: 55px;
+    margin-top: 14px;
+}
+
+#rightside {
+    margin-left: 35px;
+    margin-top: 8px;
+    float: left;
+}
+
+#rightside h3 {
+    font-size: 14.3px;
+    color: #22343E;
+    font-weight: 600;
+}
+
+.statusText {
+    margin-top: 14px;
+    width: 185px;
+    height: 55px;
+}
+
+hr {
+    margin: 0;
+}
+
+/* Goals */
+#goalsLeft {
+    margin-left: 36px;
+    margin-top: 0px;
+    width: 113px;
+    float: left;
+}
+
+#goalsSettings p {
+    font-size: 13px;
+    color: #22343E;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 25px;
+}
+
+#goalsRight {
+    margin-top: 9px;
+}
+
+#goalsRight img {
+    width: 138px;
+    height: 30px;
+    margin-top: 15px;
+}
+
+/* Goals */
+#gameIcons {
+    margin-top: 24px;
+    margin-left: 31px;
+}
+
+#gameIcons img {
+    width: 78px;
+    height: 62px;
+}
+
+
+/* Settings */
+#settingsSettings {
+    margin-left: 35px;
+    margin-top: 24px;
+}
+
+#settingsSettings h2 {
+    font-size: 16px;
+    color: #22343E;
+    font-weight: 500;
+    margin: 0;
+}
+
+#settingsSettings p {
+    font-size: 13px;
+    color: #22343E;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 10px;
+}
+
+#settingsLeft {
+    width: 83px;
+    float: left;
+}
+
+#settingsRight {
+    width: 22px;
+    float: left;
+}
+
+#settingsRight img {
+    margin-top: 7px;
+}
+
+#notificationSettings {
+    margin-top: 63px !important;
+}
+
+#check1,
+#check2,
+#check3,
+#check4 {
+    width: 22px;
+    height: 22px;
+}
+
+/* Profile */
+#settingsProfile {
+    margin-left: 35px;
+    margin-top: 24px;
+}
+
+#settingsProfile h2 {
+    font-size: 16px;
+    color: #22343E;
+    font-weight: 500;
+    margin: 0;
+}
+
+#settingsProfile p {
+    font-size: 13px;
+    color: #22343E;
+    font-weight: 400;
+    margin: 0;
+}
+
+#likesSettings {
+    clear: both;
+    margin-bottom: 15px;
+}
+
+#largeProfileScott {
+    margin-top: 15px;
+    width: 114px;
+    height: 119px;
+    float: left;
+}
+
+#profileRight {
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 43px;
+    float: left;
+}
+
+#profileRight h6 {
+    color: #09A38C;
+    font-size: 10px;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 10px;
+}
