@@ -2,7 +2,6 @@ import zerorpc
 import sys
 from detector import Detector
 
-
 class SocketRPC(object):
 
     def __init__(self):

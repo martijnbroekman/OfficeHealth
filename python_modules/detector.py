@@ -5,11 +5,11 @@ import imutils
 import time
 import json
 from pathlib import Path
+import base64
 
 from detection import fatigue
 from detection import posture
-from detection.emotion_detection import EMD
-from models.Emotion import EMR
+from detection import emotion_detection as emd
 from models.Result import Result
 
 
@@ -27,11 +27,6 @@ class Detector:
     def __init__(self):
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-        self.emd = EMD(self.predictor, self.detector)
-
-        #Initialize network
-        self.network = EMR()
-        self.network.build_network()
 
         print("[INFO] starting video stream thread")
         self.vs = VideoStream(0).start()
@@ -91,12 +86,14 @@ class Detector:
         faces = self.detector(gray, 0)
 
         for face in faces:
+            cv2.imwrite('live.png', frame)
+
             posture_core = posture.check_posture(face)
 
             drowsy_core = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
 
-            emotion_score = self.network.predict(self.emd.format_image(gray, faces))
+            emotion_score = emd.predict_emotions()
 
-            return json.dumps(Result(self.emd.parse_emotions(emotion_score), posture_core, drowsy_core).__dict__)
+            return json.dumps(Result(emotion_score, posture_core, drowsy_core).__dict__)
 
 
