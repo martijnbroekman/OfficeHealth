@@ -1,6 +1,155 @@
-<button onclick="renderer.fitbitSignin()">fitbit sign in</button>
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pots</title>
+    <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700">
 
 
-<script>
-    let renderer = require('./renderer.js');    
-</script>
+</head>
+
+<body>
+    <section id="topBar">
+        <section id="settingsBar">
+            <span><img id="notifications" onclick="clicker()" class="cursor-pointer not-selectable" src="icons/png/notifcations.png" /></span>
+
+            <span id="profile" onclick="showmodal(this.id); closeTabs()">
+                <img id="profilePicture" class="cursor-pointer not-selectable" src="img/profile-scott.png" />
+                <h1 id="profileName" class="cursor-pointer not-selectable">Scott Ruigrok</h1>
+            </span>
+
+            <span><img id="settings" class="cursor-pointer not-selectable" onclick="showmodal(this.id); closeTabs()" src="icons/png/settings.png" /></span>
+        </section>
+        <section id="navigationBar">
+            <ul>
+                <li>
+                    <p id="status" onclick="tab1(); showmodal(this.id)" class="not-selectable cursor-pointer">Status</p>
+                </li>
+                <li>
+                    <p id="goals" onclick="tab2(); showmodal(this.id)" class="not-selectable cursor-pointer">Goals</p>
+                </li>
+                <li>
+                    <p id="games" onclick="tab3(); showmodal(this.id)" class="not-selectable cursor-pointer">Games</p>
+                </li>
+            </ul>
+        </section>
+    </section>
+
+    <section id="bottomBar">
+
+        <!-- This is the div where the others div's are put into with the use of JS. -->
+        <div id="modal"></div>
+
+        <!-- Status page -->
+        <div style="display: none;" class="modal" id="status_content">
+            <ul id="statusList">
+                <li><img id="stress" class="status not-selectable" src="icons/png/stress.png" />
+                </li>
+                <li><img id="posture" class="status not-selectable" src="icons/png/posture.png" /></li>
+                <li><img id="tired" class="status not-selectable" src="icons/png/tired.png" /></li>
+                <li><img id="staring" class="status not-selectable" src="icons/png/staring.png" /></li>
+            </ul>
+            <div id="rightside">
+                <div class="statusText">
+                    <h3>Your stress levels look fine.</h3>
+                </div>
+                <hr>
+                <div class="statusText">
+                    <h3>Your posture is not looking great right now.</h3>
+                </div>
+                <hr>
+                <div class="statusText">
+                    <h3>It’s almost time for a break Scott.</h3>
+                </div>
+                <hr>
+                <div class="statusText">
+                    <h3>You have stared at the screenfor a while, but your break is soon.</h3>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Goals page -->
+        <div style="display: none;" class="modal" id="goals_content">
+            <div id="goalsSettings">
+                <div id="goalsLeft">
+                    <p>Exercise</p>
+                    <p>Staring</p>
+                    <p>Posture</p>
+                    <p>Social activities</p>
+                    <p>Meeting people</p>
+                </div>
+                <div id="goalsRight">
+                    <img id="bar1" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar1.png" />
+                    <img id="bar2" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar2.png" />
+                    <img id="bar3" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar3.png" />
+                    <img id="bar4" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar4.png" />
+                    <img id="bar5" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar5.png" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Games page -->
+        <div style="display: none;" class="modal" id="games_content">
+            <div id="gameIcons">
+                <img id="game1" onclick="checkClick5()" class="gameIcon cursor-pointer not-selectable" src="icons/png/pingpongblock.png" />
+                <img id="game2" onclick="checkClick6()" class="gameIcon cursor-pointer not-selectable" src="icons/png/chessblock-checked.png" />
+                <img id="game3" onclick="checkClick7()" class="gameIcon cursor-pointer not-selectable" src="icons/png/walksblock-checked.png" />
+                <img id="game4" onclick="checkClick8()" class="gameIcon cursor-pointer not-selectable" src="icons/png/blindlunchblock.png" />
+            </div>
+        </div>
+
+        <!-- Settings page -->
+        <div style="display: none;" class="modal" id="settings_content">
+            <div id="settingsSettings">
+                <h2>General settings</h2>
+                <p class="cursor-pointer"><u>reset posture</u></p>
+                <h2 id="notificationSettings">Notifications settings</h2>
+                <div id="settingsLeft">
+                    <p>Stress</p>
+                    <p>Posture</p>
+                    <p>Tired</p>
+                    <p>Staring</p>
+                </div>
+                <div id="settingsRight">
+                    <img id="check1" onclick="checkClick1()" class="cursor-pointer not-selectable" src="icons/png/unchecked.png" />
+                    <img id="check2" onclick="checkClick2()" class="cursor-pointer not-selectable" src="icons/png/unchecked.png" />
+                    <img id="check3" onclick="checkClick3()" class="cursor-pointer not-selectable" src="icons/png/checked.png" />
+                    <img id="check4" onclick="checkClick4()" class="cursor-pointer not-selectable" src="icons/png/checked.png" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile page -->
+        <div style="display: none;" class="modal" id="profile_content">
+            <div id="settingsProfile">
+                <h2>Profile</h2>
+                <img id="largeProfileScott" class="cursor-pointer not-selectable" src="img/large-profile-scott.png" />
+                <div id="profileRight">
+                    <h6>Name</h6>
+                    <p>Scott Ruigrok</p>
+                    <h6>Company</h6>
+                    <p>Red Shed Gathering</p>
+                    <h6>Birthday</h6>
+                    <p>27-06-1995</p>
+                </div>
+                <h2 id="likesSettings">Likes</h2>
+                <p>Pingpong, walks, chess &amp; checkers.</p>
+            </div>
+        </div>
+
+
+
+    </section>
+
+    <script src="scripts/functions.js"></script>
+    <script>
+        require('./renderer.js');
+
+    </script>
+</body>
+
+</html>

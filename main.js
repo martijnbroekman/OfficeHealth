@@ -4,11 +4,21 @@ const fitbit = require('./javascript/fitbit.js');
 const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
 
-const { app, BrowserWindow, ipcMain } = electron;
+const {
+    app,
+    BrowserWindow,
+    ipcMain
+} = electron;
 
 let mainWinow = null;
 const createWindow = () => {
-    mainWinow = new BrowserWindow({width: 800, height: 600});
+    mainWinow = new BrowserWindow({
+        width: 320,
+        height: 390,
+        resizable: false,
+        icon: path.join(__dirname, 'icons/png/dark-icon-pngs/64x64.png')
+    });
+
     mainWinow.loadURL(require('url').format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file',
@@ -66,7 +76,7 @@ const createPyProc = () => {
 
     emitter.on('error', (error) => {
         mainWinow.webContents.send('py:measure_error', error);
-    })
+    });
 };
 
 const exitPyProc = () => {
