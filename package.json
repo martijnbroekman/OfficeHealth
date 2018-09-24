@@ -24,6 +24,7 @@
     "@aspnet/signalr": "^1.0.3",
     "axios": "^0.18.0",
     "electron-rebuild": "^1.8.2",
+    "freedesktop-notifications": "^1.2.3",
     "jwt-decode": "^2.2.0",
     "moment": "^2.22.2",
     "qs": "^6.5.2",
