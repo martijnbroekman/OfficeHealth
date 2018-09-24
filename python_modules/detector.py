@@ -1,98 +1,99 @@
-import json
-import threading
-import time
-
-from client import Client
-import cv2
 import dlib
+import cv2
+from imutils.video import VideoStream
 import imutils
+import time
+import json
+from pathlib import Path
+import base64
+
 from detection import fatigue
 from detection import posture
-from detection.emotion_detection import EMD
-from models.Emotion import EMR
+from detection import emotion_detection as emd
 from models.Result import Result
 
-# define two constants, one for the eye aspect ratio to indicate
-# blink and then a second constant for the number of consecutive
-# frames the eye must be below the threshold for to sent a notification
-EYE_AR_THRESH = 0.3
-EYE_AR_CONSEC_FRAMES = 48
+
+class Settings:
+
+    def __init__(self, x, y, w, h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
 
 class Detector:
 
     def __init__(self):
-        print("[INFO] loading facial landmark predictor")
-
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-        self.emd = EMD(self.predictor, self.detector)
 
-        #Initialize network
-        self.network = EMR()
-        self.network.build_network()
+        print("[INFO] starting video stream thread")
+        self.vs = VideoStream(0).start()
 
-        #Initialize camera
-        self.cap = cv2.VideoCapture(0)
-
-        self.client = Client()
-
-        # Init camera time
+        # Time for camera to initialize
         time.sleep(1.0)
 
-
-    def rect_to_bb(self, rect):
-        x = rect.left()
-        y = rect.top()
-        w = rect.right() - x
-        h = rect.bottom() - y
-
-        # return a tuple of (x, y, w, h)
-        return x, y, w, h
-
     def start(self):
-        print("[INFO] loading facial landmark predictor")
-        detector = dlib.get_frontal_face_detector()
-        predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-        self.emd = EMD(predictor, detector)
+        data = {}
+        if self.settings_set():
+            data["ready"] = True
+        else:
+            data["ready"] = self.save_settings()
 
-    def stop(self):
-        self.cap.release()
+        return json.dumps(data)
 
-    def start_reading(self):
-        # grab the indexes of the facial landmarks for the left and
-        # right eye, respectively
+    def save_settings(self):
+        faceSet = False
+
+        while not faceSet:
+            frame = self.vs.read()
+
+            frame = imutils.resize(frame, width=450)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            # Detect faces
+            faces = self.detector(gray, 0)
+
+            for face in faces:
+                (x, y, w, h) = posture.rect_to_bb(face)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+            cv2.imshow("Posture", frame)
+            key = cv2.waitKey(1) & 0xFF
+
+            if key == ord("s") and len(faces) > 0:
+                posture.save_face(faces[0])
+                faceSet = True
+                cv2.destroyAllWindows()
+
+        return faceSet
+
+    def settings_set(self):
+        return Path("settings.json").exists()
+
+    def measure(self):
+
+        # Grab facial landmarks for both eyes
         (lStart, lEnd, rStart, rEnd) = fatigue.calculate_landmarks()
 
-        COUNTER = 0
-        POSTURE = True
-        FATIGUE = False
-
-        # Again find haar cascade to draw bounding box around face
-        ret, frame = self.cap.read()
-
+        # Read frame + preprocessing
+        frame = self.vs.read()
         frame = imutils.resize(frame, width=450)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Detect faces
-        rects = self.detector(gray, 0)
+        faces = self.detector(gray, 0)
 
-        for rect in rects:
-            POSTURE =  posture.check_posture(rect)
+        for face in faces:
+            cv2.imwrite('live.png', frame)
 
-            EAR = fatigue.calculate_ear(self.predictor(gray, rect), lStart, lEnd, rStart, rEnd)
+            posture_core = posture.check_posture(face)
 
-            # Check if EAR is below blink treshold. If true, increase blink frame counter
-            if EAR < EYE_AR_THRESH:
-                COUNTER += 1
+            drowsy_core = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
 
-                # If eyes were closed for a sufficient number of frames, drowsiness is detected
-                if COUNTER >= EYE_AR_CONSEC_FRAMES:
-                    FATIGUE = True
+            emotion_score = emd.predict_emotions()
 
-            else:
-                COUNTER = 0
+            return json.dumps(Result(emotion_score, posture_core, drowsy_core).__dict__)
 
-            # compute softmax probabilities
-            result = self.network.predict(self.emd.format_image(gray, rects))
 
-            return json.dumps(Result(self.emd.parse_emotions(result), POSTURE, FATIGUE).__dict__)

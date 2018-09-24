@@ -1,60 +1,65 @@
-import numpy as np
-import cv2
+import requests
+import time
+import json
 
+with open('key.json') as f:
+    subscription_key = json.load(f)["key"]
+assert subscription_key
 
-class EMD:
+face_api_url = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect'
+_maxNumRetries = 10
 
-    EMOTIONS = ['angry', 'disgusted', 'fearful', 'happy', 'sad', 'surprised', 'neutral']
+def processRequest(json, data, headers, params):
+    retries = 0
+    result = None
+    error = None
 
-    def __init__(self, predictor, detector):
-        self.predictor = predictor
-        self.detector = detector
+    while True:
 
-    def rect_to_bb(self, rect):
-        x = rect.left()
-        y = rect.top()
-        w = rect.right() - x
-        h = rect.bottom() - y
+        response = requests.request('post', face_api_url, json=json, data=data, headers=headers, params=params)
 
-        # return a np array of (x, y, w, h)
-        return np.array([x, y, w, h], np.int32)
+        if response.status_code == 429:
+            if retries <= _maxNumRetries:
+                time.sleep(1)
+                retries += 1
+                continue
+            else:
+                error = "Error on connection to emotion service"
+                break
 
-    def format_image(self, image, det_faces):
+        elif response.status_code == 200 or response.status_code == 201:
 
-        if not len(det_faces) > 0:
-            return None
+            if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
+                result = None
+                error = "No content returned from emotion service"
+            elif 'content-type' in response.headers and isinstance(response.headers['content-type'], str):
+                if 'application/json' in response.headers['content-type'].lower():
+                    result = response.json() if response.content else None
+                elif 'image' in response.headers['content-type'].lower():
+                    result = response.content
+        else:
+            error = response.json()['error']['message']
+        break
 
-        # initialize the first face as having maximum area, then find the one with max_area
-        area_face = self.rect_to_bb(det_faces[0])
-        for det_face in det_faces:
-            bb_newface = self.rect_to_bb(det_face)
-            if bb_newface[2] * bb_newface[3] > area_face[2] * area_face[3]:
-                area_face = bb_newface
-        calc_result = area_face
+    return error, result
 
-        calc_result[1] -= 30
-        calc_result[2] += 50
-        calc_result[3] += 50
+def predict_emotions():
+    headers = dict()
+    headers['Ocp-Apim-Subscription-Key'] = subscription_key
+    headers['Content-Type'] = 'application/octet-stream'
 
-        # extract ROI of face
-        image = image[calc_result[1]:(calc_result[1] + calc_result[2]), calc_result[0]:(calc_result[0] + calc_result[3])]
+    with open("live.png", 'rb' ) as f:
+        data = f.read()
 
-        try:
-            # resize the image so that it can be passed to the neural network
-            image = cv2.resize(image, (48, 48), interpolation=cv2.INTER_CUBIC) / 255.
-        except Exception:
-            print("----->Problem during resize")
-            return None
+    params = {
+        'returnFaceId': 'true',
+        'returnFaceLandmarks': 'false',
+        'returnFaceAttributes': 'emotion'
+    }
 
-        return image
+    error, result = processRequest(None, data, headers, params)
+    if error is None:
+        return result[0]["faceAttributes"]["emotion"]
 
-    def parse_emotions(self, emotions):
-        return {
-            self.EMOTIONS[0]: emotions.item(0),
-            self.EMOTIONS[1]: emotions.item(1),
-            self.EMOTIONS[2]: emotions.item(2),
-            self.EMOTIONS[3]: emotions.item(3),
-            self.EMOTIONS[4]: emotions.item(4),
-            self.EMOTIONS[5]: emotions.item(5),
-            self.EMOTIONS[6]: emotions.item(6),
-        }
+    return error
+

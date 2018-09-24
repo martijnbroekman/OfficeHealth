@@ -1,6 +1,11 @@
 from scipy.spatial import distance as dist
 from imutils import face_utils
 
+# define two constants, one for the eye aspect ratio to indicate
+# blink and then a second constant for the number of consecutive
+# frames the eye must be below the threshold for to sent a notification
+EYE_AR_THRESH = 0.2
+
 
 def calculate_landmarks():
     (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
@@ -21,7 +26,7 @@ def eye_aspect_ratio(eye):
     return (A + B) / (2.0 * C)
 
 
-def calculate_ear(shape, lStart, lEnd, rStart, rEnd):
+def check_drowsiness(shape, lStart, lEnd, rStart, rEnd):
     shape = face_utils.shape_to_np(shape)
 
     leftEye = shape[lStart:lEnd]
@@ -29,5 +34,8 @@ def calculate_ear(shape, lStart, lEnd, rStart, rEnd):
     leftEAR = eye_aspect_ratio(leftEye)
     rightEAR = eye_aspect_ratio(rightEye)
 
-    # Calculate average EAR for both eyes (suggested by pros so better probably haha)
-    return (leftEAR + rightEAR) / 2
+    # Calculate average EAR for both eyes
+    ear =  (leftEAR + rightEAR) / 2
+
+    # Check if EAR is < ear treshold
+    return bool(ear < EYE_AR_THRESH)

@@ -2,11 +2,13 @@ import zerorpc
 import sys
 from detector import Detector
 
-
 class SocketRPC(object):
+
+    def __init__(self):
+        self.detector = Detector()
+
     def start(self):
-        detector.start()
-        return "Started successfully"
+        return self.detector.start()
 
     def settings(self):
         return "settings"
@@ -15,7 +17,7 @@ class SocketRPC(object):
         return "emotion"
 
     def measure(self):
-        return detector.start_reading()
+        return self.detector.measure()
 
 
 def parse_port():
@@ -36,5 +38,4 @@ def main():
 
 
 if __name__ == '__main__':
-    detector = Detector()
     main()
