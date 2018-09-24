@@ -5,8 +5,6 @@ import imutils
 import time
 import json
 from pathlib import Path
-from threading import Event
-from queue import Queue
 
 from detection import fatigue
 from detection.fatigue import FatigueBackgroundWorker
@@ -32,10 +30,8 @@ class Detector:
 
         print("[INFO] starting video stream thread")
         self.vs = VideoStream(0).start()
-        self.event = Event()
-        self.queue = Queue()
 
-        self.background_worker = FatigueBackgroundWorker(self.vs, self.predictor, self.detector, self.event, self.queue)
+        self.background_worker = FatigueBackgroundWorker(self.vs, self.predictor, self.detector)
 
         # Time for camera to initialize
         time.sleep(1.0)
@@ -81,8 +77,6 @@ class Detector:
         return Path("settings.json").exists()
 
     def measure(self):
-        # Read frame + preprocessing
-        self.event.set()
         frame = self.vs.read()
         frame = imutils.resize(frame, width=450)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -95,13 +89,11 @@ class Detector:
 
             posture_core = posture.check_posture(face)
 
-            print(self.queue.get())
+            drowsy_score = self.background_worker.get_result()
 
-            # drowsy_core = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
+            # emotion_score = emd.predict_emotions()
 
-            emotion_score = emd.predict_emotions()
-
-            return json.dumps(Result(emotion_score, posture_core, False).__dict__)
+            return json.dumps(Result(None, posture_core, drowsy_score).__dict__)
 
 
 

@@ -41,31 +41,25 @@ def calculate_ear(shape, lStart, lEnd, rStart, rEnd):
 
 class FatigueBackgroundWorker:
 
-    def __init__(self, vs, predictor, detector, event, queue):
+    def __init__(self, vs, predictor, detector):
         self.thread = threading.Thread(target=self.run, args=())
         self.thread.daemon = True
         self.vs = vs
         self.predictor = predictor
         self.detector = detector
-        self.event = event
-        self.queue = queue
         self.drowsinessDetected = False
 
     def start(self):
         self.thread.start()
 
-    def check_lock(self):
-        if self.event.isSet():
-            self.queue.put(self.drowsinessDetected)
-            self.drowsinessDetected = False
-            self.event.clear()
+    def get_result(self):
+        return self.drowsinessDetected
 
     def run(self):
         (lStart, lEnd, rStart, rEnd) = calculate_landmarks()
 
         counter = 0
         while True:
-            self.check_lock()
             frame = self.vs.read()
             frame = imutils.resize(frame, width=450)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -85,4 +79,5 @@ class FatigueBackgroundWorker:
                     if counter >= EYE_AR_CONSEC_FRAMES:
                         self.drowsinessDetected = True
                 else:
-                    counter = 0
+                    self.drowsinessDetected = False
+
