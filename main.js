@@ -15,7 +15,7 @@ const createWindow = () => {
     mainWinow = new BrowserWindow({
         width: 320,
         height: 390,
-        resizable: false,
+        // resizable: false,
         icon: path.join(__dirname, 'icons/png/dark-icon-pngs/64x64.png')
     });
 
@@ -56,7 +56,7 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port])
+    // pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
@@ -80,9 +80,9 @@ const createPyProc = () => {
 };
 
 const exitPyProc = () => {
-    pyProc.kill();
-    pyProc = null;
-    pyPort = null;
+    // pyProc.kill();
+    // pyProc = null;
+    // pyPort = null;
 };
 
 app.on('ready', createPyProc);

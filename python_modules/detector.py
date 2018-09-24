@@ -5,9 +5,9 @@ import imutils
 import time
 import json
 from pathlib import Path
-import base64
 
 from detection import fatigue
+from detection.fatigue import FatigueBackgroundWorker
 from detection import posture
 from detection import emotion_detection as emd
 from models.Result import Result
@@ -31,6 +31,8 @@ class Detector:
         print("[INFO] starting video stream thread")
         self.vs = VideoStream(0).start()
 
+        self.background_worker = FatigueBackgroundWorker(self.vs, self.predictor, self.detector)
+
         # Time for camera to initialize
         time.sleep(1.0)
 
@@ -40,6 +42,8 @@ class Detector:
             data["ready"] = True
         else:
             data["ready"] = self.save_settings()
+
+        self.background_worker.start()
 
         return json.dumps(data)
 
@@ -73,10 +77,6 @@ class Detector:
         return Path("settings.json").exists()
 
     def measure(self):
-
-        # Grab facial landmarks for both eyes
-        (lStart, lEnd, rStart, rEnd) = fatigue.calculate_landmarks()
-
         # Read frame + preprocessing
         frame = self.vs.read()
         frame = imutils.resize(frame, width=450)
@@ -90,10 +90,10 @@ class Detector:
 
             posture_core = posture.check_posture(face)
 
-            drowsy_core = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
+            # drowsy_core = fatigue.check_drowsiness(self.predictor(gray, face), lStart, lEnd, rStart, rEnd)
 
             emotion_score = emd.predict_emotions()
 
-            return json.dumps(Result(emotion_score, posture_core, drowsy_core).__dict__)
+            return json.dumps(Result(emotion_score, posture_core, False).__dict__)
 
 
