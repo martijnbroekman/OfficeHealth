@@ -91,9 +91,9 @@ class Detector:
 
             drowsy_score = self.background_worker.get_result()
 
-            # emotion_score = emd.predict_emotions()
+            emotion_score = emd.predict_emotions()
 
-            return json.dumps(Result(None, posture_core, drowsy_score).__dict__)
+            return json.dumps(Result(emotion_score, posture_core, drowsy_score).__dict__)
 
 
 
