@@ -56,7 +56,7 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    // pyProc = require('child_process').spawn(pythonExec, [script, port])
+    pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
@@ -80,9 +80,9 @@ const createPyProc = () => {
 };
 
 const exitPyProc = () => {
-    // pyProc.kill();
-    // pyProc = null;
-    // pyPort = null;
+    pyProc.kill();
+    pyProc = null;
+    pyPort = null;
 };
 
 app.on('ready', createPyProc);
