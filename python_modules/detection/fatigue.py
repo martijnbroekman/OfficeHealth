@@ -7,7 +7,7 @@ import imutils
 # define two constants, one for the eye aspect ratio to indicate
 # blink and then a second constant for the number of consecutive
 # frames the eye must be below the threshold for to sent a notification
-EYE_AR_THRESH = 0.3
+EYE_AR_THRESH = 0.2
 EYE_AR_CONSEC_FRAMES = 48
 
 
@@ -41,21 +41,31 @@ def calculate_ear(shape, lStart, lEnd, rStart, rEnd):
 
 class FatigueBackgroundWorker:
 
-    def __init__(self, vs, predictor, detector):
+    def __init__(self, vs, predictor, detector, event, queue):
         self.thread = threading.Thread(target=self.run, args=())
         self.thread.daemon = True
         self.vs = vs
         self.predictor = predictor
         self.detector = detector
+        self.event = event
+        self.queue = queue
+        self.drowsinessDetected = False
 
     def start(self):
         self.thread.start()
+
+    def check_lock(self):
+        if self.event.isSet():
+            self.queue.put(self.drowsinessDetected)
+            self.drowsinessDetected = False
+            self.event.clear()
 
     def run(self):
         (lStart, lEnd, rStart, rEnd) = calculate_landmarks()
 
         counter = 0
         while True:
+            self.check_lock()
             frame = self.vs.read()
             frame = imutils.resize(frame, width=450)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -73,6 +83,6 @@ class FatigueBackgroundWorker:
 
                     # If eyes were closed for a sufficient number of frames, drowsiness is detected
                     if counter >= EYE_AR_CONSEC_FRAMES:
-                        print("Oh nee u bent vermoeid makker")
+                        self.drowsinessDetected = True
                 else:
                     counter = 0
