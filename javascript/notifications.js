@@ -1,3 +1,4 @@
+const path = require('path');
 const notifications = require( 'freedesktop-notifications' );
 
 // Construct and push notification
@@ -6,6 +7,7 @@ const pushNotification = (title, message) => {
         let notif = notifications.createNotification( {
             summary: title ,
             body: message,
+            icon: path.join(__dirname, '../img/pots-logo.png'),
             actions: {
                 default: '' ,
                 yes: 'Yes!' ,
