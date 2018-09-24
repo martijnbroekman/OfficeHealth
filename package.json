@@ -21,11 +21,15 @@
     "electron-packager": "^12.1.1"
   },
   "dependencies": {
+    "@aspnet/signalr": "^1.0.3",
     "axios": "^0.18.0",
     "electron-rebuild": "^1.8.2",
     "jwt-decode": "^2.2.0",
     "moment": "^2.22.2",
     "qs": "^6.5.2",
+    "tslib": "^1.9.3",
+    "websocket": "^1.0.28",
+    "xmlhttprequest": "^1.8.0",
     "zerorpc": "^0.9.8"
   }
 }
