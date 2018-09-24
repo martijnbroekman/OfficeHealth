@@ -3,6 +3,8 @@ const path = require('path');
 const fitbit = require('./javascript/fitbit.js');
 const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
+const axios = require('axios');
+const notifications = require('./javascript/notifications')
 
 const { app, BrowserWindow, ipcMain } = electron;
 
@@ -51,12 +53,26 @@ const createPyProc = () => {
         console.log('child process success')
     }
 
-    client.start().then((res)=> console.log(res));
+    client.start().then((res) => console.log(res));
 
     const emitter = new EventEmitter();
     client.startMeasure(emitter);
 
     emitter.on('measure_result', (result) => {
+        let parsedResult = JSON.parse(result);
+
+        if (parsedResult !== null) {
+
+            let resultObject = parsedResult.emotions;
+            resultObject.userId = 1;
+            // axios.post('http://localhost:5000/emotions', resultObject)
+            // .then((res) => {
+                
+            // })
+            // .catch((error) => {
+            //     console.log(error)
+            // });
+        }
         mainWinow.webContents.send('py:measure', result);
     });
 
