@@ -4,7 +4,7 @@ const fitbit = require('./javascript/fitbit.js');
 const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
 const axios = require('axios');
-const notifications = require('./javascript/notifications')
+const api = require('./javascript/api-service')
 
 const {
     app,
@@ -30,6 +30,10 @@ const createWindow = () => {
     mainWinow.on('closed', () => {
         mainWinow = null
     });
+
+    api.login('test@test.nl', 'Welcome1!')
+    .then(() => api.changeNotificationStatus(true)).catch(error => console.log(error));
+    api.onNotification(data => console.log(data));
 };
 
 app.on('ready', createWindow);
@@ -58,7 +62,7 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port])
+    //pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
@@ -79,13 +83,13 @@ const createPyProc = () => {
 
             let resultObject = parsedResult.emotions;
             resultObject.userId = 1;
-            // axios.post('http://localhost:5000/emotions', resultObject)
-            // .then((res) => {
+            axios.post('http://localhost:5000/emotions', resultObject)
+            .then((res) => {
                 
-            // })
-            // .catch((error) => {
-            //     console.log(error)
-            // });
+            })
+            .catch((error) => {
+                console.log(error)
+            });
         }
         mainWinow.webContents.send('py:measure', result);
     });
@@ -96,7 +100,7 @@ const createPyProc = () => {
 };
 
 const exitPyProc = () => {
-    pyProc.kill();
+    //pyProc.kill();
     pyProc = null;
     pyPort = null;
 };
