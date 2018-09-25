@@ -4,40 +4,9 @@ import threading
 import cv2
 import imutils
 
-# define two constants, one for the eye aspect ratio to indicate
-# blink and then a second constant for the number of consecutive
-# frames the eye must be below the threshold for to sent a notification
 EYE_AR_THRESH = 0.2
 EYE_AR_CONSEC_FRAMES = 48
 
-
-def calculate_landmarks():
-    (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
-    (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
-
-    return lStart, lEnd, rStart, rEnd
-
-
-def eye_aspect_ratio(eye):
-    # calculate euclidean distance between the two sets of vertical eye landmarks (x y coordinates)
-    A = dist.euclidean(eye[1], eye[5])
-    B = dist.euclidean(eye[2], eye[4])
-
-    # calculate euclidean distance between horizontal eye landmarks
-    C = dist.euclidean(eye[0], eye[3])
-
-    # Calculate and return eye aspect ratio (ear)
-    return (A + B) / (2.0 * C)
-
-
-def calculate_ear(shape, lStart, lEnd, rStart, rEnd):
-    leftEye = shape[lStart:lEnd]
-    rightEye = shape[rStart:rEnd]
-    leftEAR = eye_aspect_ratio(leftEye)
-    rightEAR = eye_aspect_ratio(rightEye)
-
-    # Calculate average EAR for both eyes
-    return (leftEAR + rightEAR) / 2
 
 class FatigueBackgroundWorker:
 
@@ -55,8 +24,34 @@ class FatigueBackgroundWorker:
     def get_result(self):
         return self.drowsinessDetected
 
+    def calculate_landmarks(self):
+        (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
+        (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+
+        return lStart, lEnd, rStart, rEnd
+
+    def eye_aspect_ratio(self, eye):
+        # calculate euclidean distance between the two sets of vertical eye landmarks (x y coordinates)
+        A = dist.euclidean(eye[1], eye[5])
+        B = dist.euclidean(eye[2], eye[4])
+
+        # calculate euclidean distance between horizontal eye landmarks
+        C = dist.euclidean(eye[0], eye[3])
+
+        # Calculate and return eye aspect ratio (ear)
+        return (A + B) / (2.0 * C)
+
+    def calculate_ear(self, shape, lStart, lEnd, rStart, rEnd):
+        leftEye = shape[lStart:lEnd]
+        rightEye = shape[rStart:rEnd]
+        leftEAR = self.eye_aspect_ratio(leftEye)
+        rightEAR = self.eye_aspect_ratio(rightEye)
+
+        # Calculate average EAR for both eyes
+        return (leftEAR + rightEAR) / 2
+
     def run(self):
-        (lStart, lEnd, rStart, rEnd) = calculate_landmarks()
+        (lStart, lEnd, rStart, rEnd) = self.calculate_landmarks()
 
         counter = 0
         while True:
@@ -70,8 +65,9 @@ class FatigueBackgroundWorker:
                 shape = self.predictor(gray, face)
                 shape = face_utils.shape_to_np(shape)
 
-                ear = calculate_ear(shape, lStart, lEnd, rStart, rEnd)
+                ear = self.calculate_ear(shape, lStart, lEnd, rStart, rEnd)
 
+                # Check if EAR is lower than treshold value
                 if ear < EYE_AR_THRESH:
                     counter += 1
 
@@ -80,4 +76,3 @@ class FatigueBackgroundWorker:
                         self.drowsinessDetected = True
                 else:
                     self.drowsinessDetected = False
-

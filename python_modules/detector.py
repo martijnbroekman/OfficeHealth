@@ -5,8 +5,8 @@ import imutils
 import time
 import json
 from pathlib import Path
+import gevent
 
-from detection import fatigue
 from detection.fatigue import FatigueBackgroundWorker
 from detection import posture
 from detection import emotion_detection as emd
@@ -51,6 +51,7 @@ class Detector:
         faceSet = False
 
         while not faceSet:
+            gevent.sleep(0)
             frame = self.vs.read()
 
             frame = imutils.resize(frame, width=450)

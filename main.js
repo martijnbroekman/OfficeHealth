@@ -17,7 +17,7 @@ const createWindow = () => {
     mainWinow = new BrowserWindow({
         width: 320,
         height: 390,
-        // resizable: false,
+        resizable: false,
         icon: path.join(__dirname, 'icons/png/dark-icon-pngs/64x64.png')
     });
 
