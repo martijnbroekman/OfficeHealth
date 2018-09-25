@@ -128,8 +128,6 @@ function tab3() {
     document.getElementById('status').style.color = "rgba(255, 255, 255, 0.83)";
 }
 
-
-
 function closeTabs() {
     document.getElementById('games').style.backgroundColor = "#22343E";
     document.getElementById('games').style.color = "rgba(255, 255, 255, 0.83)";
@@ -139,4 +137,28 @@ function closeTabs() {
 
     document.getElementById('status').style.backgroundColor = "#22343E";
     document.getElementById('status').style.color = "rgba(255, 255, 255, 0.83)";
+}
+
+function radiobuttoncheck(id, group) {
+    var di = document.getElementsByName(group);
+    var valid = false;
+    for (i = 0; i < di.length; i++) {
+        if (di[i].checked == true && !valid) {
+            valid = true;
+            document.getElementById('modal').innerHTML =
+                document.getElementById(id + '_content').innerHTML;
+        }
+    }
+    if (!valid) {
+        alert('you didn´t choose a option');
+    }
+}
+
+function progressbar() {
+    var timeleft = 10;
+    var downloadTimer = setInterval(function () {
+        document.getElementById("progressBar").value = 10 - --timeleft;
+        if (timeleft <= 0)
+            clearInterval(downloadTimer);
+    }, 1000);
 }
