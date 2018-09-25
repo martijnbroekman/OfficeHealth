@@ -93,7 +93,9 @@ class Detector:
 
             emotion_score = emd.predict_emotions()
 
-            return json.dumps(Result(emotion_score, posture_core, drowsy_score).__dict__)
+            return json.dumps(Result(True, emotion_score, posture_core, drowsy_score).__dict__)
+
+        return json.dumps(Result(False).__dict__)
 
 
 
