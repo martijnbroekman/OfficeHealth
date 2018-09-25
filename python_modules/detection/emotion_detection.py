@@ -1,6 +1,6 @@
-import requests
-import time
 import json
+import aiohttp
+import asyncio
 
 with open('key.json') as f:
     subscription_key = json.load(f)["key"]
@@ -9,57 +9,44 @@ assert subscription_key
 face_api_url = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect'
 _maxNumRetries = 10
 
-def processRequest(json, data, headers, params):
-    retries = 0
+
+async def process_request(data, headers, params):
     result = None
     error = None
 
-    while True:
+    # Post face async to Azure api
+    async with aiohttp.ClientSession() as session:
+        async with session.post(face_api_url, data=data, headers=headers, params=params) as resp:
 
-        response = requests.request('post', face_api_url, json=json, data=data, headers=headers, params=params)
-
-        if response.status_code == 429:
-            if retries <= _maxNumRetries:
-                time.sleep(1)
-                retries += 1
-                continue
+            # Handle response
+            if resp.status == 200 or resp.status == 201:
+                result = await resp.json()
             else:
-                error = "Error on connection to emotion service"
-                break
-
-        elif response.status_code == 200 or response.status_code == 201:
-
-            if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
-                result = None
-                error = "No content returned from emotion service"
-            elif 'content-type' in response.headers and isinstance(response.headers['content-type'], str):
-                if 'application/json' in response.headers['content-type'].lower():
-                    result = response.json() if response.content else None
-                elif 'image' in response.headers['content-type'].lower():
-                    result = response.content
-        else:
-            error = response.json()['error']['message']
-        break
+                error = await resp.json()
 
     return error, result
+
 
 def predict_emotions():
     headers = dict()
     headers['Ocp-Apim-Subscription-Key'] = subscription_key
     headers['Content-Type'] = 'application/octet-stream'
 
+    # Load latest live image
     with open("live.png", 'rb' ) as f:
         data = f.read()
 
+    # Set request parameters
     params = {
         'returnFaceId': 'true',
         'returnFaceLandmarks': 'false',
         'returnFaceAttributes': 'emotion'
     }
 
-    error, result = processRequest(None, data, headers, params)
+    loop = asyncio.get_event_loop()
+    error, result = loop.run_until_complete(process_request(data, headers, params))
     if error is None:
         return result[0]["faceAttributes"]["emotion"]
 
-    return error
+    return error['error']['message']
 

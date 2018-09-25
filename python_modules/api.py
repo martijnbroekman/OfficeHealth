@@ -2,6 +2,7 @@ import zerorpc
 import sys
 from detector import Detector
 
+
 class SocketRPC(object):
 
     def __init__(self):
@@ -9,12 +10,6 @@ class SocketRPC(object):
 
     def start(self):
         return self.detector.start()
-
-    def settings(self):
-        return "settings"
-
-    def emotion(self):
-        return "emotion"
 
     def measure(self):
         return self.detector.measure()
@@ -24,16 +19,16 @@ def parse_port():
     port = 4242
     try:
         port = int(sys.argv[1])
-    except Exception as e:
+    except Exception:
         pass
     return '{}'.format(port)
 
 
 def main():
-    addr = 'tcp://127.0.0.1:' + parse_port()
+    # Start socket server
+    address = 'tcp://127.0.0.1:' + parse_port()
     s = zerorpc.Server(SocketRPC())
-    s.bind(addr)
-    print('start running on {}'.format(addr))
+    s.bind(address)
     s.run()
 
 

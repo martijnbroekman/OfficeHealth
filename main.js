@@ -79,7 +79,7 @@ const createPyProc = () => {
     emitter.on('measure_result', (result) => {
         let parsedResult = JSON.parse(result);
 
-        if (parsedResult !== null) {
+        if (parsedResult !== null && parsedResult.face_detected !== false) {
 
             let resultObject = parsedResult.emotions;
             resultObject.userId = 1;

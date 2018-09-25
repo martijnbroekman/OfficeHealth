@@ -1,41 +1,80 @@
 from scipy.spatial import distance as dist
 from imutils import face_utils
+import threading
+import cv2
+import imutils
 
-# define two constants, one for the eye aspect ratio to indicate
-# blink and then a second constant for the number of consecutive
-# frames the eye must be below the threshold for to sent a notification
 EYE_AR_THRESH = 0.2
+EYE_AR_CONSEC_FRAMES = 48
 
 
-def calculate_landmarks():
-    (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
-    (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+class FatigueBackgroundWorker:
 
-    return lStart, lEnd, rStart, rEnd
+    def __init__(self, vs, predictor, detector):
+        self.thread = threading.Thread(target=self.run, args=())
+        self.thread.daemon = True
+        self.vs = vs
+        self.predictor = predictor
+        self.detector = detector
+        self.drowsinessDetected = False
 
+    def start(self):
+        self.thread.start()
 
-def eye_aspect_ratio(eye):
-    # calculate euclidean distance between the two sets of vertical eye landmarks (x y coordinates)
-    A = dist.euclidean(eye[1], eye[5])
-    B = dist.euclidean(eye[2], eye[4])
+    def get_result(self):
+        return self.drowsinessDetected
 
-    # calculate euclidean distance between horizontal eye landmarks
-    C = dist.euclidean(eye[0], eye[3])
+    def calculate_landmarks(self):
+        # Calculate face landmarks
+        (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
+        (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 
-    # Calculate and return eye aspect ratio (ear)
-    return (A + B) / (2.0 * C)
+        return lStart, lEnd, rStart, rEnd
 
+    def eye_aspect_ratio(self, eye):
+        # Calculate euclidean distance between the two sets of vertical eye landmarks (x y coordinates)
+        A = dist.euclidean(eye[1], eye[5])
+        B = dist.euclidean(eye[2], eye[4])
 
-def check_drowsiness(shape, lStart, lEnd, rStart, rEnd):
-    shape = face_utils.shape_to_np(shape)
+        # Calculate euclidean distance between horizontal eye landmarks
+        C = dist.euclidean(eye[0], eye[3])
 
-    leftEye = shape[lStart:lEnd]
-    rightEye = shape[rStart:rEnd]
-    leftEAR = eye_aspect_ratio(leftEye)
-    rightEAR = eye_aspect_ratio(rightEye)
+        # Calculate and return eye aspect ratio (ear)
+        return (A + B) / (2.0 * C)
 
-    # Calculate average EAR for both eyes
-    ear =  (leftEAR + rightEAR) / 2
+    def calculate_ear(self, shape, lStart, lEnd, rStart, rEnd):
+        # Detect eye positions for ear calculation
+        leftEye = shape[lStart:lEnd]
+        rightEye = shape[rStart:rEnd]
+        leftEAR = self.eye_aspect_ratio(leftEye)
+        rightEAR = self.eye_aspect_ratio(rightEye)
 
-    # Check if EAR is < ear treshold
-    return bool(ear < EYE_AR_THRESH)
+        # Calculate average EAR for both eyes
+        return (leftEAR + rightEAR) / 2
+
+    def run(self):
+        (lStart, lEnd, rStart, rEnd) = self.calculate_landmarks()
+
+        counter = 0
+        while True:
+            frame = self.vs.read()
+            frame = imutils.resize(frame, width=450)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            faces = self.detector(gray, 0)
+
+            for face in faces:
+                shape = self.predictor(gray, face)
+                shape = face_utils.shape_to_np(shape)
+
+                ear = self.calculate_ear(shape, lStart, lEnd, rStart, rEnd)
+
+                # Check if EAR is lower than treshold value
+                if ear < EYE_AR_THRESH:
+                    counter += 1
+
+                    # If eyes were closed for a sufficient number of frames, drowsiness is detected
+                    if counter >= EYE_AR_CONSEC_FRAMES:
+                        self.drowsinessDetected = True
+                else:
+                    self.drowsinessDetected = False

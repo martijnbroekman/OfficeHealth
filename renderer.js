@@ -13,5 +13,5 @@ ipcRenderer.on('py:measure', function(e, result){
 });
 
 ipcRenderer.on('py:measure_error', function(e, error){
-    console.error(error)
+    console.log(error)
 });
