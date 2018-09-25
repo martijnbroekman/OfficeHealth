@@ -5,6 +5,7 @@ const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
 const axios = require('axios');
 const notifications = require('./javascript/notifications')
+const pythonParsing = require('./javascript/python-parsing')
 const fs = require('fs');
 
 const {
@@ -51,8 +52,6 @@ const initApp = () => {
             console.log(err)
         }
     });
-
-    console.log(JSON.stringify(measureValues));
 }
 
 app.on('ready', initApp);
@@ -99,7 +98,7 @@ const createPyProc = () => {
         let parsedResult = JSON.parse(result);
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
-
+            pythonParsing.ParseResults(parsedResult);
             let resultObject = parsedResult.emotions;
             resultObject.userId = 1;
             // axios.post('http://localhost:5000/emotions', resultObject)
