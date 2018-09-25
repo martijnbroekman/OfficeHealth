@@ -5,6 +5,7 @@ const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
 const axios = require('axios');
 const notifications = require('./javascript/notifications')
+const fs = require('fs');
 
 const {
     app,
@@ -13,7 +14,8 @@ const {
 } = electron;
 
 let mainWinow = null;
-const createWindow = () => {
+
+const initApp = () => {
     mainWinow = new BrowserWindow({
         width: 320,
         height: 390,
@@ -30,9 +32,30 @@ const createWindow = () => {
     mainWinow.on('closed', () => {
         mainWinow = null
     });
-};
 
-app.on('ready', createWindow);
+    const measureValues = {
+        posture: 1,
+        fatigue: 1,
+        emotions: {
+            anger: 0,
+            neutral: 1, 
+            sadness: 0,
+            disgust: 0,
+            happy: 0,
+            surprise: 0
+        }
+    };
+
+    fs.writeFile('measure.json', JSON.stringify(measureValues), (err) => {
+        if (err) {
+            console.log(err)
+        }
+    });
+
+    console.log(JSON.stringify(measureValues));
+}
+
+app.on('ready', initApp);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
@@ -40,7 +63,7 @@ app.on('window-all-closed', () => {
 });
 app.on('activate', () => {
     if (mainWinow === null) {
-        createWindow();
+        initApp();
     }
 });
 
