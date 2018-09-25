@@ -26,7 +26,7 @@ def rect_to_bb(rect):
     w = rect.right() - x
     h = rect.bottom() - y
 
-    # return a tuple of (x, y, w, h)
+    # Return a tuple of (x, y, w, h)
     return x, y, w, h
 
 
@@ -34,21 +34,22 @@ def check_posture(rect):
     settings = load_settings()
     score = PostureScore.GOOD
 
-    topScore = round((rect.tl_corner().y - settings.y) * -1 / DIVIDER)
-    bottomScore = round((rect.bl_corner().y - (settings.y + settings.h)) / DIVIDER)
-    leftScore = round((rect.tl_corner().x - settings.x) * -1 / DIVIDER)
-    rightScore = round((rect.tr_corner().x - (settings.x + settings.h)) / DIVIDER)
+    # Calculate posture score for top, bottom, left and right position
+    top_score = round((rect.tl_corner().y - settings.y) * -1 / DIVIDER)
+    bottom_score = round((rect.bl_corner().y - (settings.y + settings.h)) / DIVIDER)
+    left_score = round((rect.tl_corner().x - settings.x) * -1 / DIVIDER)
+    right_score = round((rect.tr_corner().x - (settings.x + settings.h)) / DIVIDER)
 
-    if topScore >= 3 or bottomScore >= 3 or leftScore >= 3 or rightScore > 3:
+    if top_score >= 3 or bottom_score >= 3 or left_score >= 3 or right_score > 3:
         score = PostureScore.BAD
-    elif topScore == 2 or bottomScore == 2 or leftScore == 2 or rightScore == 2:
+    elif top_score == 2 or bottom_score == 2 or left_score == 2 or right_score == 2:
         score = PostureScore.FINE
 
     return score.value
 
 
-def save_face(faceFound):
-    (xf, yf, wf, hf) = rect_to_bb(faceFound)
+def save_face(face_found):
+    (xf, yf, wf, hf) = rect_to_bb(face_found)
     settings = Settings(xf, yf, wf, hf)
 
     with open("settings.json", "w") as out:
@@ -56,5 +57,5 @@ def save_face(faceFound):
 
 
 def load_settings():
-    settingsfile = open("settings.json")
-    return json.loads(settingsfile.read(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    settings_file = open("settings.json")
+    return json.loads(settings_file.read(), object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))

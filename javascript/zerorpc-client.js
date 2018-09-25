@@ -46,6 +46,6 @@ module.exports =  {
                     emitter.emit("measure_result", res);
                 }
             });
-        }, 7000); 
+        }, 8000); 
     }
 }

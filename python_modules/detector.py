@@ -25,12 +25,12 @@ class Settings:
 class Detector:
 
     def __init__(self):
+        # setup dlib and load model for face detection
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-
-        print("[INFO] starting video stream thread")
         self.vs = VideoStream(0).start()
 
+        # Initialize background worker for detecting drowsiness
         self.background_worker = FatigueBackgroundWorker(self.vs, self.predictor, self.detector)
 
         # Time for camera to initialize
@@ -38,11 +38,14 @@ class Detector:
 
     def start(self):
         data = {}
+
+        # Check if settings are set, if not load setup screen
         if self.settings_set():
             data["ready"] = True
         else:
             data["ready"] = self.save_settings()
 
+        # Start background worker
         self.background_worker.start()
 
         return json.dumps(data)
@@ -67,6 +70,7 @@ class Detector:
             cv2.imshow("Posture", frame)
             key = cv2.waitKey(1) & 0xFF
 
+            # Save settings on s click
             if key == ord("s") and len(faces) > 0:
                 posture.save_face(faces[0])
                 faceSet = True
@@ -88,14 +92,18 @@ class Detector:
         for face in faces:
             cv2.imwrite('live.png', frame)
 
-            posture_core = posture.check_posture(face)
+            # Calculate posture score
+            posture_score = posture.check_posture(face)
 
+            # Get drowsiness score
             drowsy_score = self.background_worker.get_result()
 
+            # Calculate emotion score
             emotion_score = emd.predict_emotions()
 
-            return json.dumps(Result(True, emotion_score, posture_core, drowsy_score).__dict__)
+            return json.dumps(Result(True, emotion_score, posture_score, drowsy_score).__dict__)
 
+        # When no face is detected, return false
         return json.dumps(Result(False).__dict__)
 
 

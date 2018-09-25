@@ -25,23 +25,25 @@ class FatigueBackgroundWorker:
         return self.drowsinessDetected
 
     def calculate_landmarks(self):
+        # Calculate face landmarks
         (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
         (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 
         return lStart, lEnd, rStart, rEnd
 
     def eye_aspect_ratio(self, eye):
-        # calculate euclidean distance between the two sets of vertical eye landmarks (x y coordinates)
+        # Calculate euclidean distance between the two sets of vertical eye landmarks (x y coordinates)
         A = dist.euclidean(eye[1], eye[5])
         B = dist.euclidean(eye[2], eye[4])
 
-        # calculate euclidean distance between horizontal eye landmarks
+        # Calculate euclidean distance between horizontal eye landmarks
         C = dist.euclidean(eye[0], eye[3])
 
         # Calculate and return eye aspect ratio (ear)
         return (A + B) / (2.0 * C)
 
     def calculate_ear(self, shape, lStart, lEnd, rStart, rEnd):
+        # Detect eye positions for ear calculation
         leftEye = shape[lStart:lEnd]
         rightEye = shape[rStart:rEnd]
         leftEAR = self.eye_aspect_ratio(leftEye)

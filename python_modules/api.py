@@ -25,10 +25,10 @@ def parse_port():
 
 
 def main():
-    addr = 'tcp://127.0.0.1:' + parse_port()
+    # Start socket server
+    address = 'tcp://127.0.0.1:' + parse_port()
     s = zerorpc.Server(SocketRPC())
-    s.bind(addr)
-    print('start running on {}'.format(addr))
+    s.bind(address)
     s.run()
 
 

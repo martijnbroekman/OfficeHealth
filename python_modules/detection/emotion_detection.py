@@ -14,9 +14,11 @@ async def process_request(data, headers, params):
     result = None
     error = None
 
+    # Post face async to Azure api
     async with aiohttp.ClientSession() as session:
         async with session.post(face_api_url, data=data, headers=headers, params=params) as resp:
 
+            # Handle response
             if resp.status == 200 or resp.status == 201:
                 result = await resp.json()
             else:
@@ -30,9 +32,11 @@ def predict_emotions():
     headers['Ocp-Apim-Subscription-Key'] = subscription_key
     headers['Content-Type'] = 'application/octet-stream'
 
+    # Load latest live image
     with open("live.png", 'rb' ) as f:
         data = f.read()
 
+    # Set request parameters
     params = {
         'returnFaceId': 'true',
         'returnFaceLandmarks': 'false',
