@@ -39,8 +39,6 @@ ipcRenderer.on('py:status', (e, result) => {
     else if (result.emotions.happy > 0) mood.style.borderColor = green;
     else if (result.emotions.sadness > 0) mood.style.borderColor = orange;
     else if (result.emotions.neutral > 0) mood.style.borderColor = yellow;
-
-    console.log(result.emotions);
 });
 
 ipcRenderer.on('py:measure_error', function(e, error){

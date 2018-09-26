@@ -1,3 +1,8 @@
+document.addEventListener("DOMContentLoaded", function (event) {
+    showmodal('status');
+    tab1();
+});
+
 function showmodal(id) {
     document.getElementById('modal').innerHTML =
         document.getElementById(id + '_content').innerHTML;
