@@ -41,15 +41,45 @@ const parseResults = (results, callback) => {
         currentEmotions.neutral = measuredEmotions.neutral > 0.2 ? Math.min(1, currentEmotions.neutral + 0.1) : Math.max(0, currentEmotions.neutral - 0.1);
 
         fs.writeFile('measure.json', JSON.stringify(currentValues), (err) => {
-            if (err) {
-                console.log(err)
-            }
+            if (err) throw err;
         });
     
-        callback(currentValues);
+        setStatusDescription(currentValues, (callback))
     });
 };
 
+const setStatusDescription = (values, callback) => {
+    fs.readFile('./info/status.json', 'utf8', (err, data) => {
+        if (err) throw err;
+
+        const statusTexts = JSON.parse(data);
+        
+        // Set posture text
+        if (between(values.posture, 0.76, 1)) values.postureText = statusTexts.posture.green;
+        else if (between(values.posture, 0.51, 0.75)) values.postureText = statusTexts.posture.yellow;
+        else if (between(values.posture, 0.26, 0.5)) values.postureText = statusTexts.posture.orange;
+        else if (between(values.posture, 0, 0.25)) values.postureText = statusTexts.posture.red;
+
+        // Set fatigue text
+        if (between(values.fatigue, 0.76, 1)) values.fatigueText = statusTexts.fatigue.green;
+        else if (between(values.fatigue, 0.51, 0.75)) values.fatigueText = statusTexts.fatigue.yellow;
+        else if (between(values.fatigue, 0.26, 0.5)) values.fatigueText = statusTexts.fatigue.orange;
+        else if (between(values.fatigue, 0, 0.25)) values.fatigueText = statusTexts.fatigue.red;
+
+        // Set mood text
+        if (values.emotions.anger > 0) values.moodText = statusTexts.mood.red;
+        else if (values.emotions.happy > 0) values.moodText = statusTexts.mood.green;
+        else if (values.emotions.sadness > 0) values.moodText = statusTexts.mood.orange;
+        else if (values.emotions.neutral > 0) values.moodText = statusTexts.mood.yellow;
+
+        callback(values);
+    });
+}
+
+function between(x, min, max) {
+    return x >= min && x <= max;
+}
+
 module.exports = {
-    ParseResults: parseResults
+    ParseResults: parseResults,
 };

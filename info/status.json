@@ -1,42 +1,20 @@
 {
-    "text": {
-        "posture": {
-            "1": "Onderzoek wijst erop dat je zithouding invloed heeft op je gezondheid. Ook al is het soms lastig, rechtop zitten helpt!",
-            "2": "Je zat erg goed! Probeer het vol te houden.",
-            "3": "Door goed te zitten blijft je lijf gezond.",
-            "4": "Je zit al een tijdje goed! Ga zo door!"
-        },
-        "fatigue": {
-            "1": "Iedereen is wel eens vermoeid. Vaak helpt het om even wat fysieks te doen of om wat water te drinken.",
-            "2": "Tips tegen vermoeidheid: onderhoud een frequent slaappatroon. Beweeg regelmatig. Eet gezond, en matig cafeïne toenamen.",
-            "3": "test3",
-            "4": "Je ziet er fit uit!"
-        },
-        "mood": {
-            "1": "Ben je boos? Pluk een roos. Zet hem op je hoed. Dan komt alles weer goed.",
-            "2": "Voel jij je niet zo goed? Wat afleiding helpt misschien.",
-            "3": "Geconcentreerd aan het werk? Ga zo door!",
-            "4": "Je ziet er vrolijk uit!"
-        }
+    "posture": {
+        "red": "Onderzoek wijst erop dat je zithouding invloed heeft op je gezondheid. Ook al is het soms lastig, rechtop zitten helpt!",
+        "orange": "Je zat erg goed! Probeer het vol te houden.",
+        "yellow": "Door goed te zitten blijft je lijf gezond.",
+        "green": "Je zit al een tijdje goed! Ga zo door!"
     },
-    "notification": {
-        "posture": {
-            "1": "test",
-            "2": "test2",
-            "3": "test3",
-            "4": "test4"
-        },
-        "fatigue": {
-            "1": "test",
-            "2": "test2",
-            "3": "test3",
-            "4": "test4"
-        },
-        "mood": {
-            "1": "test",
-            "2": "test2",
-            "3": "test3",
-            "4": "test4"
-        }
+    "fatigue": {
+        "red": "Iedereen is wel eens vermoeid. Vaak helpt het om even wat fysieks te doen of om wat water te drinken.",
+        "orange": "Tips tegen vermoeidheid: onderhoud een frequent slaappatroon. Beweeg regelmatig. Eet gezond, en matig cafeïne toenamen.",
+        "yellow": "Je kan voorkomen dat je moe wordt door regelmatig te bewegen en water te drinken.",
+        "green": "Je ziet er fit uit!"
+    },
+    "mood": {
+        "red": "Ben je boos? Pluk een roos. Zet hem op je hoed. Dan komt alles weer goed.",
+        "orange": "Voel jij je niet zo goed? Wat afleiding helpt misschien.",
+        "yellow": "Geconcentreerd aan het werk? Ga zo door!",
+        "green": "Je ziet er vrolijk uit!"
     }
 }
