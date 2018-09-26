@@ -1,13 +1,13 @@
 {
     "posture": {
-        "red": "Onderzoek wijst erop dat je zithouding invloed heeft op je gezondheid. Ook al is het soms lastig, rechtop zitten helpt!",
+        "red": "Zithouding heeft invloed op je gezondheid. Ook al is het soms lastig, rechtop zitten helpt!",
         "orange": "Je zat erg goed! Probeer het vol te houden.",
         "yellow": "Door goed te zitten blijft je lijf gezond.",
         "green": "Je zit al een tijdje goed! Ga zo door!"
     },
     "fatigue": {
         "red": "Iedereen is wel eens vermoeid. Vaak helpt het om even wat fysieks te doen of om wat water te drinken.",
-        "orange": "Tips tegen vermoeidheid: onderhoud een frequent slaappatroon. Beweeg regelmatig. Eet gezond, en matig cafeïne toenamen.",
+        "orange": "Tips tegen vermoeidheid: Slaap en beweeg regelmatig, eet gezond en matig cafeïne toenamen.",
         "yellow": "Je kan voorkomen dat je moe wordt door regelmatig te bewegen en water te drinken.",
         "green": "Je ziet er fit uit!"
     },
