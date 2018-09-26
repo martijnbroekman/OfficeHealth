@@ -5,6 +5,7 @@ const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
 const axios = require('axios');
 const api = require('./javascript/api-service')
+const notification =  require('./javascript/notifications')
 
 const {
     app,
@@ -31,10 +32,25 @@ const createWindow = () => {
         mainWinow = null
     });
 
-    api.login('test@test.nl', 'Welcome1!')
+    api.login('martijn@rsg.nl', 'Welcome1!')
     .then(() => api.changeNotificationStatus(true)).catch(error => console.log(error));
-    api.onNotification(data => console.log(data));
 };
+
+api.onNotification(data => {
+    notification.PushNotification(data.title, data.description)
+    .then(res => {
+        api.responseOnNotification(data.id, res === 'yes');
+    })
+    .catch(error => api.responseOnNotification(data.id, false));
+});
+
+api.onAccept(data => {
+    notification.pushNotificationWithoutActions(data.title, data.text);
+});
+
+api.onDecline(data => {
+    notification.pushNotificationWithoutActions(data.title, data.text);
+});
 
 app.on('ready', createWindow);
 app.on('window-all-closed', () => {
@@ -83,7 +99,7 @@ const createPyProc = () => {
 
             let resultObject = parsedResult.emotions;
             resultObject.userId = 1;
-            axios.post('http://localhost:5000/emotions', resultObject)
+            axios.post('http://167.99.38.7/emotions', resultObject)
             .then((res) => {
                 
             })

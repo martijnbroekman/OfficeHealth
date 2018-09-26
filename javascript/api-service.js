@@ -8,9 +8,11 @@ global.WebSocket = require('websocket').w3cwebsocket;
 
 let accessToken = null;
 let id = null;
-const apiUrl = "http://localhost:5000";
+const apiUrl = "http://167.99.38.7";
 
-let callBack = null
+let callBack = null;
+let acceptCallBack = null;
+let declineCallBack = null;
 let connection =  null;
 
 const startListening = () => {
@@ -22,6 +24,18 @@ const startListening = () => {
     connection.on("notification", data => {
         if (callBack !== null) {
             callBack(data);
+        }
+    });
+
+    connection.on("notification:accept", data => {
+        if (acceptCallBack !== null) {
+            acceptCallBack(data);
+        }
+    });
+
+    connection.on("notification:decline", data => {
+        if (declineCallBack !== null) {
+            declineCallBack(data);
         }
     });
 
@@ -71,8 +85,17 @@ const changeNotificationStatus = (canReceiveNotification) => {
         .catch(() => console.log("failed to save canRecieveNotifications"));
 }
 
+const responseOnNotification = (notificationId, accepted) => {
+    axios.patch(`${apiUrl}/notifications/${notificationId}/accept`, { accept: accepted }, getDefaultConfig())
+        .then(() => console.log("accepted was saved"))
+        .catch(() => console.log("failed to save accepted"));
+}
+
 module.exports = {
     login: login,
     changeNotificationStatus: changeNotificationStatus,
-    onNotification: ((newCallBack) => callBack = newCallBack)
+    responseOnNotification: responseOnNotification,
+    onNotification: ((newCallBack) => callBack = newCallBack),
+    onAccept: ((newacceptCallBack) => acceptCallBack = newacceptCallBack),
+    onDecline: ((newdeclineCallBack) => declineCallBack = newdeclineCallBack)
 }

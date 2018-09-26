@@ -29,6 +29,19 @@ const pushNotification = (title, message) => {
     })
 };
 
+// Construct and push notification
+const pushNotificationWithoutActions = (title, message) => {
+
+    let notif = notifications.createNotification( {
+        summary: title ,
+        body: message,
+        icon: path.join(__dirname, '../img/pots-logo.png'),
+    });
+
+    notif.push();
+};
+
 module.exports = {
-    PushNotification: pushNotification
+    PushNotification: pushNotification,
+    pushNotificationWithoutActions: pushNotificationWithoutActions
 };
