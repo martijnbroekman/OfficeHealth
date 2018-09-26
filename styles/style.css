@@ -142,11 +142,11 @@ body {
     background-image: url("../icons/png/posture.png");
 }
 
-#emotion {
+#mood {
     background-image: url("../icons/png/stress.png");
 }
 
-#tired {
+#fatigue {
     background-image: url("../icons/png/tired.png");
 }
 
@@ -163,7 +163,7 @@ body {
     background-size: 43px 43px;
     background-position: center;
     border-radius: 50%;
-    border: solid 4px #09A38C;
+    border: solid 4px #09a38c;
     width: 55px;
     height: 55px;
     margin-top: 14px;

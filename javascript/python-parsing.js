@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const parseResults = (results) => {
+const parseResults = (results, callback) => {
     let currentValues;
 
     fs.readFile('./measure.json', 'utf8', (err, data) => {  
@@ -27,7 +27,7 @@ const parseResults = (results) => {
         }
     
         // Calculate new fatigue score
-        currentValues.fatigue = resultObject.fatigue ? Math.min(1, currentValues.fatigue + 0.1) : Math.min(0, currentValues.fatigue - 0.1)
+        currentValues.fatigue = resultObject.fatigue ? Math.max(0, currentValues.fatigue - 0.1) : Math.min(1, currentValues.fatigue + 0.1);
     
         const measuredEmotions = resultObject.emotions;
         let currentEmotions = currentValues.emotions;
@@ -40,14 +40,13 @@ const parseResults = (results) => {
         currentEmotions.surprise = measuredEmotions.surprise > 0.2 ? Math.min(1, currentEmotions.surprise + 0.15) : Math.max(0, currentEmotions.surprise - 0.15);
         currentEmotions.neutral = measuredEmotions.neutral > 0.2 ? Math.min(1, currentEmotions.neutral + 0.1) : Math.max(0, currentEmotions.neutral - 0.1);
 
-        console.log(currentValues);
         fs.writeFile('measure.json', JSON.stringify(currentValues), (err) => {
             if (err) {
                 console.log(err)
             }
         });
     
-        return currentValues;
+        callback(currentValues);
     });
 };
 

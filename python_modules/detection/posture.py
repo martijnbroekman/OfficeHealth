@@ -2,13 +2,14 @@ import json
 from collections import namedtuple
 from enum import Enum
 
-DIVIDER = 15
+DIVIDER = 10
 
 
 class PostureScore(Enum):
-    GOOD = 1
-    FINE = 2
-    BAD = 3
+    Green = 1
+    Yellow = 2
+    Orange = 3
+    Red = 4
 
 
 class Settings:
@@ -32,7 +33,7 @@ def rect_to_bb(rect):
 
 def check_posture(rect):
     settings = load_settings()
-    score = PostureScore.GOOD
+    score = PostureScore.Green
 
     # Calculate posture score for top, bottom, left and right position
     top_score = round((rect.tl_corner().y - settings.y) * -1 / DIVIDER)
@@ -40,10 +41,12 @@ def check_posture(rect):
     left_score = round((rect.tl_corner().x - settings.x) * -1 / DIVIDER)
     right_score = round((rect.tr_corner().x - (settings.x + settings.h)) / DIVIDER)
 
-    if top_score >= 3 or bottom_score >= 3 or left_score >= 3 or right_score > 3:
-        score = PostureScore.BAD
+    if top_score >= 4 or bottom_score >= 4 or left_score >= 4 or right_score > 4:
+        score = PostureScore.Red
+    elif top_score >= 3 or bottom_score >= 3 or left_score >= 3 or right_score > 3:
+        score = PostureScore.Orange
     elif top_score == 2 or bottom_score == 2 or left_score == 2 or right_score == 2:
-        score = PostureScore.FINE
+        score = PostureScore.Yellow
 
     return score.value
 

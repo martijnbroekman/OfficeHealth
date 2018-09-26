@@ -98,9 +98,11 @@ const createPyProc = () => {
         let parsedResult = JSON.parse(result);
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
-            pythonParsing.ParseResults(parsedResult);
-            let resultObject = parsedResult.emotions;
-            resultObject.userId = 1;
+            pythonParsing.ParseResults(parsedResult, (resultatos) => {
+                mainWinow.webContents.send("py:status", resultatos);
+            });
+            // let resultObject = parsedResult.emotions;
+            // resultObject.userId = 1;
             // axios.post('http://localhost:5000/emotions', resultObject)
             // .then((res) => {
                 
@@ -109,7 +111,6 @@ const createPyProc = () => {
             //     console.log(error)
             // });
         }
-        mainWinow.webContents.send('py:measure', result);
     });
 
     emitter.on('error', (error) => {
