@@ -38,9 +38,9 @@ ipcRenderer.on('py:status', (e, result) => {
 
     // Set mood pot
     if (result.emotions.anger > 0) mood.style.borderColor = red;
-    if (result.emotions.happy > 0) mood.style.borderColor = green;
-    if (result.emotions.sadness > 0) mood.style.borderColor = orange;
-    if (result.emotions.neutral > 0) mood.style.borderColor = yellow;
+    else if (result.emotions.happy > 0) mood.style.borderColor = green;
+    else if (result.emotions.sadness > 0) mood.style.borderColor = orange;
+    else if (result.emotions.neutral > 0) mood.style.borderColor = yellow;
     document.getElementById('moodText').innerText = result.moodText;
 });
 

@@ -150,18 +150,15 @@ body {
     background-image: url("../icons/png/tired.png");
 }
 
-#statusList {
-    margin-left: 28px;
-    margin-top: 8px;
-    list-style: none;
-    height: 100%;
-    width: 48px;
-    float: left;
+.status-col {
+    min-height: 70px;
+    position: relative;
 }
 
 .status {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     background-size: 43px 43px;
     background-position: center;
     border-radius: 50%;

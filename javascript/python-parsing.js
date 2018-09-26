@@ -68,9 +68,9 @@ const setStatusDescription = (values, callback) => {
 
         // Set mood text
         if (values.emotions.anger > 0) values.moodText = statusTexts.mood.red;
-        if (values.emotions.happy > 0) values.moodText = statusTexts.mood.green;
-        if (values.emotions.sadness > 0) values.moodText = statusTexts.mood.orange;
-        if (values.emotions.neutral > 0) values.moodText = statusTexts.mood.yellow;
+        else if (values.emotions.happy > 0) values.moodText = statusTexts.mood.green;
+        else if (values.emotions.sadness > 0) values.moodText = statusTexts.mood.orange;
+        else if (values.emotions.neutral > 0) values.moodText = statusTexts.mood.yellow;
 
         callback(values);
     });
