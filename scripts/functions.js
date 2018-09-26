@@ -162,3 +162,80 @@ function progressbar() {
             clearInterval(downloadTimer);
     }, 1000);
 }
+var optellen = [];
+
+function vraag1() {
+    optellen[0] = parseInt(document.querySelector('input[name="group1"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag2() {
+    optellen[1] = parseInt(document.querySelector('input[name="group2"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag3() {
+    optellen[2] = parseInt(document.querySelector('input[name="group3"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag4() {
+    optellen[3] = parseInt(document.querySelector('input[name="group4"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag5() {
+    optellen[4] = parseInt(document.querySelector('input[name="group5"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag6() {
+    optellen[5] = parseInt(document.querySelector('input[name="group6"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag7() {
+    optellen[6] = parseInt(document.querySelector('input[name="group7"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag8() {
+    optellen[7] = parseInt(document.querySelector('input[name="group8"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag9() {
+    optellen[8] = parseInt(document.querySelector('input[name="group9"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag10() {
+    optellen[9] = parseInt(document.querySelector('input[name="group10"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag11() {
+    optellen[10] = parseInt(document.querySelector('input[name="group11"]:checked').value);
+    console.log(optellen);
+}
+
+function vraag12() {
+    optellen[11] = parseInt(document.querySelector('input[name="group12"]:checked').value);
+    console.log(optellen);
+}
+
+function getSum(total, num) {
+    return total + num;
+}
+
+function groteoptelsom() {
+    //    var eindresultaat = optellen[0] + optellen[1] + optellen[2] + optellen[3] + optellen[4] + optellen[5] + optellen[6] + optellen[7] + optellen[8] + optellen[9] + optellen[10] + optellen[11];
+    //    console.log(eindresultaat);
+
+    var eindresultaat = optellen.reduce(getSum)
+
+    var percentage = Math.round((eindresultaat / 84) * 100);
+    console.log(percentage);
+
+    document.getElementById('resultaatplaats').innerHTML = 'Jou resultaten zijn als volgt je competitiefheids percentage is: ' + percentage + '%.';
+}
