@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pots</title>
+    <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700">
+</head>
+
+<body>
+    <section id="settings-topBar">
+        <section id="settings-settingsBar">
+            <span id="profile" onclick="showmodal(this.id); closeTabs()">
+                <img id="settings-profilePicture" class="cursor-pointer not-selectable" src="img/profile-scott.png" />
+                <h1 id="profileName" class="cursor-pointer not-selectable">Scott Ruigrok</h1>
+            </span>
+        </section>
+    </section>
+
+    <section id="bottomBar">
+        <div id="modal">
+            <div id="inleiding">
+                <h2>Eerst een aantal vragen om je een betere ervaring te geven.</h2>
+                <h2 id="inleidingdeel2">Beantwoord deze d.m.v. een kant te kiezen.</h2>
+            </div>
+            <button id="vraag1" class="vraagbuttons" onclick="showmodal(this.id)">Start</button>
+        </div>
+
+        <div style="display: none;" class="modal" id="vraag1_content">
+            <ul id="vraaglijst">
+                <li style="margin-bottom: 10px;">My goals are vague.</li>
+                <li><input name="group1" onclick="vraag1()" value="1" type="radio"></li>
+                <li><input name="group1" onclick="vraag1()" value="2" type="radio"></li>
+                <li><input name="group1" onclick="vraag1()" value="3" type="radio"></li>
+                <li><input name="group1" onclick="vraag1()" value="4" type="radio"></li>
+                <li><input name="group1" onclick="vraag1()" value="5" type="radio"></li>
+                <li><input name="group1" onclick="vraag1()" value="6" type="radio"></li>
+                <li><input name="group1" onclick="vraag1()" value="7" type="radio"></li>
+                <li style="margin-top: 10px;">My goals are clear and well-defined.</li>
+            </ul>
+            <button id="vraag2" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group1')">Next</button>
+        </div>
+
+        <div style="display: none;" class="modal" id="vraag2_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I am irrational.</li>
+                    <li><input name="group2" onclick="vraag2()" value="1" type="radio"></li>
+                    <li><input name="group2" onclick="vraag2()" value="2" type="radio"></li>
+                    <li><input name="group2" onclick="vraag2()" value="3" type="radio"></li>
+                    <li><input name="group2" onclick="vraag2()" value="4" type="radio"></li>
+                    <li><input name="group2" onclick="vraag2()" value="5" type="radio"></li>
+                    <li><input name="group2" onclick="vraag2()" value="6" type="radio"></li>
+                    <li><input name="group2" onclick="vraag2()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I am a rational person.</li>
+                </ul>
+                <button id="vraag3" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group2')">Next</button>
+            </div>
+            <!-- Vraag 3 -->
+            <div style="display: none;" class="modal" id="vraag3_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I am lazy.</li>
+                    <li><input name="group3" onclick="vraag3()" value="1" type="radio"></li>
+                    <li><input name="group3" onclick="vraag3()" value="2" type="radio"></li>
+                    <li><input name="group3" onclick="vraag3()" value="3" type="radio"></li>
+                    <li><input name="group3" onclick="vraag3()" value="4" type="radio"></li>
+                    <li><input name="group3" onclick="vraag3()" value="5" type="radio"></li>
+                    <li><input name="group3" onclick="vraag3()" value="6" type="radio"></li>
+                    <li><input name="group3" onclick="vraag3()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I am a workaholic.</li>
+                </ul><button id="vraag4" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group3')">Next</button>
+            </div>
+            <!-- Vraag 4 -->
+            <div style="display: none;" class="modal" id="vraag4_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I can’t think of anything new or original.</li>
+                    <li><input name="group4" onclick="vraag4()" value="1" type="radio"></li>
+                    <li><input name="group4" onclick="vraag4()" value="2" type="radio"></li>
+                    <li><input name="group4" onclick="vraag4()" value="3" type="radio"></li>
+                    <li><input name="group4" onclick="vraag4()" value="4" type="radio"></li>
+                    <li><input name="group4" onclick="vraag4()" value="5" type="radio"></li>
+                    <li><input name="group4" onclick="vraag4()" value="6" type="radio"></li>
+                    <li><input name="group4" onclick="vraag4()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I am a creative person.</li>
+                </ul><button id="vraag5" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group4')">Next</button>
+            </div>
+            <!-- Vraag 5 -->
+            <div style="display: none;" class="modal" id="vraag5_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I am easily persuaded.</li>
+                    <li><input name="group5" onclick="vraag5()" value="1" type="radio"></li>
+                    <li><input name="group5" onclick="vraag5()" value="2" type="radio"></li>
+                    <li><input name="group5" onclick="vraag5()" value="3" type="radio"></li>
+                    <li><input name="group5" onclick="vraag5()" value="4" type="radio"></li>
+                    <li><input name="group5" onclick="vraag5()" value="5" type="radio"></li>
+                    <li><input name="group5" onclick="vraag5()" value="6" type="radio"></li>
+                    <li><input name="group5" onclick="vraag5()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I am an independent thinker.</li>
+                </ul><button id="vraag6" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group5')">Next</button>
+            </div>
+            <!-- Vraag 6 -->
+            <div style="display: none;" class="modal" id="vraag6_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I am passive.</li>
+                    <li><input name="group6" onclick="vraag6()" value="1" type="radio"></li>
+                    <li><input name="group6" onclick="vraag6()" value="2" type="radio"></li>
+                    <li><input name="group6" onclick="vraag6()" value="3" type="radio"></li>
+                    <li><input name="group6" onclick="vraag6()" value="4" type="radio"></li>
+                    <li><input name="group6" onclick="vraag6()" value="5" type="radio"></li>
+                    <li><input name="group6" onclick="vraag6()" value="6" type="radio"></li>
+                    <li><input name="group6" onclick="vraag6()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I am a leader</li>
+                </ul><button id="vraag7" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group6')">Next</button>
+            </div>
+            <!-- Vraag 7 -->
+            <div style="display: none;" class="modal" id="vraag7_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I am irresponsible.</li>
+                    <li><input name="group7" onclick="vraag7()" value="1" type="radio"></li>
+                    <li><input name="group7" onclick="vraag7()" value="2" type="radio"></li>
+                    <li><input name="group7" onclick="vraag7()" value="3" type="radio"></li>
+                    <li><input name="group7" onclick="vraag7()" value="4" type="radio"></li>
+                    <li><input name="group7" onclick="vraag7()" value="5" type="radio"></li>
+                    <li><input name="group7" onclick="vraag7()" value="6" type="radio"></li>
+                    <li><input name="group7" onclick="vraag7()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I am a responsible person.</li>
+                </ul><button id="vraag8" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group7')">Next</button>
+            </div>
+            <!-- Vraag 8 -->
+            <div style="display: none;" class="modal" id="vraag8_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I get stressed out easily.</li>
+                    <li><input name="group8" onclick="vraag8()" value="1" type="radio"></li>
+                    <li><input name="group8" onclick="vraag8()" value="2" type="radio"></li>
+                    <li><input name="group8" onclick="vraag8()" value="3" type="radio"></li>
+                    <li><input name="group8" onclick="vraag8()" value="4" type="radio"></li>
+                    <li><input name="group8" onclick="vraag8()" value="5" type="radio"></li>
+                    <li><input name="group8" onclick="vraag8()" value="6" type="radio"></li>
+                    <li><input name="group8" onclick="vraag8()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I can handle success very well.</li>
+                </ul><button id="vraag9" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group8')">Next</button>
+            </div>
+            <!-- Vraag 9 -->
+            <div style="display: none;" class="modal" id="vraag9_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I don’t learn anything new.</li>
+                    <li><input name="group9" onclick="vraag9()" value="1" type="radio"></li>
+                    <li><input name="group9" onclick="vraag9()" value="2" type="radio"></li>
+                    <li><input name="group9" onclick="vraag9()" value="3" type="radio"></li>
+                    <li><input name="group9" onclick="vraag9()" value="4" type="radio"></li>
+                    <li><input name="group9" onclick="vraag9()" value="5" type="radio"></li>
+                    <li><input name="group9" onclick="vraag9()" value="6" type="radio"></li>
+                    <li><input name="group9" onclick="vraag9()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I constantly learn and grow.</li>
+                </ul><button id="vraag10" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group9')">Next</button>
+            </div>
+            <!-- Vraag 10 -->
+            <div style="display: none;" class="modal" id="vraag10_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I avoid risks.</li>
+                    <li><input name="group10" onclick="vraag10()" value="1" type="radio"></li>
+                    <li><input name="group10" onclick="vraag10()" value="2" type="radio"></li>
+                    <li><input name="group10" onclick="vraag10()" value="3" type="radio"></li>
+                    <li><input name="group10" onclick="vraag10()" value="4" type="radio"></li>
+                    <li><input name="group10" onclick="vraag10()" value="5" type="radio"></li>
+                    <li><input name="group10" onclick="vraag10()" value="6" type="radio"></li>
+                    <li><input name="group10" onclick="vraag10()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I enjoy risk.</li>
+                </ul><button id="vraag11" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group10')">Next</button>
+            </div>
+            <!-- Vraag 11 -->
+            <div style="display: none;" class="modal" id="vraag11_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I like to relax.</li>
+                    <li><input name="group11" onclick="vraag11()" value="1" type="radio"></li>
+                    <li><input name="group11" onclick="vraag11()" value="2" type="radio"></li>
+                    <li><input name="group11" onclick="vraag11()" value="3" type="radio"></li>
+                    <li><input name="group11" onclick="vraag11()" value="4" type="radio"></li>
+                    <li><input name="group11" onclick="vraag11()" value="5" type="radio"></li>
+                    <li><input name="group11" onclick="vraag11()" value="6" type="radio"></li>
+                    <li><input name="group11" onclick="vraag11()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I become restless when idle.</li>
+                </ul><button id="vraag12" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group11', 'group11')">Next</button>
+            </div>
+            <!-- Laatste vraag -->
+            <div style="display: none;" class="modal" id="vraag12_content">
+                <ul id="vraaglijst">
+                    <li style="margin-bottom: 10px;">I almost never plan things in advance.</li>
+                    <li><input name="group12" onclick="vraag12()" value="1" type="radio"></li>
+                    <li><input name="group12" onclick="vraag12()" value="2" type="radio"></li>
+                    <li><input name="group12" onclick="vraag12()" value="3" type="radio"></li>
+                    <li><input name="group12" onclick="vraag12()" value="4" type="radio"></li>
+                    <li><input name="group12" onclick="vraag12()" value="5" type="radio"></li>
+                    <li><input name="group12" onclick="vraag12()" value="6" type="radio"></li>
+                    <li><input name="group12" onclick="vraag12()" value="7" type="radio"></li>
+                    <li style="margin-top: 10px;">I would be lost without my to-do list.</li>
+                </ul>
+                <button id="naarresultaat" class="vraagbuttons" onclick="radiobuttoncheck(this.id, 'group12', groteoptelsom())">Finish</button>
+            </div>
+            <!-- nu de resultaten -->
+            <div style="display: none;" class="modal" id="naarresultaat_content">
+                <div id="inleiding">
+                    <h2 id="resultaatplaats"></h2>
+                </div>
+                <button id="stilzitten" class="vraagbuttons" onclick="showmodal(this.id), progressbar()">Begin</button>
+            </div>
+            <!-- Naar de applicatie -->
+            <div style="display: none;" class="modal" id="stilzitten_content">
+                <div id="inleiding">
+                    <h2>Als laatste gaan we de camera instellen.</h2>
+                    <h2 id="inleidingdeel2">Ga in een goede positie zitten voor 10 seconden.</h2>
+                    <progress value="0" max="10" id="progressBar"></progress>
+                </div>
+                <button id="xxx" class="vraagbuttons" onclick="showmodal(this.id)">Begin</button>
+            </div>
+    
+        
+        <div id="modal"></div>
+    </section>
+
+    <script src="./settings.js"></script>
+    <script>
+        require('./renderer.js');
+    </script>
+</body>
+
+</html>

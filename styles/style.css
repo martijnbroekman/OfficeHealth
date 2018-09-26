@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -39,6 +40,20 @@ body {
 
 }
 
+#settings-topBar {
+    background-color: #22343E;
+    height: 30px;
+
+}
+
+#settings-topBar h1 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 14.3px;
+    color: white;
+
+}
+
 #topBar h2 {
     font-family: 'Raleway', sans-serif;
     font-weight: 600;
@@ -46,12 +61,18 @@ body {
     color: #22343E;
 }
 
-#topBar h3 {}
-
 #settingsBar {
     height: 34px;
     width: 100%;
     display: inline-block;
+    text-align: center;
+}
+
+#settings-settingsBar {
+    height: 34px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
 }
 
 #notifications {
@@ -66,7 +87,12 @@ body {
     height: 21.8px;
     display: inline-block;
     margin-left: 57px;
+}
 
+#settings-profilePicture {
+    width: 21.8px;
+    height: 21.8px;
+    display: inline-block;
 }
 
 #profileName {
@@ -132,8 +158,55 @@ body {
     width: 320px;
 }
 
-.modal {
-    top: 80px;
+/* Inleiding */
+#inleiding {
+    margin: 31px 24px 0px 24px;
+    text-align: center;
+}
+
+#inleiding h2 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #22343E;
+}
+
+#inleidingdeel2 {
+    margin-top: 34px;
+}
+
+/* vragen */
+#vraaglijst {
+    margin: 31px 24px 0px 24px;
+    text-align: center;
+    text-decoration: none;
+    list-style: none;
+}
+
+.vraagbuttons {
+    position: absolute;
+    bottom: 20px;
+    padding: 5px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #22343E;
+}
+
+#vraaglijst li:nth-child(even) {
+    background-color: whitesmoke;
+}
+
+/* laatste pagina */
+#progressBar {
+    margin-top: 34px;
+}
+
+#resultaatplaats {
+    margin-top: 34px;
 }
 
 /* status */
@@ -305,3 +378,4 @@ hr {
     margin: 0;
     margin-top: 10px;
 }
+© 2018 GitH

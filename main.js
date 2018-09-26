@@ -36,6 +36,26 @@ const createWindow = () => {
     .then(() => api.changeNotificationStatus(true)).catch(error => console.log(error));
 };
 
+let settingsWindow = null;
+const createSettingsWindow = () => {
+    settingsWindow = new BrowserWindow({
+        width: 320,
+        height: 410,
+        resizable: false,
+        icon: path.join(__dirname, 'icons/png/dark-icon-pngs/64x64.png')
+    });
+
+    settingsWindow.loadURL(require('url').format({
+        pathname: path.join(__dirname, 'settings.html'),
+        protocol: 'file',
+        slashes: true
+    }));
+
+    settingsWindow.on('closed', () => {
+        settingsWindow = null
+    });
+};
+
 api.onNotification(data => {
     notification.PushNotification(data.title, data.description)
     .then(res => {
@@ -52,7 +72,8 @@ api.onDecline(data => {
     notification.pushNotificationWithoutActions(data.title, data.text);
 });
 
-app.on('ready', createWindow);
+app.on('ready', createSettingsWindow);
+//app.on('ready', createWindow);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
