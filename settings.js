@@ -159,13 +159,7 @@ function radiobuttoncheck(id, group) {
 }
 
 function progressbar() {
-    var timeleft = 10;
-    var downloadTimer = setInterval(function () {
-        document.getElementById("progressBar").value = 10 - --timeleft;
-        if (timeleft <= 0) {
-            clearInterval(downloadTimer);
-        }
-    }, 1000);
+    ipcRenderer.send('start_camera');
 }
 let optellen = [];
 let percentage = 0;
@@ -281,6 +275,16 @@ ipcRenderer.on('settings:failed', function (e, errors) {
 
     alert(errorMessage);
 })
+
+ipcRenderer.on('camera_started', () => {
+    let timeleft = 10;
+    let downloadTimer = setInterval(function () {
+        document.getElementById("progressBar").value = 10 - --timeleft;
+        if (timeleft <= 0) {
+            clearInterval(downloadTimer);
+        }
+    }, 1000);
+});
 
 function addLine(message, line) {
     const newLine = "\r\n";

@@ -5,19 +5,17 @@ client.connect("tcp://127.0.0.1:4242");
 
 module.exports =  {
     start: function start() {
-        return new Promise((resolve, reject) => {
-            client.invoke("start", (error, res) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(res);
-                }
-            })
+        client.invoke("start", (error, res) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(res);
+            }
         });
     },
-    settings: function settings() {
+    start_camera: function start_camera() {
         return new Promise((resolve, reject) => {
-            client.invoke("settings", (error, res) => {
+            client.invoke("start_camera", (error, res) => {
                 if (error) {
                     reject(error);
                 } else {

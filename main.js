@@ -136,29 +136,29 @@ const createPyProc = () => {
         console.log('child process success')
     }
 
-    const emitter = new EventEmitter();
-    client.start().then((res) => {
-        if (JSON.parse(res).ready) {
-            client.startMeasure(emitter);
-            setInterval(() => {
-                client.startMeasure(emitter);
-            }, 4000);
-        }
-    }).catch((error) => {
-        console.log(`Error: ${error}`)
-    });
+    // const emitter = new EventEmitter();
+    // client.start().then((res) => {
+    //     if (JSON.parse(res).ready) {
+    //         client.startMeasure(emitter);
+    //         setInterval(() => {
+    //             client.startMeasure(emitter);
+    //         }, 4000);
+    //     }
+    // }).catch((error) => {
+    //     console.log(`Error: ${error}`)
+    // });
 
-    emitter.on('measure_result', (result) => {
-        let parsedResult = JSON.parse(result);
+    // emitter.on('measure_result', (result) => {
+    //     let parsedResult = JSON.parse(result);
 
-        if (parsedResult !== null && parsedResult.face_detected !== false) {
+    //     if (parsedResult !== null && parsedResult.face_detected !== false) {
 
 
-            let resultObject = parsedResult.emotions;
-            resultObject.userId = 1;
-            pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
-            });
+    //         let resultObject = parsedResult.emotions;
+    //         resultObject.userId = 1;
+    //         pythonParsing.ParseResults(parsedResult, (resultatos) => {
+    //             mainWinow.webContents.send("py:status", resultatos);
+    //         });
             // axios.post('http://167.99.38.7/emotions', resultObject)
             //     .then((res) => {
 
@@ -169,12 +169,12 @@ const createPyProc = () => {
             //     .catch((error) => {
             //         console.log(error)
             //     });
-        }
-    });
+    //     }
+    // });
 
-    emitter.on('error', (error) => {
-        mainWinow.webContents.send('py:measure_error', error);
-    });
+    // emitter.on('error', (error) => {
+    //     mainWinow.webContents.send('py:measure_error', error);
+    // });
 };
 
 const exitPyProc = () => {
@@ -216,3 +216,16 @@ ipcMain.on('mute', (event, arg) => {
     api.changeNotificationStatus(arg);
 });
 
+ipcMain.on('start_camera', (event) => {
+    client.start();
+    event.sender.send('camera_started');
+    // client.start().then((res) => {
+    //     console.log(res);
+    //     if (JSON.parse(res).ready) {
+    //         console.log("started");
+    //         ipcMain.send('camera_started')
+    //     }
+    // }).catch((error) => {
+    //     console.log(`Error: ${error}`)
+    // });
+});

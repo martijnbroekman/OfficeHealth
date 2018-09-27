@@ -37,20 +37,12 @@ class Detector:
         time.sleep(1.0)
 
     def start(self):
-        data = {}
-
-        # Check if settings are set, if not load setup screen
-        if self.settings_set():
-            data["ready"] = True
-        else:
-            data["ready"] = self.save_settings()
+        self.start_camera()
 
         # Start background worker
         self.background_worker.start()
 
-        return json.dumps(data)
-
-    def save_settings(self):
+    def start_camera(self):
         faceSet = False
 
         while not faceSet:
