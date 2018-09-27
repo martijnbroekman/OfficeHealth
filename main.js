@@ -111,6 +111,9 @@ const createPyProc = () => {
     client.start().then((res) => {
         if (JSON.parse(res).ready) {
             client.startMeasure(emitter);
+            setInterval(() => {
+                client.startMeasure(emitter);
+            }, 4000);
         }
     }).catch((error) => {
         console.log(`Error: ${error}`)
@@ -127,16 +130,16 @@ const createPyProc = () => {
             pythonParsing.ParseResults(parsedResult, (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
-            axios.post('http://167.99.38.7/emotions', resultObject)
-                .then((res) => {
+            // axios.post('http://167.99.38.7/emotions', resultObject)
+            //     .then((res) => {
 
-                    pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                        mainWinow.webContents.send("py:status", resultatos);
-                    });
-                })
-                .catch((error) => {
-                    console.log(error)
-                });
+            //         pythonParsing.ParseResults(parsedResult, (resultatos) => {
+            //             mainWinow.webContents.send("py:status", resultatos);
+            //         });
+            //     })
+            //     .catch((error) => {
+            //         console.log(error)
+            //     });
         }
     });
 

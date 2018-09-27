@@ -6,7 +6,7 @@ with open('key.json') as f:
     subscription_key = json.load(f)["key"]
 assert subscription_key
 
-face_api_url = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect'
+face_api_url = 'https://westeurope.api.cognitive.microsoft.com/face/v1.0'
 _maxNumRetries = 10
 
 
