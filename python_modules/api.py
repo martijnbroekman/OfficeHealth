@@ -17,6 +17,9 @@ class SocketRPC(object):
     def start_camera(self):
         self.detector.start_camera()
 
+    def capture(self):
+        self.detector.capture()
+
 
 def parse_port():
     port = 4242

@@ -136,6 +136,8 @@ const createPyProc = () => {
         console.log('child process success')
     }
 
+    client.start();
+
     // const emitter = new EventEmitter();
     // client.start().then((res) => {
     //     if (JSON.parse(res).ready) {
@@ -217,7 +219,7 @@ ipcMain.on('mute', (event, arg) => {
 });
 
 ipcMain.on('start_camera', (event) => {
-    client.start();
+    client.start_camera();
     event.sender.send('camera_started');
     // client.start().then((res) => {
     //     console.log(res);
@@ -228,4 +230,12 @@ ipcMain.on('start_camera', (event) => {
     // }).catch((error) => {
     //     console.log(`Error: ${error}`)
     // });
+});
+
+ipcMain.on('capture', (event) => {
+    client.capture().then(() => {
+        console.log("Go to next screen");
+    }).catch((error) => {
+        console.log(error);
+    });
 });

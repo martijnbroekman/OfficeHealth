@@ -161,6 +161,7 @@ function radiobuttoncheck(id, group) {
 function progressbar() {
     ipcRenderer.send('start_camera');
 }
+
 let optellen = [];
 let percentage = 0;
 
@@ -277,10 +278,11 @@ ipcRenderer.on('settings:failed', function (e, errors) {
 })
 
 ipcRenderer.on('camera_started', () => {
-    let timeleft = 10;
+    let timeleft = 5;
     let downloadTimer = setInterval(function () {
-        document.getElementById("progressBar").value = 10 - --timeleft;
+        document.getElementById("progressBar").value = 5 - --timeleft;
         if (timeleft <= 0) {
+            ipcRenderer.send('capture');
             clearInterval(downloadTimer);
         }
     }, 1000);
