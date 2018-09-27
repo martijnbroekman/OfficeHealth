@@ -45,30 +45,22 @@
 
         <!-- Status page -->
         <div style="display: none;" class="modal" id="status_content">
-            <ul id="statusList">
-                <li><img id="stress" class="status not-selectable" src="icons/png/stress.png" />
-                </li>
-                <li><img id="posture" class="status not-selectable" src="icons/png/posture.png" /></li>
-                <li><img id="tired" class="status not-selectable" src="icons/png/tired.png" /></li>
-                <li><img id="staring" class="status not-selectable" src="icons/png/staring.png" /></li>
-            </ul>
-            <div id="rightside">
-                <div class="statusText">
-                    <h3>Your stress levels look fine.</h3>
+            <div class="container">
+                <div class="row">
+                    <div class="col-4 status-col"><div class="status" id="posture"></div></div>
+                    <div class="col-8 statusText"><h3 id="postureText"></h3></div>
                 </div>
                 <hr>
-                <div class="statusText">
-                    <h3>Your posture is not looking great right now.</h3>
+                <div class="row">
+                    <div class="col-4 status-col"><div class="status" id="fatigue"></div></div>
+                    <div class="col-8 statusText"><h3 id="fatigueText"></h3></div>
                 </div>
                 <hr>
-                <div class="statusText">
-                    <h3>It’s almost time for a break Scott.</h3>
+                <div class="row">
+                    <div class="col-4 status-col"><div class="status" id="mood"></div></div>
+                    <div class="col-8 statusText"><h3 id="moodText"></h3></div>
                 </div>
                 <hr>
-                <div class="statusText">
-                    <h3>You have stared at the screenfor a while, but your break is soon.</h3>
-                </div>
-
             </div>
         </div>
 

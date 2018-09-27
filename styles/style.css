@@ -220,37 +220,44 @@ body {
 }
 
 /* status */
-#statusList {
-    margin-left: 28px;
-    margin-top: 8px;
-    list-style: none;
-    height: 100%;
-    width: 48px;
-    float: left;
+
+#posture { 
+    background-image: url("../icons/png/posture.png");
+}
+
+#mood {
+    background-image: url("../icons/png/stress.png");
+}
+
+#fatigue {
+    background-image: url("../icons/png/tired.png");
+}
+
+.status-col {
+    min-height: 70px;
+    position: relative;
 }
 
 .status {
-    width: 48px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-size: 43px 43px;
+    background-position: center;
+    border-radius: 50%;
+    border: solid 4px #09a38c;
+    width: 55px;
     height: 55px;
-    margin-top: 14px;
 }
 
-#rightside {
-    margin-left: 35px;
-    margin-top: 8px;
-    float: left;
-}
-
-#rightside h3 {
+.statusText h3 {
     font-size: 14.3px;
     color: #22343E;
     font-weight: 600;
 }
 
 .statusText {
-    margin-top: 14px;
-    width: 185px;
-    height: 55px;
+    padding: 10px 15px 5px 0px;
 }
 
 hr {

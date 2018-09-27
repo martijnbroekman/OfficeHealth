@@ -1,3 +1,12 @@
+electron = require('electron');
+
+const { ipcRenderer } = electron;
+
+document.addEventListener("DOMContentLoaded", () => {
+    showmodal('status');
+    tab1();
+});
+
 function showmodal(id) {
     document.getElementById('modal').innerHTML =
         document.getElementById(id + '_content').innerHTML;
@@ -6,8 +15,10 @@ function showmodal(id) {
 function clicker() {
     let image = document.getElementById('notifications').getAttribute("src");
     if (image == "icons/png/notifcations.png") {
+        ipcRenderer.send("mute", false);
         document.getElementById('notifications').src = "icons/png/notifcations-muted.png";
     } else {
+        ipcRenderer.send("mute", true);
         document.getElementById('notifications').src = "icons/png/notifcations.png";
     }
 }

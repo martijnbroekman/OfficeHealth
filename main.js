@@ -4,8 +4,9 @@ const fitbit = require('./javascript/fitbit.js');
 const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
 const axios = require('axios');
-const api = require('./javascript/api-service');
-const notification =  require('./javascript/notifications');
+const api = require('./javascript/api-service')
+const notification = require('./javascript/notifications')
+const pythonParsing = require('./javascript/python-parsing')
 const fs = require('fs');
 
 const {
@@ -15,6 +16,7 @@ const {
 } = electron;
 
 let mainWinow = null;
+
 const createWindow = () => {
     mainWinow = new BrowserWindow({
         width: 320,
@@ -32,9 +34,6 @@ const createWindow = () => {
     mainWinow.on('closed', () => {
         mainWinow = null
     });
-
-    api.login('martijn@rsg.nl', 'Welcome1!')
-    .then(() => api.changeNotificationStatus(true)).catch(error => console.log(error));
 };
 
 let settingsWindow = null;
@@ -58,6 +57,25 @@ const createSettingsWindow = () => {
 };
 
 const startup = () => {
+    const measureValues = {
+        posture: 1,
+        fatigue: 1,
+        emotions: {
+            anger: 0,
+            neutral: 1,
+            sadness: 0,
+            disgust: 0,
+            happy: 0,
+            surprise: 0
+        }
+    };
+
+    fs.writeFile('measure.json', JSON.stringify(measureValues), (err) => {
+        if (err) {
+            console.log(err)
+        }
+    });
+
     fs.readFile('./credentials.json', 'utf8', (err, data) => {
         if (err) {
             createSettingsWindow();
@@ -72,10 +90,10 @@ const startup = () => {
 
 api.onNotification(data => {
     notification.PushNotification(data.title, data.description)
-    .then(res => {
-        api.responseOnNotification(data.id, res === 'yes');
-    })
-    .catch(error => api.responseOnNotification(data.id, false));
+        .then(res => {
+            api.responseOnNotification(data.id, res === 'yes');
+        })
+        .catch(error => api.responseOnNotification(data.id, false));
 });
 
 api.onAccept(data => {
@@ -87,7 +105,7 @@ api.onDecline(data => {
 });
 
 app.on('ready', startup);
-//app.on('ready', createWindow);
+
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
@@ -95,7 +113,7 @@ app.on('window-all-closed', () => {
 });
 app.on('activate', () => {
     if (mainWinow === null) {
-        createWindow();
+        initApp();
     }
 });
 
@@ -113,7 +131,7 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    //pyProc = require('child_process').spawn(pythonExec, [script, port])
+    pyProc = require('child_process').spawn(pythonExec, [script, port])
     if (pyPort != null) {
         console.log('child process success')
     }
@@ -122,6 +140,9 @@ const createPyProc = () => {
     client.start().then((res) => {
         if (JSON.parse(res).ready) {
             client.startMeasure(emitter);
+            setInterval(() => {
+                client.startMeasure(emitter);
+            }, 4000);
         }
     }).catch((error) => {
         console.log(`Error: ${error}`)
@@ -132,17 +153,23 @@ const createPyProc = () => {
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
 
+
             let resultObject = parsedResult.emotions;
             resultObject.userId = 1;
-            axios.post('http://167.99.38.7/emotions', resultObject)
-            .then((res) => {
-                
-            })
-            .catch((error) => {
-                console.log(error)
+            pythonParsing.ParseResults(parsedResult, (resultatos) => {
+                mainWinow.webContents.send("py:status", resultatos);
             });
+            // axios.post('http://167.99.38.7/emotions', resultObject)
+            //     .then((res) => {
+
+            //         pythonParsing.ParseResults(parsedResult, (resultatos) => {
+            //             mainWinow.webContents.send("py:status", resultatos);
+            //         });
+            //     })
+            //     .catch((error) => {
+            //         console.log(error)
+            //     });
         }
-        mainWinow.webContents.send('py:measure', result);
     });
 
     emitter.on('error', (error) => {
@@ -151,7 +178,7 @@ const createPyProc = () => {
 };
 
 const exitPyProc = () => {
-    //pyProc.kill();
+    pyProc.kill();
     pyProc = null;
     pyPort = null;
 };
@@ -168,6 +195,7 @@ ipcMain.on('fitbit:signin', (event) => {
         })
 });
 
+
 ipcMain.on('settings:login', (event, creditials) => {
     api.register(creditials.mail, creditials.name, creditials.password, creditials.type)
     .then(res => {
@@ -183,3 +211,8 @@ ipcMain.on('settings:login', (event, creditials) => {
         settingsWindow.webContents.send('settings:failed', error.response.data);
     })
 });
+
+ipcMain.on('mute', (event, arg) => {
+    api.changeNotificationStatus(arg);
+});
+
