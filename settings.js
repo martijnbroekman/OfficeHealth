@@ -288,6 +288,10 @@ ipcRenderer.on('camera_started', () => {
     }, 1000);
 });
 
+ipcRenderer.on('proceed_login', () => {
+    showmodal('login');
+});
+
 function addLine(message, line) {
     const newLine = "\r\n";
 

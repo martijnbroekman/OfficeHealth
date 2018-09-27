@@ -221,20 +221,11 @@ ipcMain.on('mute', (event, arg) => {
 ipcMain.on('start_camera', (event) => {
     client.start_camera();
     event.sender.send('camera_started');
-    // client.start().then((res) => {
-    //     console.log(res);
-    //     if (JSON.parse(res).ready) {
-    //         console.log("started");
-    //         ipcMain.send('camera_started')
-    //     }
-    // }).catch((error) => {
-    //     console.log(`Error: ${error}`)
-    // });
 });
 
 ipcMain.on('capture', (event) => {
     client.capture().then(() => {
-        console.log("Go to next screen");
+        event.sender.send('proceed_login');
     }).catch((error) => {
         console.log(error);
     });
