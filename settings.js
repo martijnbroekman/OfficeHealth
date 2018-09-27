@@ -18,7 +18,6 @@ function clicker() {
 
 function checkClick1() {
     let image1 = document.getElementById('check1').getAttribute("src");
-    console.log(image1);
     if (image1 == "icons/png/checked.png") {
         document.getElementById('check1').src = "icons/png/unchecked.png";
     } else {
@@ -55,7 +54,6 @@ function checkClick4() {
 
 function checkClick5() {
     let image5 = document.getElementById('game1').getAttribute("src");
-    console.log(image5);
     if (image5 == "icons/png/pingpongblock.png") {
         document.getElementById('game1').src = "icons/png/pingpongblock-checked.png";
     } else {
@@ -65,7 +63,6 @@ function checkClick5() {
 
 function checkClick6() {
     let image6 = document.getElementById('game2').getAttribute("src");
-    console.log(image6);
     if (image6 == "icons/png/chessblock.png") {
         document.getElementById('game2').src = "icons/png/chessblock-checked.png";
     } else {
@@ -75,7 +72,6 @@ function checkClick6() {
 
 function checkClick7() {
     let image7 = document.getElementById('game3').getAttribute("src");
-    console.log(image7);
     if (image7 == "icons/png/walksblock.png") {
         document.getElementById('game3').src = "icons/png/walksblock-checked.png";
     } else {
@@ -85,7 +81,6 @@ function checkClick7() {
 
 function checkClick8() {
     let image8 = document.getElementById('game4').getAttribute("src");
-    console.log(image8);
     if (image8 == "icons/png/blindlunchblock.png") {
         document.getElementById('game4').src = "icons/png/blindlunchblock-checked.png";
     } else {
@@ -154,7 +149,7 @@ function radiobuttoncheck(id, group) {
         }
     }
     if (!valid) {
-        alert('you didn´t choose a option');
+        alert('Selecteer één optie');
     }
 }
 
@@ -167,62 +162,50 @@ let percentage = 0;
 
 function vraag1() {
     optellen[0] = parseInt(document.querySelector('input[name="group1"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag2() {
     optellen[1] = parseInt(document.querySelector('input[name="group2"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag3() {
     optellen[2] = parseInt(document.querySelector('input[name="group3"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag4() {
     optellen[3] = parseInt(document.querySelector('input[name="group4"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag5() {
     optellen[4] = parseInt(document.querySelector('input[name="group5"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag6() {
     optellen[5] = parseInt(document.querySelector('input[name="group6"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag7() {
     optellen[6] = parseInt(document.querySelector('input[name="group7"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag8() {
     optellen[7] = parseInt(document.querySelector('input[name="group8"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag9() {
     optellen[8] = parseInt(document.querySelector('input[name="group9"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag10() {
     optellen[9] = parseInt(document.querySelector('input[name="group10"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag11() {
     optellen[10] = parseInt(document.querySelector('input[name="group11"]:checked').value);
-    console.log(optellen);
 }
 
 function vraag12() {
     optellen[11] = parseInt(document.querySelector('input[name="group12"]:checked').value);
-    console.log(optellen);
 }
 
 function login() {
@@ -253,8 +236,6 @@ function groteoptelsom() {
     let eindresultaat = optellen.reduce(getSum)
 
     percentage = Math.round((eindresultaat / 84) * 100);
-    console.log(percentage);
-
     document.getElementById('resultaatplaats').innerHTML = `Je competitiviteit percentage is ${percentage}%`;
 }
 

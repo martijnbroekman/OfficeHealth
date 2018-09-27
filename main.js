@@ -86,6 +86,12 @@ const createSettingsWindow = () => {
     settingsWindow.on('closed', () => {
         settingsWindow = null
     });
+
+    fs.stat('settings.json', (err) => {
+        if (!err) {
+            fs.unlink('settings.json');
+        }
+    });
 };
 
 const startup = () => {
@@ -163,7 +169,7 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port])
+    pyProc = require('child_process').spawn(pythonExec, [script, port]);
     if (pyPort != null) {
         console.log('child process success')
     }

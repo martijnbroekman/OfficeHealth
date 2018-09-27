@@ -38,8 +38,6 @@ class Detector:
         time.sleep(1.0)
 
     def start(self):
-        # self.start_camera()
-
         # Start background worker
         self.background_worker.start()
 
