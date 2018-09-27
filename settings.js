@@ -255,7 +255,7 @@ function groteoptelsom() {
     percentage = Math.round((eindresultaat / 84) * 100);
     console.log(percentage);
 
-    document.getElementById('resultaatplaats').innerHTML = 'Jou resultaten zijn als volgt je competitiefheids percentage is: ' + percentage + '%.';
+    document.getElementById('resultaatplaats').innerHTML = `Je competitiviteit percentage is ${percentage}%`;
 }
 
 ipcRenderer.on('settings:failed', function (e, errors) {
