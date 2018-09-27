@@ -165,3 +165,7 @@ ipcMain.on('fitbit:signin', (event) => {
             console.log(error);
         })
 });
+
+ipcMain.on('mute', (event, arg) => {
+    api.changeNotificationStatus(arg);
+});
