@@ -53,6 +53,25 @@ const getDefaultConfig = () => {
     }
 }
 
+const register = (mail, name, password, type) => {
+    return new Promise((resolve, reject) => {
+        let content = {
+            mail: mail,
+            name: name,
+            password: password,
+            type: type
+        }
+    
+        axios.post(apiUrl + '/users', content)
+        .then(res => {
+            resolve(res);
+        })
+        .catch(error => {
+            reject(error);
+        });
+    })
+}
+
 const login = (username, password) => {
     const config = {
         headers: {
@@ -93,6 +112,7 @@ const responseOnNotification = (notificationId, accepted) => {
 
 module.exports = {
     login: login,
+    register: register,
     changeNotificationStatus: changeNotificationStatus,
     responseOnNotification: responseOnNotification,
     onNotification: ((newCallBack) => callBack = newCallBack),

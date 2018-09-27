@@ -4,8 +4,9 @@ const fitbit = require('./javascript/fitbit.js');
 const client = require('./javascript/zerorpc-client');
 const EventEmitter = require('events').EventEmitter
 const axios = require('axios');
-const api = require('./javascript/api-service')
-const notification =  require('./javascript/notifications')
+const api = require('./javascript/api-service');
+const notification =  require('./javascript/notifications');
+const fs = require('fs');
 
 const {
     app,
@@ -56,6 +57,19 @@ const createSettingsWindow = () => {
     });
 };
 
+const startup = () => {
+    fs.readFile('./credentials.json', 'utf8', (err, data) => {
+        if (err) {
+            createSettingsWindow();
+        } else {
+            let dataObject = JSON.parse(data);
+            api.login(dataObject.mail, dataObject.password)
+                .then(() => createWindow())
+                .catch(error => console.log(error));
+        }
+    });
+}
+
 api.onNotification(data => {
     notification.PushNotification(data.title, data.description)
     .then(res => {
@@ -72,7 +86,7 @@ api.onDecline(data => {
     notification.pushNotificationWithoutActions(data.title, data.text);
 });
 
-app.on('ready', createSettingsWindow);
+app.on('ready', startup);
 //app.on('ready', createWindow);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -152,4 +166,20 @@ ipcMain.on('fitbit:signin', (event) => {
         }).catch((error) => {
             console.log(error);
         })
+});
+
+ipcMain.on('settings:login', (event, creditials) => {
+    api.register(creditials.mail, creditials.name, creditials.password, creditials.type)
+    .then(res => {
+        createWindow();
+        settingsWindow.close();
+        settingsWindow = null;
+        fs.writeFile('credentials.json', JSON.stringify(creditials), (err) => {
+            if (err) throw err;
+        });
+    })
+    .catch(error => {
+        console.log(error)
+        settingsWindow.webContents.send('settings:failed', error.response.data);
+    })
 });

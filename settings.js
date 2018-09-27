@@ -1,4 +1,6 @@
-document = require('document');
+const electron = require('electron')
+
+const { ipcRenderer } = electron;
 
 function showmodal(id) {
     document.getElementById('modal').innerHTML =
@@ -165,7 +167,8 @@ function progressbar() {
         }
     }, 1000);
 }
-var optellen = [];
+let optellen = [];
+let percentage = 0;
 
 function vraag1() {
     optellen[0] = parseInt(document.querySelector('input[name="group1"]:checked').value);
@@ -227,18 +230,60 @@ function vraag12() {
     console.log(optellen);
 }
 
+function login() {
+    let mail = document.getElementById('inputEmail').value;
+    let name = document.getElementById('inputName').value;
+    let password = document.getElementById('inputPassword').value;
+    
+    if (mail.trim() === '' || name.trim() === '' || password.trim() === '') {
+        alert('Alle velden moeten gevuld zijn');
+        return;
+    }
+
+    let creditials = {
+        mail: mail,
+        name: name,
+        password: password,
+        type: percentage > 50 ? 0 : 1
+    }
+
+    ipcRenderer.send('settings:login', creditials);
+}
+
 function getSum(total, num) {
     return total + num;
 }
 
 function groteoptelsom() {
-    //    var eindresultaat = optellen[0] + optellen[1] + optellen[2] + optellen[3] + optellen[4] + optellen[5] + optellen[6] + optellen[7] + optellen[8] + optellen[9] + optellen[10] + optellen[11];
-    //    console.log(eindresultaat);
+    let eindresultaat = optellen.reduce(getSum)
 
-    var eindresultaat = optellen.reduce(getSum)
-
-    var percentage = Math.round((eindresultaat / 84) * 100);
+    percentage = Math.round((eindresultaat / 84) * 100);
     console.log(percentage);
 
     document.getElementById('resultaatplaats').innerHTML = 'Jou resultaten zijn als volgt je competitiefheids percentage is: ' + percentage + '%.';
+}
+
+ipcRenderer.on('settings:failed', function (e, errors) {
+    let errorMessage = '';
+
+    if (errors.includes('PasswordTooShort')) {
+        errorMessage = addLine(errorMessage, '- minimaal 6 characters zijn');
+    }
+    if (errors.includes('PasswordRequiresNonAlphanumeric')) {
+        errorMessage = addLine(errorMessage, '- een vreemd teken bevatten');
+    }
+    if (errors.includes('PasswordRequiresDigit')) {
+        errorMessage = addLine(errorMessage, '- een nummer bevatten');
+    }
+    if (errors.includes('PasswordRequiresUpper')) {
+        errorMessage = addLine(errorMessage, '- een hoofdletter bevatten');
+    }
+
+    alert(errorMessage);
+})
+
+function addLine(message, line) {
+    const newLine = "\r\n";
+
+    return message === '' ? 'het wachtwoord moet: \r\n' + line : message += (newLine + line);
 }
