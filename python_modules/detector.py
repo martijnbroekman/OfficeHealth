@@ -57,11 +57,9 @@ class Detector:
             # Detect faces
             faces = self.detector(gray, 0)
 
-            for face in faces:
-                (x, y, w, h) = posture.rect_to_bb(face)
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-                face = faces[0]
+            face = faces[0]
+            (x, y, w, h) = posture.rect_to_bb(face)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             cv2.imshow("Posture", frame)
             key = cv2.waitKey(1) & 0xFF

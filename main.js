@@ -92,7 +92,7 @@ const createSettingsWindow = () => {
         settingsWindow = null
     });
 
-    Menu.setApplicationMenu(null);
+    // Menu.setApplicationMenu(null);
 
     fs.stat('settings.json', (err) => {
         if (!err) {
@@ -104,7 +104,7 @@ const createSettingsWindow = () => {
 const startup = () => {
     const measureValues = {
         posture: 1,
-        fatigue: 1,
+        fatigue: 0.5,
         emotions: {
             anger: 0,
             neutral: 1,

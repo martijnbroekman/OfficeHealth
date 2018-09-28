@@ -155,7 +155,7 @@ body {
 
 /* Inleiding */
 #inleiding {
-    margin: 31px 24px 0px 24px;
+    margin-top: 25px;
     text-align: center;
 }
 
@@ -205,13 +205,19 @@ body {
     background-color: whitesmoke;
 }
 
+#posture-hint {
+    background-image: url("../img/good.png");
+    max-width: 225px;
+}
+
 /* laatste pagina */
-#progressBar {
+#resultaatplaats {
     margin-top: 34px;
 }
 
-#resultaatplaats {
-    margin-top: 34px;
+#cameraStart {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* status */
@@ -390,4 +396,3 @@ hr {
     margin: 0;
     margin-top: 10px;
 }
-© 2018 GitH

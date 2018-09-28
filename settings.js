@@ -154,7 +154,9 @@ function radiobuttoncheck(id, group) {
 }
 
 function progressbar() {
-    ipcRenderer.send('start_camera');
+    setTimeout(() => {
+        ipcRenderer.send('start_camera');
+    }, 3000);
 }
 
 let optellen = [];
@@ -212,7 +214,7 @@ function login() {
     let mail = document.getElementById('inputEmail').value;
     let name = document.getElementById('inputName').value;
     let password = document.getElementById('inputPassword').value;
-    
+
     if (mail.trim() === '' || name.trim() === '' || password.trim() === '') {
         alert('Alle velden moeten gevuld zijn');
         return;
