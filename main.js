@@ -104,7 +104,7 @@ const createSettingsWindow = () => {
 const startup = () => {
     const measureValues = {
         posture: 1,
-        fatigue: 1,
+        fatigue: 0.5,
         emotions: {
             anger: 0,
             neutral: 1,
