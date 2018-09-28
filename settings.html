@@ -14,7 +14,8 @@
         <div id="modal">
             <div id="inleiding">
                 <h2>Welkom bij Pots</h2>
-                <h2 id="inleidingdeel2">Als eerste leggen we een aantal stellingen voor, hiermee kunnen we je notificaties personaliseren.</h2>
+                <h2 id="inleidingdeel2">Als eerste leggen we een aantal stellingen voor, hiermee kunnen we je
+                    notificaties personaliseren.</h2>
             </div>
             <button id="vraag1" class="vraagbuttons" onclick="showmodal(this.id)">Start</button>
         </div>
@@ -191,20 +192,30 @@
         </div>
         <!-- nu de resultaten -->
         <div style="display: none;" class="modal" id="naarresultaat_content">
-            <div id="inleiding">
+            <div id="inleiding" class="container">
                 <div class="text_value">
                     <h2>Jouw resultaten zijn bekend:</h2>
                     <h2 id="resultaatplaats"></h2>
                 </div>
             </div>
-            <button id="stilzitten" class="vraagbuttons" onclick="showmodal(this.id), progressbar()">Verder</button>
+            <button id="stilzitten" class="vraagbuttons" onclick="showmodal(this.id)">Verder</button>
         </div>
         <!-- Naar de applicatie -->
-        <div style="display: none;" class="modal" id="stilzitten_content">
-            <div id="inleiding">
-                <h2>Als laatste gaan we de camera instellen.</h2>
-                <h2 id="inleidingdeel2">Ga in een goede positie zitten voor 5 seconden.</h2>
-                <progress value="0" max="5" id="progressBar"></progress>
+        <div class="modal" id="stilzitten_content">
+            <div id="inleiding" class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Als laatste gaan we de camera kalibreren.</h2>
+                        <h2 id="inleidingdeel2">Ga in een goede positie zitten voor 5 seconden.</h2>
+                        <img id="posture-hint" src="./img/good.png" class="img-fluid" alt="Responsive image">
+                        <button id="cameraStart" onclick="progressbar()">Start kalibratie</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <progress value="0" max="5" id="progressBar"></progress>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Login -->
