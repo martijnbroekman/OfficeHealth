@@ -12,7 +12,8 @@ const fs = require('fs');
 const {
     app,
     BrowserWindow,
-    ipcMain
+    ipcMain,
+    Menu
 } = electron;
 
 let mainWinow = null;
@@ -34,6 +35,8 @@ const createWindow = () => {
     mainWinow.on('closed', () => {
         mainWinow = null
     });
+
+    Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
     client.startMeasure(emitter);
@@ -86,6 +89,8 @@ const createSettingsWindow = () => {
     settingsWindow.on('closed', () => {
         settingsWindow = null
     });
+
+    Menu.setApplicationMenu(null);
 
     fs.stat('settings.json', (err) => {
         if (!err) {
