@@ -48,6 +48,12 @@ ipcRenderer.on('py:measure_error', function(e, error){
     console.log(error)
 });
 
+
+ipcRenderer.on('settings:name', function(e, name) {
+    console.log(name)
+    document.getElementById('profileName').innerText = name;
+});
+
 function between(x, min, max) {
     return x >= min && x <= max;
 }

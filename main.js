@@ -15,6 +15,8 @@ const {
     ipcMain
 } = electron;
 
+let currentUser = {};
+
 let mainWinow = null;
 
 const createWindow = () => {
@@ -35,6 +37,8 @@ const createWindow = () => {
         mainWinow = null
     });
 
+    mainWinow.webContents.once('dom-ready', () => setName(currentUser.name));
+
     const emitter = new EventEmitter();
     client.startMeasure(emitter);
     setInterval(() => {
@@ -46,20 +50,17 @@ const createWindow = () => {
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
             let resultObject = parsedResult.emotions;
-            resultObject.userId = 1;
+            
             pythonParsing.ParseResults(parsedResult, (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
-            // axios.post('http://167.99.38.7/emotions', resultObject)
-            //     .then((res) => {
+            //api.sendEmotion(resultObject)
+            //    .then(() => {})
+            //    .catch(error => console.log(error))
 
-            //         pythonParsing.ParseResults(parsedResult, (resultatos) => {
-            //             mainWinow.webContents.send("py:status", resultatos);
-            //         });
-            //     })
-            //     .catch((error) => {
-            //         console.log(error)
-            //     });
+            pythonParsing.ParseResults(parsedResult, (resultatos) => {
+                mainWinow.webContents.send("py:status", resultatos);
+            });
         }
     });
 
@@ -116,11 +117,16 @@ const startup = () => {
 
     fs.readFile('./credentials.json', 'utf8', (err, data) => {
         if (err) {
+            console.log(err)
             createSettingsWindow();
         } else {
             let dataObject = JSON.parse(data);
+            currentUser = dataObject;
             api.login(dataObject.mail, dataObject.password)
-                .then(() => createWindow())
+                .then(() => {
+                    createWindow()
+                    setName(currentUser.name);
+                })
                 .catch(error => console.log(error));
         }
     });
@@ -199,12 +205,13 @@ ipcMain.on('fitbit:signin', (event) => {
 ipcMain.on('settings:login', (event, creditials) => {
     api.register(creditials.mail, creditials.name, creditials.password, creditials.type)
         .then(res => {
-            createWindow();
-            settingsWindow.close();
-            settingsWindow = null;
+            currentUser = creditials;
             fs.writeFile('credentials.json', JSON.stringify(creditials), (err) => {
                 if (err) throw err;
             });
+            createWindow();
+            settingsWindow.close();
+            settingsWindow = null;
         })
         .catch(error => {
             console.log(error)
@@ -228,3 +235,7 @@ ipcMain.on('capture', (event) => {
         console.log(error);
     });
 });
+
+function setName(name) {
+    mainWinow.webContents.send('settings:name', name);
+}
