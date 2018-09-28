@@ -14,27 +14,37 @@
 <body>
     <section id="topBar">
         <section id="settingsBar">
-            <span><img id="notifications" onclick="clicker()" class="cursor-pointer not-selectable" src="icons/png/notifcations.png" /></span>
-
-            <span id="profile" onclick="showmodal(this.id); closeTabs()">
-                <img id="profilePicture" class="cursor-pointer not-selectable" src="img/profile-scott.png" />
-                <h1 id="profileName" class="cursor-pointer not-selectable"></h1>
-            </span>
-
-            <span><img id="settings" class="cursor-pointer not-selectable" onclick="showmodal(this.id); closeTabs()" src="icons/png/settings.png" /></span>
-        </section>
-        <section id="navigationBar">
-            <ul>
-                <li>
-                    <p id="status" onclick="tab1(); showmodal(this.id)" class="not-selectable cursor-pointer">Status</p>
-                </li>
-                <li>
-                    <p id="goals" onclick="tab2(); showmodal(this.id)" class="not-selectable cursor-pointer">Goals</p>
-                </li>
-                <li>
-                    <p id="games" onclick="tab3(); showmodal(this.id)" class="not-selectable cursor-pointer">Games</p>
-                </li>
-            </ul>
+            <div class="containter">
+                <div class="row">
+                    <div class="col-2">
+                        <span><img id="notifications" onclick="clicker()" class="cursor-pointer not-selectable" src="icons/png/notifcations.png" /></span>
+                    </div>
+                    <div class="col-8">
+                        <span id="profile" onclick="showmodal(this.id); closeTabs()">
+                            <img id="profilePicture" class="cursor-pointer not-selectable" src="img/profile-scott.png" />
+                            <h1 id="profileName" class="cursor-pointer not-selectable"></h1>
+                        </span>
+                    </div>
+                    <div class="col-2">
+                        <span><img id="settings" class="cursor-pointer not-selectable" onclick="showmodal(this.id); closeTabs()" src="icons/png/settings.png" /></span>
+                    </div>      
+                </div>
+                <div class="row" id="stick-bottom">
+                    <div id="navigationBar" class="col-12">
+                        <ul>
+                            <li>
+                                <p id="status" onclick="tab1(); showmodal(this.id)" class="not-selectable cursor-pointer">Status</p>
+                            </li>
+                            <li>
+                                <p id="goals" onclick="tab2(); showmodal(this.id)" class="not-selectable cursor-pointer">Goals</p>
+                            </li>
+                            <li>
+                                <p id="games" onclick="tab3(); showmodal(this.id)" class="not-selectable cursor-pointer">Games</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
     </section>
 

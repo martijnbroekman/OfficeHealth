@@ -6,6 +6,8 @@
 
 body {
     background-color: #FCFAF8;
+    overflow-x: hidden;
+      
 }
 
 .not-selectable {
@@ -28,8 +30,7 @@ body {
 /* deel 1*/
 #topBar {
     background-color: #22343E;
-    height: 60px;
-
+    margin: 0px;
 }
 
 #topBar h1 {
@@ -37,7 +38,6 @@ body {
     font-weight: 600;
     font-size: 14.3px;
     color: white;
-
 }
 
 #settings-topBar {
@@ -62,9 +62,6 @@ body {
 }
 
 #settingsBar {
-    height: 34px;
-    width: 100%;
-    display: inline-block;
     text-align: center;
 }
 
@@ -79,14 +76,12 @@ body {
     width: 18px;
     height: 20px;
     display: inline-block;
-    margin-left: 22px;
 }
 
 #profilePicture {
     width: 21.8px;
     height: 21.8px;
     display: inline-block;
-    margin-left: 57px;
 }
 
 #settings-profilePicture {
@@ -100,19 +95,17 @@ body {
 }
 
 #settings {
+
+    width: 18px;
+    height: 20px;
     display: inline-block;
-    margin-left: 50px;
-
 }
-
-
 
 /* navigatie */
 
 #navigationBar {
     text-decoration: none;
     width: 100%;
-    height: 25px;
 }
 
 #navigationBar ul {
@@ -121,10 +114,11 @@ body {
     display: table;
     table-layout: fixed;
     width: 320px;
+    margin-bottom: 0px;
 }
 
 #navigationBar ul li {
-    width: 33%;
+    /* width: 33%; */
     display: table-cell;
     height: auto;
     vertical-align: bottom;
@@ -139,7 +133,8 @@ body {
     color: rgba(255, 255, 255, 0.83);
     display: block;
     min-height: 26px;
-    padding-top: 4px;
+    padding-top: 0px;
+    margin-bottom: 0px;
 }
 
 /*
