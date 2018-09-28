@@ -110,11 +110,25 @@ const responseOnNotification = (notificationId, accepted) => {
         .catch(() => console.log("failed to save accepted"));
 }
 
+const sendEmotion = (emotions) => {
+    return new Promise((resolve, reject) => {
+        emotions.userId = id;
+        axios.post(apiUrl + '/emotions', emotions)
+            .then((res) => {
+                resolve(res)
+            })
+            .catch((error) => {
+                reject(error)
+            });
+    });
+}
+
 module.exports = {
     login: login,
     register: register,
     changeNotificationStatus: changeNotificationStatus,
     responseOnNotification: responseOnNotification,
+    sendEmotion: sendEmotion,
     onNotification: ((newCallBack) => callBack = newCallBack),
     onAccept: ((newacceptCallBack) => acceptCallBack = newacceptCallBack),
     onDecline: ((newdeclineCallBack) => declineCallBack = newdeclineCallBack)
