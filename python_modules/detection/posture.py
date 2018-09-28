@@ -1,6 +1,7 @@
 import json
 from collections import namedtuple
 from enum import Enum
+import os
 
 DIVIDER = 10
 

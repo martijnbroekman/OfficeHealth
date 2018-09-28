@@ -32,28 +32,22 @@ class Detector:
 
         # Initialize background worker for detecting drowsiness
         self.background_worker = FatigueBackgroundWorker(self.vs, self.predictor, self.detector)
+        self.face_set = self.settings_set()
 
         # Time for camera to initialize
         time.sleep(1.0)
 
     def start(self):
-        data = {}
-
-        # Check if settings are set, if not load setup screen
-        if self.settings_set():
-            data["ready"] = True
-        else:
-            data["ready"] = self.save_settings()
-
         # Start background worker
         self.background_worker.start()
 
-        return json.dumps(data)
+    def capture(self):
+        self.face_set = True
 
-    def save_settings(self):
-        faceSet = False
+    def start_camera(self):
+        face = None
 
-        while not faceSet:
+        while not self.face_set:
             gevent.sleep(0)
             frame = self.vs.read()
 
@@ -67,16 +61,14 @@ class Detector:
                 (x, y, w, h) = posture.rect_to_bb(face)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
+                face = faces[0]
+
             cv2.imshow("Posture", frame)
             key = cv2.waitKey(1) & 0xFF
 
-            # Save settings on s click
-            if key == ord("s") and len(faces) > 0:
-                posture.save_face(faces[0])
-                faceSet = True
-                cv2.destroyAllWindows()
-
-        return faceSet
+        cv2.destroyAllWindows()
+        posture.save_face(face)
+        return self.face_set
 
     def settings_set(self):
         return Path("settings.json").exists()

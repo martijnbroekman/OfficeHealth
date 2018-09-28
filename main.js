@@ -34,6 +34,38 @@ const createWindow = () => {
     mainWinow.on('closed', () => {
         mainWinow = null
     });
+
+    const emitter = new EventEmitter();
+    client.startMeasure(emitter);
+    setInterval(() => {
+        client.startMeasure(emitter);
+    }, 5000);
+
+    emitter.on('measure_result', (result) => {
+        let parsedResult = JSON.parse(result);
+
+        if (parsedResult !== null && parsedResult.face_detected !== false) {
+            let resultObject = parsedResult.emotions;
+            resultObject.userId = 1;
+            pythonParsing.ParseResults(parsedResult, (resultatos) => {
+                mainWinow.webContents.send("py:status", resultatos);
+            });
+            // axios.post('http://167.99.38.7/emotions', resultObject)
+            //     .then((res) => {
+
+            //         pythonParsing.ParseResults(parsedResult, (resultatos) => {
+            //             mainWinow.webContents.send("py:status", resultatos);
+            //         });
+            //     })
+            //     .catch((error) => {
+            //         console.log(error)
+            //     });
+        }
+    });
+
+    emitter.on('error', (error) => {
+        mainWinow.webContents.send('py:measure_error', error);
+    });
 };
 
 let settingsWindow = null;
@@ -53,6 +85,12 @@ const createSettingsWindow = () => {
 
     settingsWindow.on('closed', () => {
         settingsWindow = null
+    });
+
+    fs.stat('settings.json', (err) => {
+        if (!err) {
+            fs.unlink('settings.json');
+        }
     });
 };
 
@@ -131,50 +169,12 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port])
+    pyProc = require('child_process').spawn(pythonExec, [script, port]);
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    const emitter = new EventEmitter();
-    client.start().then((res) => {
-        if (JSON.parse(res).ready) {
-            client.startMeasure(emitter);
-            setInterval(() => {
-                client.startMeasure(emitter);
-            }, 4000);
-        }
-    }).catch((error) => {
-        console.log(`Error: ${error}`)
-    });
-
-    emitter.on('measure_result', (result) => {
-        let parsedResult = JSON.parse(result);
-
-        if (parsedResult !== null && parsedResult.face_detected !== false) {
-
-
-            let resultObject = parsedResult.emotions;
-            resultObject.userId = 1;
-            pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
-            });
-            // axios.post('http://167.99.38.7/emotions', resultObject)
-            //     .then((res) => {
-
-            //         pythonParsing.ParseResults(parsedResult, (resultatos) => {
-            //             mainWinow.webContents.send("py:status", resultatos);
-            //         });
-            //     })
-            //     .catch((error) => {
-            //         console.log(error)
-            //     });
-        }
-    });
-
-    emitter.on('error', (error) => {
-        mainWinow.webContents.send('py:measure_error', error);
-    });
+    client.start();
 };
 
 const exitPyProc = () => {
@@ -198,21 +198,33 @@ ipcMain.on('fitbit:signin', (event) => {
 
 ipcMain.on('settings:login', (event, creditials) => {
     api.register(creditials.mail, creditials.name, creditials.password, creditials.type)
-    .then(res => {
-        createWindow();
-        settingsWindow.close();
-        settingsWindow = null;
-        fs.writeFile('credentials.json', JSON.stringify(creditials), (err) => {
-            if (err) throw err;
-        });
-    })
-    .catch(error => {
-        console.log(error)
-        settingsWindow.webContents.send('settings:failed', error.response.data);
-    })
+        .then(res => {
+            createWindow();
+            settingsWindow.close();
+            settingsWindow = null;
+            fs.writeFile('credentials.json', JSON.stringify(creditials), (err) => {
+                if (err) throw err;
+            });
+        })
+        .catch(error => {
+            console.log(error)
+            settingsWindow.webContents.send('settings:failed', error.response.data);
+        })
 });
 
 ipcMain.on('mute', (event, arg) => {
     api.changeNotificationStatus(arg);
 });
 
+ipcMain.on('start_camera', (event) => {
+    client.start_camera();
+    event.sender.send('camera_started');
+});
+
+ipcMain.on('capture', (event) => {
+    client.capture().then(() => {
+        event.sender.send('proceed_login');
+    }).catch((error) => {
+        console.log(error);
+    });
+});
