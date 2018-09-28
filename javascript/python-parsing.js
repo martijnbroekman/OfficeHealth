@@ -1,17 +1,18 @@
 const fs = require('fs');
+const notification = require('./notifications');
 
 const parseResults = (results, callback) => {
     let currentValues;
 
-    fs.readFile('./measure.json', 'utf8', (err, data) => {  
+    fs.readFile('./measure.json', 'utf8', (err, data) => {
         if (err) throw err;
         currentValues = JSON.parse(data);
 
         const resultObject = results;
 
         // Calculate new posture scores
-        switch(resultObject.posture) {
-            case 1 :
+        switch (resultObject.posture) {
+            case 1:
                 currentValues.posture = Math.min(1, currentValues.posture + 0.2);
                 break;
             case 2:
@@ -25,10 +26,12 @@ const parseResults = (results, callback) => {
                 break;
             default: break;
         }
-    
+
+        postureNotification(currentValues.posture);
+
         // Calculate new fatigue score
         currentValues.fatigue = resultObject.fatigue ? Math.max(0, currentValues.fatigue - 0.1) : Math.min(1, currentValues.fatigue + 0.1);
-    
+
         const measuredEmotions = resultObject.emotions;
         let currentEmotions = currentValues.emotions;
 
@@ -43,7 +46,7 @@ const parseResults = (results, callback) => {
         fs.writeFile('measure.json', JSON.stringify(currentValues), (err) => {
             if (err) throw err;
         });
-    
+
         setStatusDescription(currentValues, (callback))
     });
 };
@@ -53,7 +56,7 @@ const setStatusDescription = (values, callback) => {
         if (err) throw err;
 
         const statusTexts = JSON.parse(data);
-        
+
         // Set posture text
         if (between(values.posture, 0.76, 1)) values.postureText = statusTexts.posture.green;
         else if (between(values.posture, 0.51, 0.75)) values.postureText = statusTexts.posture.yellow;
@@ -74,6 +77,14 @@ const setStatusDescription = (values, callback) => {
 
         callback(values);
     });
+}
+
+function postureNotification(score) {
+    if (score <= 0.25) {
+        notification.pushNotificationWithoutActions("Pots", "Zithouding heeft invloed op je gezondheid. Ook al is het soms lastig, rechtop zitten helpt!");
+    } else if (score >= 0.26 && score <= 0.5) {
+        notification.pushNotificationWithoutActions("Pots", "Je zat erg goed! Probeer het vol te houden.");
+    }
 }
 
 function between(x, min, max) {

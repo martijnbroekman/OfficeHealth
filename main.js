@@ -39,7 +39,7 @@ const createWindow = () => {
     client.startMeasure(emitter);
     setInterval(() => {
         client.startMeasure(emitter);
-    }, 5000);
+    }, 8000);
 
     emitter.on('measure_result', (result) => {
         let parsedResult = JSON.parse(result);
