@@ -227,6 +227,16 @@ ipcMain.on('settings:login', (event, creditials) => {
 
 ipcMain.on('mute', (event, arg) => {
     api.changeNotificationStatus(arg);
+
+    fs.readFile('settings.json', 'utf8', (err, data) => {
+        if (!err) {
+            let settings = JSON.parse(data);
+            settings.canReceiveNotfications = arg;
+            fs.writeFile('settings.json', JSON.stringify(settings), (err) => {
+                if (err) throw err;
+            });
+        }
+    });
 });
 
 ipcMain.on('start_camera', (event) => {

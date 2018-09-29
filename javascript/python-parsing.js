@@ -27,7 +27,12 @@ const parseResults = (results, callback) => {
             default: break;
         }
 
-        postureNotification(currentValues.posture);
+
+        fs.readFile('settings.json', 'utf8', (err, data) => {
+            if (!err && JSON.parse(data).canReceiveNotfications) {
+                postureNotification(currentValues.posture);
+            }
+        });
 
         // Calculate new fatigue score
         currentValues.fatigue = resultObject.fatigue ? Math.max(0, currentValues.fatigue - 0.1) : Math.min(1, currentValues.fatigue + 0.1);
