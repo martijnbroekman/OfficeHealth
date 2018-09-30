@@ -1,6 +1,6 @@
 # Pots
 
-Start creating a healty work environment using Pots. Pots is an Electron Python combination application which tracks mood, posture en drowsiness. When something "bad" gets detected, it will alert the user by updating it's personal dashboard and by sending a custom notification.
+Start creating a healthy working environment using Pots. Pots is an Electron Python combination application which tracks mood, posture en drowsiness. When something "bad" gets detected, it will alert the user by updating it's personal dashboard and by sending a custom notification.
 
 **Note**: The application frontend is entirely in Dutch
 
@@ -35,7 +35,7 @@ When everything is set, the application is ready to start. The only step left is
 ```bash
 npm start
 ```
-Enjoy
+Enjoy 🎉
 
 ## License ##
 [The MIT License](https://opensource.org/licenses/mit-license.php).
