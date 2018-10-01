@@ -54,6 +54,16 @@ ipcRenderer.on('settings:name', function(e, name) {
     document.getElementById('profileName').innerText = name;
 });
 
+ipcRenderer.on('canReceiveNotification', function(e, canReceiveNotification) {
+    if (!canReceiveNotification) {
+        ipcRenderer.send("mute", false);
+        document.getElementById('notifications').src = "icons/png/notifcations-muted.png";
+    } else {
+        ipcRenderer.send("mute", true);
+        document.getElementById('notifications').src = "icons/png/notifcations.png";
+    }
+});
+
 function between(x, min, max) {
     return x >= min && x <= max;
 }

@@ -123,12 +123,23 @@ const sendEmotion = (emotions) => {
     });
 }
 
+const getUser = () => {
+    return new Promise((resolve, reject) => {
+        axios.default.get(`${apiUrl}/users/${id}`, getDefaultConfig())
+            .then(res => {
+                resolve(res.data)
+            })
+            .catch(error => reject(error));
+    });
+}
+
 module.exports = {
     login: login,
     register: register,
     changeNotificationStatus: changeNotificationStatus,
     responseOnNotification: responseOnNotification,
     sendEmotion: sendEmotion,
+    getUser: getUser,
     onNotification: ((newCallBack) => callBack = newCallBack),
     onAccept: ((newacceptCallBack) => acceptCallBack = newacceptCallBack),
     onDecline: ((newdeclineCallBack) => declineCallBack = newdeclineCallBack)

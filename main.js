@@ -38,8 +38,23 @@ const createWindow = () => {
         mainWinow = null
     });
 
-
-    mainWinow.webContents.once('dom-ready', () => setName(currentUser.name));
+    mainWinow.webContents.once('dom-ready', () => {
+        setName(currentUser.name);
+        api.getUser()
+            .then(res => {
+                fs.readFile('settings.json', 'utf8', (err, data) => {
+                    if (!err) {
+                        let settings = JSON.parse(data);
+                        settings.canReceiveNotfications = res.canReceiveNotification;
+                        fs.writeFile('settings.json', JSON.stringify(settings), (err) => {
+                            if (err) throw err;
+                        });
+                    }
+                });
+                mainWinow.webContents.send('canReceiveNotification', res.canReceiveNotification);
+            })
+            .catch(error => console.log(error));
+    });
 
     Menu.setApplicationMenu(null);
 
