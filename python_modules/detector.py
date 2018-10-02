@@ -6,12 +6,24 @@ import time
 import json
 from pathlib import Path
 import gevent
+import os
+import sys
 
 from detection.fatigue import FatigueBackgroundWorker
 from detection import posture
 from detection import emotion_detection as emd
 from models.Result import Result
 
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.environ.get("_MEIPASS2", os.path.abspath("."))
+
+    return os.path.join(base_path, relative_path)
 
 class Settings:
 
@@ -27,7 +39,7 @@ class Detector:
     def __init__(self):
         # setup dlib and load model for face detection
         self.detector = dlib.get_frontal_face_detector()
-        self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+        self.predictor = dlib.shape_predictor(resource_path("shape_predictor_68_face_landmarks.dat"))
         self.vs = VideoStream(0).start()
 
         # Initialize background worker for detecting drowsiness
