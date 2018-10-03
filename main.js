@@ -18,27 +18,27 @@ const {
 
 let currentUser = {};
 
-let mainWinow = null;
+let mainWindow = null;
 
 const createWindow = () => {
-    mainWinow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 320,
         height: 390,
         resizable: false,
         icon: path.join(__dirname, 'icons/png/dark-icon-pngs/64x64.png')
     });
 
-    mainWinow.loadURL(require('url').format({
+    mainWindow.loadURL(require('url').format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file',
         slashes: true
     }));
 
-    mainWinow.on('closed', () => {
-        mainWinow = null
+    mainWindow.on('closed', () => {
+        mainWindow = null
     });
 
-    mainWinow.webContents.once('dom-ready', () => {
+    mainWindow.webContents.once('dom-ready', () => {
         setName(currentUser.name);
         api.getUser()
             .then(res => {
@@ -51,7 +51,7 @@ const createWindow = () => {
                         });
                     }
                 });
-                mainWinow.webContents.send('canReceiveNotification', res.canReceiveNotification);
+                mainWindow.webContents.send('canReceiveNotification', res.canReceiveNotification);
             })
             .catch(error => console.log(error));
     });
@@ -71,20 +71,20 @@ const createWindow = () => {
             let resultObject = parsedResult.emotions;
             
             pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
+                mainWindow.webContents.send("py:status", resultatos);
             });
             //api.sendEmotion(resultObject)
             //    .then(() => {})
             //    .catch(error => console.log(error))
 
             pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
+                mainWindow.webContents.send("py:status", resultatos);
             });
         }
     });
 
     emitter.on('error', (error) => {
-        mainWinow.webContents.send('py:measure_error', error);
+        mainWindow.webContents.send('py:measure_error', error);
     });
 };
 
@@ -177,7 +177,7 @@ app.on('window-all-closed', () => {
     }
 });
 app.on('activate', () => {
-    if (mainWinow === null) {
+    if (mainWindow === null) {
         initApp();
     }
 });
@@ -268,5 +268,5 @@ ipcMain.on('capture', (event) => {
 });
 
 function setName(name) {
-    mainWinow.webContents.send('settings:name', name);
+    mainWindow.webContents.send('settings:name', name);
 }
