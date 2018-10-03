@@ -1,42 +1,34 @@
 import zerorpc
 import sys
 from detector import Detector
+from flask import Flask
+
+app = Flask("App")
+detector = Detector()
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+@app.route('/start')
+def start():
+    return detector.start()
 
 
-class SocketRPC(object):
-
-    def __init__(self):
-        self.detector = Detector()
-
-    def start(self):
-        return self.detector.start()
-
-    def measure(self):
-        return self.detector.measure()
-
-    def start_camera(self):
-        self.detector.start_camera()
-
-    def capture(self):
-        self.detector.capture()
+@app.route('/measure')
+def measure():
+    return detector.measure()
 
 
-def parse_port():
-    port = 4242
-    try:
-        port = int(sys.argv[1])
-    except Exception:
-        pass
-    return '{}'.format(port)
+@app.route('/start-camera')
+def start_camera():
+    detector.start_camera()
 
 
-def main():
-    # Start socket server
-    address = 'tcp://127.0.0.1:' + parse_port()
-    s = zerorpc.Server(SocketRPC())
-    s.bind(address)
-    s.run()
+@app.route('/capture')
+def capture():
+    detector.capture()
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    app.run()
