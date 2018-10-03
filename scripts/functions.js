@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function showmodal(id) {
     document.getElementById('modal').innerHTML =
         document.getElementById(id + '_content').innerHTML;
+    slider.setupSliders();
 }
 
 function clicker() {
@@ -109,8 +110,8 @@ function tab1() {
     document.getElementById('goals').style.backgroundColor = "#22343E";
     document.getElementById('goals').style.color = "rgba(255, 255, 255, 0.83)";
 
-    document.getElementById('games').style.backgroundColor = "#22343E";
-    document.getElementById('games').style.color = "rgba(255, 255, 255, 0.83)";
+    //document.getElementById('games').style.backgroundColor = "#22343E";
+    //document.getElementById('games').style.color = "rgba(255, 255, 255, 0.83)";
 }
 
 function tab2() {
@@ -122,15 +123,15 @@ function tab2() {
     document.getElementById('status').style.backgroundColor = "#22343E";
     document.getElementById('status').style.color = "rgba(255, 255, 255, 0.83)";
 
-    document.getElementById('games').style.backgroundColor = "#22343E";
-    document.getElementById('games').style.color = "rgba(255, 255, 255, 0.83)";
+    //document.getElementById('games').style.backgroundColor = "#22343E";
+    //document.getElementById('games').style.color = "rgba(255, 255, 255, 0.83)";
 }
 
 function tab3() {
-    document.getElementById('games').style.backgroundColor = "#FCFAF8";
-    document.getElementById('games').style.color = "#22343E";
-    document.getElementById('games').style.borderTopLeftRadius = "11px";
-    document.getElementById('games').style.borderTopRightRadius = "11px";
+    // document.getElementById('games').style.backgroundColor = "#FCFAF8";
+    // document.getElementById('games').style.color = "#22343E";
+    // document.getElementById('games').style.borderTopLeftRadius = "11px";
+    // document.getElementById('games').style.borderTopRightRadius = "11px";
 
     document.getElementById('goals').style.backgroundColor = "#22343E";
     document.getElementById('goals').style.color = "rgba(255, 255, 255, 0.83)";
@@ -142,8 +143,8 @@ function tab3() {
 
 
 function closeTabs() {
-    document.getElementById('games').style.backgroundColor = "#22343E";
-    document.getElementById('games').style.color = "rgba(255, 255, 255, 0.83)";
+    //document.getElementById('games').style.backgroundColor = "#22343E";
+    //document.getElementById('games').style.color = "rgba(255, 255, 255, 0.83)";
 
     document.getElementById('goals').style.backgroundColor = "#22343E";
     document.getElementById('goals').style.color = "rgba(255, 255, 255, 0.83)";

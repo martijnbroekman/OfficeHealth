@@ -8,6 +8,7 @@ const api = require('./javascript/api-service')
 const notification = require('./javascript/notifications')
 const pythonParsing = require('./javascript/python-parsing')
 const fs = require('fs');
+const timer = require('./javascript/notification-time');
 
 const {
     app,
@@ -56,13 +57,13 @@ const createWindow = () => {
             .catch(error => console.log(error));
     });
 
-    Menu.setApplicationMenu(null);
+    //Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
-    client.startMeasure(emitter);
-    setInterval(() => {
-        client.startMeasure(emitter);
-    }, 8000);
+    // client.startMeasure(emitter);
+    // setInterval(() => {
+    //     client.startMeasure(emitter);
+    // }, 8000);
 
     emitter.on('measure_result', (result) => {
         let parsedResult = JSON.parse(result);
@@ -86,6 +87,8 @@ const createWindow = () => {
     emitter.on('error', (error) => {
         mainWinow.webContents.send('py:measure_error', error);
     });
+
+    timer.start();
 };
 
 let settingsWindow = null;
@@ -196,16 +199,16 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port]);
+    //pyProc = require('child_process').spawn(pythonExec, [script, port]);
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    client.start();
+    //client.start();
 };
 
 const exitPyProc = () => {
-    pyProc.kill();
+    //pyProc.kill();
     pyProc = null;
     pyPort = null;
 };

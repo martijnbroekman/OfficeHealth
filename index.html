@@ -36,11 +36,11 @@
                                 <p id="status" onclick="tab1(); showmodal(this.id)" class="not-selectable cursor-pointer">Status</p>
                             </li>
                             <li>
-                                <p id="goals" onclick="tab2(); showmodal(this.id)" class="not-selectable cursor-pointer">Goals</p>
+                                <p id="goals" onclick="tab2(); showmodal(this.id)" class="not-selectable cursor-pointer">Doelen</p>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <p id="games" onclick="tab3(); showmodal(this.id)" class="not-selectable cursor-pointer">Games</p>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -76,20 +76,50 @@
 
         <!-- Goals page -->
         <div style="display: none;" class="modal" id="goals_content">
-            <div id="goalsSettings">
-                <div id="goalsLeft">
-                    <p>Exercise</p>
-                    <p>Staring</p>
-                    <p>Posture</p>
-                    <p>Social activities</p>
-                    <p>Meeting people</p>
+            <div class="contianer goalsContainer">
+                <div class="row">
+                    <div class="col-5">
+                        <p>Beweging</p>
+                    </div>
+                    <div class="col-7">
+                        <div class="slidecontainer">
+                            <input type="range" name="exerciseRange" min="1" max="5" value="3" step="1" class="slider" id="exerciseRange">
+                            <output id="exerciseRangeOutput"></output>
+                        </div>
+                    </div>
                 </div>
-                <div id="goalsRight">
-                    <img id="bar1" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar1.png" />
-                    <img id="bar2" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar2.png" />
-                    <img id="bar3" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar3.png" />
-                    <img id="bar4" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar4.png" />
-                    <img id="bar5" class="goalsBars cursor-pointer not-selectable" src="icons/png/bar5.png" />
+                <div class="row">
+                    <div class="col-5">
+                        <p>vermoeidheid</p>
+                    </div>
+                    <div class="col-7">
+                        <div class="slidecontainer">
+                            <input type="range" name="drowsinessRange" min="1" max="5" value="3" step="1" class="slider" id="drowsinessRange">
+                            <output id="drowsinessRangeOutput"></output>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <p>Houding</p>
+                    </div>
+                    <div class="col-7">
+                        <div class="slidecontainer">
+                            <input type="range" min="1" max="5" value="3" step="1" class="slider" id="postureRange">
+                            <output id="postureRangeOutput"></output>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <p>Activiteiten</p>
+                    </div>
+                    <div class="col-7">
+                        <div class="slidecontainer">
+                            <input type="range" min="1" max="5" value="3" step="1" class="slider" id="socialRange">
+                            <output id="socialRangeOutput"></output>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -147,11 +177,11 @@
 
     </section>
 
-    <script src="scripts/functions.js"></script>
     <script>
+        var slider = require('./scripts/slider.js');
         require('./renderer.js');
-
     </script>
+    <script src="scripts/functions.js"></script>
 </body>
 
 </html>
