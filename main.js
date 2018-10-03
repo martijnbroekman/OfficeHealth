@@ -1,7 +1,7 @@
 const electron = require('electron');
 const path = require('path');
 const fitbit = require('./javascript/fitbit.js');
-const client = require('./javascript/zerorpc-client');
+const client = require('./javascript/python-client');
 const EventEmitter = require('events').EventEmitter
 const axios = require('axios');
 const api = require('./javascript/api-service')
@@ -65,16 +65,14 @@ const createWindow = () => {
     const emitter = new EventEmitter();
     setInterval(() => {
         client.startMeasure().then(res => {
-            console.log(res);
+            emitter.emit('measure_result', res);
         }).catch(error => console.log(error));
     }, 8000);
 
     emitter.on('measure_result', (result) => {
-        let parsedResult = JSON.parse(result);
+        let parsedResult = result;
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
-            let resultObject = parsedResult.emotions;
-
             pythonParsing.ParseResults(parsedResult, (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
@@ -202,19 +200,14 @@ const createPyProc = () => {
     let port = '' + selectPort();
 
     if (guessPackaged()) {
-        pyProc = require('child_process').execFile(script, [port])
+        pyProc = require('child_process').execFile(script, [port]);
     } else {
-        // pyProc = require('child_process').spawn(pythonExec, [script, port])
+        pyProc = require('child_process').spawn(pythonExec, [script, port]);
     }
 
     if (pyPort != null) {
         console.log('child process success')
     }
-
-    client.start()
-    .then(res => {
-        console.log(res)
-    }).catch(error => console.log(error));
 };
 
 const guessPackaged = () => {
@@ -284,8 +277,7 @@ ipcMain.on('mute', (event, arg) => {
 
 ipcMain.on('start_camera', (event) => {
     client.start_camera()
-    .then(result => console.log(res)).catch(error => console.log(error));
-    event.sender.send('camera_started');
+        .then(result => event.sender.send('camera_started')).catch(error => console.log(error));
 });
 
 ipcMain.on('capture', (event) => {

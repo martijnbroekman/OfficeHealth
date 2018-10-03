@@ -48,15 +48,10 @@ class Detector:
 
         # Time for camera to initialize
         time.sleep(1.0)
-
-    def start(self):
-        # Start background worker
         self.background_worker.start()
-        return True
 
     def capture(self):
         self.face_set = True
-        return self.face_set
 
     def start_camera(self):
         face = None
@@ -80,7 +75,6 @@ class Detector:
 
         cv2.destroyAllWindows()
         posture.save_face(face)
-        return self.face_set
 
     def settings_set(self):
         return Path("settings.json").exists()

@@ -1,37 +1,31 @@
-import json
 from detector import Detector
-from flask import Flask
+from flask import Flask, Response
 
 class Resultresponse:
 
     def __init__(self, result):
         self.result = result
 
+
 app = Flask("App")
 detector = Detector()
-
-@app.route("/")
-def hello():
-    return "Hello World!"
-
-@app.route('/start')
-def start():
-    return json.dumps(Resultresponse(detector.start()).__dict__)
 
 
 @app.route('/measure')
 def measure():
-    return detector.measure()
+    return Response(detector.measure(), status=200, mimetype='application/json')
 
 
 @app.route('/start-camera')
 def start_camera():
-    return json.dumps(Resultresponse(detector.start_camera()).__dict__)
+    detector.start_camera()
+    return Response(status=200)
 
 
 @app.route('/capture')
 def capture():
-    return json.dumps(Resultresponse(detector.capture()).__dict__)
+    detector.capture()
+    return Response(status=200)
 
 
 if __name__ == "__main__":
