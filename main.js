@@ -63,9 +63,10 @@ const createWindow = () => {
     Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
-    client.startMeasure(emitter);
     setInterval(() => {
-        client.startMeasure(emitter);
+        client.startMeasure().then(res => {
+            console.log(res);
+        }).catch(error => console.log(error));
     }, 8000);
 
     emitter.on('measure_result', (result) => {
@@ -202,15 +203,18 @@ const createPyProc = () => {
 
     if (guessPackaged()) {
         pyProc = require('child_process').execFile(script, [port])
-      } else {
-        pyProc = require('child_process').spawn(pythonExec, [script, port])
-      }
+    } else {
+        // pyProc = require('child_process').spawn(pythonExec, [script, port])
+    }
 
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    client.start();
+    client.start()
+    .then(res => {
+        console.log(res)
+    }).catch(error => console.log(error));
 };
 
 const guessPackaged = () => {
@@ -279,7 +283,8 @@ ipcMain.on('mute', (event, arg) => {
 });
 
 ipcMain.on('start_camera', (event) => {
-    client.start_camera();
+    client.start_camera()
+    .then(result => console.log(res)).catch(error => console.log(error));
     event.sender.send('camera_started');
 });
 

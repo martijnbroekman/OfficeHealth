@@ -52,9 +52,11 @@ class Detector:
     def start(self):
         # Start background worker
         self.background_worker.start()
+        return True
 
     def capture(self):
         self.face_set = True
+        return self.face_set
 
     def start_camera(self):
         face = None

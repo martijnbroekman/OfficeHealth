@@ -1,8 +1,8 @@
 import json
-import aiohttp
-import asyncio
+import time
 import os
 import sys
+import requests
 
 
 def resource_path(relative_path):
@@ -24,19 +24,37 @@ face_api_url = 'https://westeurope.api.cognitive.microsoft.com/face/v1.0/detect'
 _maxNumRetries = 10
 
 
-async def process_request(data, headers, params):
+def process_request(data, headers, params):
+    retries = 0
     result = None
     error = None
 
-    # Post face async to Azure api
-    async with aiohttp.ClientSession() as session:
-        async with session.post(face_api_url, data=data, headers=headers, params=params) as resp:
+    while True:
 
-            # Handle response
-            if resp.status == 200 or resp.status == 201:
-                result = await resp.json()
+        response = requests.request('post', face_api_url, json=json, data=data, headers=headers, params=params)
+
+        if response.status_code == 429:
+            if retries <= _maxNumRetries:
+                time.sleep(1)
+                retries += 1
+                continue
             else:
-                error = await resp.json()
+                error = "Error on connection to emotion service"
+                break
+
+        elif response.status_code == 200 or response.status_code == 201:
+
+            if 'content-length' in response.headers and int(response.headers['content-length']) == 0:
+                result = None
+                error = "No content returned from emotion service"
+            elif 'content-type' in response.headers and isinstance(response.headers['content-type'], str):
+                if 'application/json' in response.headers['content-type'].lower():
+                    result = response.json() if response.content else None
+                elif 'image' in response.headers['content-type'].lower():
+                    result = response.content
+        else:
+            error = response.json()['error']['message']
+        break
 
     return error, result
 
@@ -57,10 +75,9 @@ def predict_emotions():
         'returnFaceAttributes': 'emotion'
     }
 
-    loop = asyncio.get_event_loop()
-    error, result = loop.run_until_complete(process_request(data, headers, params))
+    error, result = process_request(data, headers, params)
     if error is None:
         return result[0]["faceAttributes"]["emotion"]
 
-    return error['error']['message']
+    return error
 

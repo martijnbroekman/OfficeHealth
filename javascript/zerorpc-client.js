@@ -1,37 +1,41 @@
-const zerorpc = require("zerorpc");
+const axios = require("axios");
+const pythonUrl = "http://localhost:5000"
 
-let client = new zerorpc.Client();
-client.connect("tcp://127.0.0.1:4242");
-
-module.exports =  {
+module.exports = {
     start: function start() {
-        client.invoke("start", (error) => {
-            if (error) throw error;
+        return new Promise((resolve, reject) => {
+            axios.default.get(`${pythonUrl}/start`)
+                .then(res => {
+                    resolve(res.data)
+                })
+                .catch(error => reject(error));
         });
     },
     start_camera: function start_camera() {
-        client.invoke("start_camera", (error, res) => {
-            if (error) throw error;
+        return new Promise((resolve, reject) => {
+            axios.default.get(`${pythonUrl}/start-camera`)
+                .then(res => {
+                    resolve(res.data)
+                })
+                .catch(error => reject(error));
         });
     },
     capture: function capture() {
         return new Promise((resolve, reject) => {
-            client.invoke("capture", (error, res) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(res);
-                }
-            })
+            axios.default.get(`${pythonUrl}/capture`)
+                .then(res => {
+                    resolve(res.data)
+                })
+                .catch(error => reject(error));
         });
     },
-    startMeasure: function startMeasure(emitter) {
-        client.invoke("measure", (error, res) => {
-            if (error) {
-                emitter.emit("error", error);
-            } else {
-                emitter.emit("measure_result", res);
-            }
+    startMeasure: function startMeasure() {
+        return new Promise((resolve, reject) => {
+            axios.default.get(`${pythonUrl}/measure`)
+                .then(res => {
+                    resolve(res.data)
+                })
+                .catch(error => reject(error));
         });
     }
 }
