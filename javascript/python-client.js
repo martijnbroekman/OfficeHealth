@@ -6,7 +6,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             axios.default.get(`${pythonUrl}/start-camera`)
                 .then(res => {
-                    resolve(res.data)
+                    resolve(res)
                 })
                 .catch(error => reject(error));
         });
@@ -15,7 +15,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             axios.default.get(`${pythonUrl}/capture`)
                 .then(res => {
-                    resolve(res.data)
+                    resolve(res)
                 })
                 .catch(error => reject(error));
         });

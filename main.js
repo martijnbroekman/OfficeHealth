@@ -277,7 +277,7 @@ ipcMain.on('mute', (event, arg) => {
 
 ipcMain.on('start_camera', (event) => {
     client.start_camera()
-        .then(result => event.sender.send('camera_started')).catch(error => console.log(error));
+        .then(event.sender.send('camera_started')).catch(error => console.log(error));
 });
 
 ipcMain.on('capture', (event) => {
