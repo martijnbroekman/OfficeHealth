@@ -31,7 +31,6 @@
     "qs": "^6.5.2",
     "tslib": "^1.9.3",
     "websocket": "^1.0.28",
-    "xmlhttprequest": "^1.8.0",
-    "zerorpc": "^0.9.8"
+    "xmlhttprequest": "^1.8.0"
   }
 }
