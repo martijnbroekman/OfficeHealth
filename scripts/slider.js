@@ -6,7 +6,7 @@ const setupSliders = () => {
     let exerciseSlider = document.getElementById("exerciseRange");
     let drowsinessSlider = document.getElementById("drowsinessRange");
     let postureSlider = document.getElementById("postureRange");
-    let socialSlider = document.getElementById("socialRange");
+    let socialSlider = document.getElementById("activityRange");
     
     exerciseSlider.oninput = handleOnChange;
     drowsinessSlider.oninput = handleOnChange;
@@ -38,7 +38,7 @@ const handleOnChange = (e) => {
         break;
         case 2:
             text = '2 hour';
-            ipcRenderer.send('goals:' + name, 7200000);
+            ipcRenderer.send('goals:' + name, 1000);//7200000);
         break;
         case 3:
             text = '1 hour';

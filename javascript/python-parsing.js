@@ -1,7 +1,7 @@
 const fs = require('fs');
 const notification = require('./notifications');
 
-const parseResults = (results, callback) => {
+const parseResults = (results, notificationAllowed, callback) => {
     let currentValues;
 
     fs.readFile('./measure.json', 'utf8', (err, data) => {
@@ -28,11 +28,13 @@ const parseResults = (results, callback) => {
         }
 
 
-        fs.readFile('settings.json', 'utf8', (err, data) => {
-            if (!err && JSON.parse(data).canReceiveNotfications) {
-                postureNotification(currentValues.posture);
-            }
-        });
+        if (notificationAllowed) {
+            fs.readFile('settings.json', 'utf8', (err, data) => {
+                if (!err && JSON.parse(data).canReceiveNotfications) {
+                    postureNotification(currentValues.posture);
+                }
+            });
+        }
 
         // Calculate new fatigue score
         currentValues.fatigue = resultObject.fatigue ? Math.max(0, currentValues.fatigue - 0.1) : Math.min(1, currentValues.fatigue + 0.1);

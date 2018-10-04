@@ -60,10 +60,10 @@ const createWindow = () => {
     //Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
-    // client.startMeasure(emitter);
-    // setInterval(() => {
-    //     client.startMeasure(emitter);
-    // }, 8000);
+    client.startMeasure(emitter);
+    setInterval(() => {
+        client.startMeasure(emitter);
+    }, 8000);
 
     emitter.on('measure_result', (result) => {
         let parsedResult = JSON.parse(result);
@@ -71,16 +71,12 @@ const createWindow = () => {
         if (parsedResult !== null && parsedResult.face_detected !== false) {
             let resultObject = parsedResult.emotions;
             
-            pythonParsing.ParseResults(parsedResult, (resultatos) => {
+            pythonParsing.ParseResults(parsedResult, timer.postureNotificationAllowed(), (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
             //api.sendEmotion(resultObject)
             //    .then(() => {})
             //    .catch(error => console.log(error))
-
-            pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
-            });
         }
     });
 
@@ -199,16 +195,16 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    //pyProc = require('child_process').spawn(pythonExec, [script, port]);
+    pyProc = require('child_process').spawn(pythonExec, [script, port]);
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    //client.start();
+    client.start();
 };
 
 const exitPyProc = () => {
-    //pyProc.kill();
+    pyProc.kill();
     pyProc = null;
     pyPort = null;
 };

@@ -11,8 +11,6 @@ const activityText = 'activity';
 
 const jsonPath = 'goals.json';
 
-const eventEmitter = new events.EventEmitter();
-
 let exerciseInterval = null;
 let drowsinessInterval = null;
 let postureInterval = null;
@@ -20,22 +18,30 @@ let activityInterval = null;
 
 let timing;
 
+let exerciseNotificationAllowed = false;
+let drowsinessNotificationAllowed = false;
+let postureNotificationAllowed = false;
+let activityNotificationAllowed = false;
+
 const exerciseTrigger = () => {
-    consol.console.log('exercise triggert');
+    console.log('exercise triggert');
+    exerciseNotificationAllowed = true;
 }
 
 const drowsinessTrigger = () => {
-    consol.console.log('drowsiness triggert');
+    console.log('drowsiness triggert');
+    drowsinessNotificationAllowed = true;
 }
 
 const postureTrigger = () => {
-    consol.console.log('posture triggert');
+    console.log('posture triggert');
+    postureNotificationAllowed = true;
 }
 
 const activityTrigger = () => {
-    consol.console.log('activity triggert');
+    console.log('activity triggert');
+    activityNotificationAllowed = true;
 }
-
 
 const start = () => {
     console.log('started')
@@ -52,11 +58,19 @@ const start = () => {
             timing = JSON.parse(data);
         }
 
-        exerciseInterval = setInterval(exerciseTrigger, timing.exercise);
-        drowsinessInterval = setInterval(drowsinessTrigger, timing.drowsiness);
-        postureInterval = setInterval(postureTrigger, timing.posture);
-        activityInterval = setInterval(activityTrigger, timing.activity);
+        exerciseInterval = setTrigger(exerciseTrigger, timing.exercise);
+        drowsinessInterval = setTrigger(drowsinessTrigger, timing.drowsiness);
+        postureInterval = setTrigger(postureTrigger, timing.posture);
+        activityInterval = setTrigger(activityTrigger, timing.activity);
     });
+}
+
+function setTrigger(trigger, time) {
+    console.log(time)
+    if (time !== 'on' && time !== 'off') {
+        return setInterval(trigger, time);
+    }
+    return null;
 }
 
 function saveTiming() {
@@ -67,10 +81,54 @@ function saveTiming() {
 
 module.exports = {
     start: start,
-    bindExercise: (callBack) => eventEmitter.on(exerciseText, callBack),
-    binddrowsiness: (callBack) => eventEmitter.on(drowsinessText, callBack),
-    bindposture: (callBack) => eventEmitter.on(postureText, callBack),
-    bindactivity: (callBack) => eventEmitter.on(activityText, callBack),
+    exerciseNotificationAllowed: () => {
+        if (timing.exercise === 'on') {
+            return true;
+        }
+        if (timing.exercise === 'off') {
+            return false;
+        }
+        let current = exerciseNotificationAllowed;
+        exerciseNotificationAllowed = false;
+
+        return current;
+    },
+    drowsinessNotificationAllowed: () => {
+        if (timing.drowsiness === 'on') {
+            return true;
+        }
+        if (timing.drowsiness === 'off') {
+            return false;
+        }
+        let current = drowsinessNotificationAllowed;
+        drowsinessNotificationAllowed = false;
+
+        return current;
+    },
+    postureNotificationAllowed: () => {
+        if (timing.posture === 'on') {
+            return true;
+        }
+        if (timing.posture === 'off') {
+            return false;
+        }
+        let current = postureNotificationAllowed;
+        postureNotificationAllowed = false;
+
+        return current;
+    },
+    activityNotificationAllowed: () => {
+        if (timing.activity === 'on') {
+            return true;
+        }
+        if (timing.activity === 'off') {
+            return false;
+        }
+        let current = activityNotificationAllowed;
+        activityNotificationAllowed = false;
+
+        return current;
+    }
 }
 
 ipcMain.on('goals:exercise', (event, miliseconds) => {
@@ -91,21 +149,39 @@ ipcMain.on('goals:drowsiness', (event, miliseconds) => {
     timing.drowsiness = miliseconds;
     saveTiming();
     clearInterval(drowsinessInterval);
-    drowsinessInterval = setInterval(drowsinessTrigger, miliseconds);
+    if (miliseconds === 'off') {
+        drowsinessInterval = null;
+    } else if (miliseconds === 'on') {
+        drowsinessInterval = null;
+    } else {
+        drowsinessInterval = setInterval(drowsinessTrigger, miliseconds);
+    }
 });
 
 ipcMain.on('goals:posture', (event, miliseconds) => {
     timing.posture = miliseconds;
     saveTiming();
     clearInterval(postureInterval);
-    postureInterval = setInterval(postureTrigger, miliseconds);
+    if (miliseconds === 'off') {
+        postureInterval = null;
+    } else if (miliseconds === 'on') {
+        postureInterval = null;
+    } else {
+        postureInterval = setInterval(postureTrigger, miliseconds);
+    }
 });
 
 ipcMain.on('goals:activity', (event, miliseconds) => {
     timing.posture = miliseconds;
     saveTiming();
     clearInterval(activityInterval);
-    activityInterval = setInterval(activityTrigger, miliseconds);
+    if (miliseconds === 'off') {
+        activityInterval = null;
+    } else if (miliseconds === 'on') {
+        activityInterval = null;
+    } else {
+        activityInterval = setInterval(activityTrigger, miliseconds);
+    }
 });
 
 app.on('will-quit', () => {
