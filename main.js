@@ -3,7 +3,6 @@ const path = require('path');
 const fitbit = require('./javascript/fitbit.js');
 const client = require('./javascript/python-client');
 const EventEmitter = require('events').EventEmitter
-const axios = require('axios');
 const api = require('./javascript/api-service')
 const notification = require('./javascript/notifications')
 const pythonParsing = require('./javascript/python-parsing')
@@ -44,6 +43,7 @@ const createWindow = () => {
 
     mainWinow.webContents.once('dom-ready', () => {
         setName(currentUser.name);
+        setPots();
         api.getUser()
             .then(res => {
                 fs.readFile('settings.json', 'utf8', (err, data) => {
@@ -58,6 +58,8 @@ const createWindow = () => {
                 mainWinow.webContents.send('canReceiveNotification', res.canReceiveNotification);
             })
             .catch(error => console.log(error));
+
+        
     });
 
     Menu.setApplicationMenu(null);
@@ -73,13 +75,6 @@ const createWindow = () => {
         let parsedResult = result;
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
-            pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
-            });
-            //api.sendEmotion(resultObject)
-            //    .then(() => {})
-            //    .catch(error => console.log(error))
-
             pythonParsing.ParseResults(parsedResult, (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
@@ -122,7 +117,7 @@ const createSettingsWindow = () => {
 const startup = () => {
     const measureValues = {
         posture: 1,
-        fatigue: 0.5,
+        fatigue: 0.8,
         emotions: {
             anger: 0,
             neutral: 1,
@@ -148,8 +143,7 @@ const startup = () => {
             currentUser = dataObject;
             api.login(dataObject.mail, dataObject.password)
                 .then(() => {
-                    createWindow()
-                    setName(currentUser.name);
+                    createWindow();
                 })
                 .catch(error => console.log(error));
         }
@@ -189,7 +183,7 @@ let pyProc = null;
 let pyPort = null;
 
 const selectPort = () => {
-    pyPort = 4242;
+    pyPort = 5000;
     return pyPort;
 };
 
@@ -290,4 +284,14 @@ ipcMain.on('capture', (event) => {
 
 function setName(name) {
     mainWinow.webContents.send('settings:name', name);
+}
+
+function setPots() {
+    fs.readFile('measure.json', 'utf8', (err, data) => {
+        if (!err) {
+            pythonParsing.SetStatusDescription(JSON.parse(data), (result) => {
+                mainWinow.webContents.send("py:status", result);
+            });
+        }
+    });
 }
