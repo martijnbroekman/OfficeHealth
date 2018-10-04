@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="../styles/notificationsStyle.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700">
-
-
 </head>
 
 <body>
@@ -16,26 +14,26 @@
         <div class="row no-padding">
             <div class="col-12 media-column no-padding"> 
                 <!-- <img class="img-gif" src="https://media.giphy.com/media/XmgaQnxOMQd3O/giphy.gif" />    -->
-                <img class="img-gif" src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/12458013/p8.0.gif" />  
+                <img id="gif" class="img-gif" src="https://cdn.vox-cdn.com/uploads/chorus_asset/file/12458013/p8.0.gif" />  
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="message-column">
-            <div class="row ">
-                <div class="col-12">
-                    <p><b>Djesse daagt je uit voor een potje ping pong!</b></p>
-                </div>
+    <div class="container-fluid message-column">
+        <div class="row">
+            <div class="col-12">
+                <p id="message"><b>Djesse daagt je uit voor een potje ping pong!</b></p>
             </div>
-            <div class="row">
-                <div class="col-6 no-padding">
-                    <button type="button" class="button button-yes">Yeah!</button>
-                </div>
-                <div class="col-6 no-padding">
-                    <button type="button" class="button button-no">Fuck off</button>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-6 no-padding">
+                <button id="btnYes" type="button" class="button button-yes">Yeah!</button>
+            </div>
+            <div class="col-6 no-padding">
+                <button id="btnNo" type="button" class="button button-no">Fuck off</button>
             </div>
         </div>
     </div>
+
+    <script src="../scripts/notifications-window.js"></script>
 </body>
 </html>

@@ -4,14 +4,15 @@ const notifications = require( 'freedesktop-notifications' );
 
 const {
     BrowserWindow,
-    Menu
+    Menu,
+    ipcMain
 } = electron;
 
 // Construct and push notification
 const pushNotification = (title, message) => {
     return new Promise ((resolve, reject) => {
         let notif = notifications.createNotification( {
-            summary: title ,
+            summary: title,
             body: message,
             icon: path.join(__dirname, '../img/pots-logo.png'),
             actions: {
@@ -48,7 +49,7 @@ const pushNotificationWithoutActions = (title, message) => {
 };
 
 let notificationWindow = null;
-const createNotificationWindow = () => {
+const createNotificationWindow = (gifPath, message) => {
     let notificationWidth = 320;
     let notificationHeight = 320;
     let xPosition = electron.screen.getPrimaryDisplay().bounds.width - notificationWidth - 15;
@@ -70,6 +71,11 @@ const createNotificationWindow = () => {
         slashes: true
     }));
 
+    notificationWindow.webContents.once('dom-ready', () => {     
+        notificationWindow.webContents.send('notification:content', gifPath, message);
+    });
+
+
     notificationWindow.on('closed', () => {
         notificationWindow = null
     });
@@ -77,8 +83,12 @@ const createNotificationWindow = () => {
     Menu.setApplicationMenu(null);
 };
 
+const pushNotificationWindow = (gifPath, message) => {
+    createNotificationWindow(gifPath, message);
+};
+
 module.exports = {
     PushNotification: pushNotification,
     pushNotificationWithoutActions: pushNotificationWithoutActions,
-    createNotificationWindow: createNotificationWindow
+    pushNotificationWindow: pushNotificationWindow
 };
