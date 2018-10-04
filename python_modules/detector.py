@@ -55,7 +55,7 @@ class Detector:
     def start_camera(self):
         face = None
 
-        while not self.face_set:
+        while not self.face_set or face is None:
             frame = self.vs.read()
 
             frame = imutils.resize(frame, width=450)
@@ -64,9 +64,12 @@ class Detector:
             # Detect faces
             faces = self.detector(gray, 0)
 
-            face = faces[0]
-            (x, y, w, h) = posture.rect_to_bb(face)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            if len(faces) > 0:
+                face = faces[0]
+                (x, y, w, h) = posture.rect_to_bb(face)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            else:
+                face = None
 
             cv2.imshow("Posture", frame)
             key = cv2.waitKey(1) & 0xFF

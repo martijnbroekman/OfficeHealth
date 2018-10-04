@@ -59,7 +59,7 @@ const createWindow = () => {
             })
             .catch(error => console.log(error));
 
-        
+
     });
 
     Menu.setApplicationMenu(null);
@@ -276,11 +276,20 @@ ipcMain.on('start_camera', (event) => {
 
 ipcMain.on('capture', (event) => {
     client.capture().then(() => {
-        event.sender.send('proceed_login');
+        settingsExists(() => {
+            event.sender.send('proceed_login');
+        });
     }).catch((error) => {
         console.log(error);
     });
 });
+
+function settingsExists(callback) {
+    fs.stat('settings.json', (err) => {
+        if (err) settingsExists(callback);
+        callback(true);
+    });
+}
 
 function setName(name) {
     mainWinow.webContents.send('settings:name', name);
