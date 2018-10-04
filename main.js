@@ -60,10 +60,10 @@ const createWindow = () => {
     //Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
-    client.startMeasure(emitter);
-    setInterval(() => {
-        client.startMeasure(emitter);
-    }, 8000);
+    // client.startMeasure(emitter);
+    // setInterval(() => {
+    //     client.startMeasure(emitter);
+    // }, 8000);
 
     emitter.on('measure_result', (result) => {
         let parsedResult = JSON.parse(result);
@@ -85,6 +85,9 @@ const createWindow = () => {
     });
 
     timer.start();
+    timer.setActivityCallback(() => {
+        api.changeNotificationStatus(true);
+    });
 };
 
 let settingsWindow = null;
@@ -156,8 +159,13 @@ api.onNotification(data => {
     notification.PushNotification(data.title, data.description)
         .then(res => {
             api.responseOnNotification(data.id, res === 'yes');
+            api.changeNotificationStatus(false);
         })
-        .catch(error => api.responseOnNotification(data.id, false));
+        .catch(error => { 
+            api.responseOnNotification(data.id, false);
+            api.changeNotificationStatus(false);
+        });
+    
 });
 
 api.onAccept(data => {
@@ -195,16 +203,16 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port]);
+    //pyProc = require('child_process').spawn(pythonExec, [script, port]);
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    client.start();
+    //client.start();
 };
 
 const exitPyProc = () => {
-    pyProc.kill();
+    //pyProc.kill();
     pyProc = null;
     pyPort = null;
 };
@@ -215,12 +223,11 @@ app.on('will-quit', exitPyProc);
 ipcMain.on('fitbit:signin', (event) => {
     fitbit.fitbitSignIn()
         .then((res) => {
-            console.log(res)
+            console.log(res);
         }).catch((error) => {
             console.log(error);
         })
 });
-
 
 ipcMain.on('settings:login', (event, creditials) => {
     api.register(creditials.mail, creditials.name, creditials.password, creditials.type)

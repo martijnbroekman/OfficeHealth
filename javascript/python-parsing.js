@@ -27,7 +27,6 @@ const parseResults = (results, notificationAllowed, callback) => {
             default: break;
         }
 
-
         if (notificationAllowed) {
             fs.readFile('settings.json', 'utf8', (err, data) => {
                 if (!err && JSON.parse(data).canReceiveNotfications) {
