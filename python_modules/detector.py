@@ -5,7 +5,6 @@ import imutils
 import time
 import json
 from pathlib import Path
-import gevent
 import os
 import sys
 
@@ -57,7 +56,6 @@ class Detector:
         face = None
 
         while not self.face_set:
-            gevent.sleep(0)
             frame = self.vs.read()
 
             frame = imutils.resize(frame, width=450)
