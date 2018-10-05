@@ -44,6 +44,7 @@ const createWindow = () => {
 
     mainWinow.webContents.once('dom-ready', () => {
         setName(currentUser.name);
+        setPots();
         api.getUser()
             .then(res => {
                 fs.readFile('settings.json', 'utf8', (err, data) => {
@@ -72,15 +73,6 @@ const createWindow = () => {
         let parsedResult = JSON.parse(result);
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
-            let resultObject = parsedResult.emotions;
-
-            pythonParsing.ParseResults(parsedResult, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
-            });
-            //api.sendEmotion(resultObject)
-            //    .then(() => {})
-            //    .catch(error => console.log(error))
-
             pythonParsing.ParseResults(parsedResult, (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
@@ -123,7 +115,7 @@ const createSettingsWindow = () => {
 const startup = () => {
     const measureValues = {
         posture: 1,
-        fatigue: 0.5,
+        fatigue: 0.8,
         emotions: {
             anger: 0,
             neutral: 1,
@@ -149,8 +141,7 @@ const startup = () => {
             currentUser = dataObject;
             api.login(dataObject.mail, dataObject.password)
                 .then(() => {
-                    createWindow()
-                    setName(currentUser.name);
+                    createWindow();
                 })
                 .catch(error => console.log(error));
         }
@@ -293,4 +284,14 @@ ipcMain.on('capture', (event) => {
 
 function setName(name) {
     mainWinow.webContents.send('settings:name', name);
+}
+
+function setPots() {
+    fs.readFile('measure.json', 'utf8', (err, data) => {
+        if (!err) {
+            pythonParsing.SetStatusDescription(JSON.parse(data), (result) => {
+                mainWinow.webContents.send("py:status", result);
+            });
+        }
+    });
 }
