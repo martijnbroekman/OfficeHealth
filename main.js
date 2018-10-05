@@ -193,9 +193,9 @@ const createPyProc = () => {
 
     if (guessPackaged()) {
         pyProc = require('child_process').execFile(script, [port])
-      } else {
+    } else {
         pyProc = require('child_process').spawn(pythonExec, [script, port])
-      }
+    }
 
     if (pyPort != null) {
         console.log('child process success')
@@ -276,11 +276,19 @@ ipcMain.on('start_camera', (event) => {
 
 ipcMain.on('capture', (event) => {
     client.capture().then(() => {
-        event.sender.send('proceed_login');
+        settingsExists(() => {
+            event.sender.send('proceed_login');
+        });
     }).catch((error) => {
         console.log(error);
     });
 });
+
+function settingsExists(callback) {
+    fs.stat('settings.json', (err) => {
+        err ? settingsExists(callback) : callback(true);  
+    });
+}
 
 function setName(name) {
     mainWinow.webContents.send('settings:name', name);
