@@ -99,4 +99,5 @@ function between(x, min, max) {
 
 module.exports = {
     ParseResults: parseResults,
+    SetStatusDescription: setStatusDescription
 };

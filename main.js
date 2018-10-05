@@ -17,6 +17,10 @@ const {
     Menu
 } = electron;
 
+const PY_DIST_FOLDER = 'dist';
+const PY_FOLDER = 'api';
+const PY_MODULE = 'api';
+
 let currentUser = {};
 
 let mainWinow = null;
@@ -41,6 +45,7 @@ const createWindow = () => {
 
     mainWinow.webContents.once('dom-ready', () => {
         setName(currentUser.name);
+        setPots();
         api.getUser()
             .then(res => {
                 fs.readFile('settings.json', 'utf8', (err, data) => {
@@ -69,15 +74,9 @@ const createWindow = () => {
         let parsedResult = JSON.parse(result);
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
-            let resultObject = parsedResult.emotions;
-            
-            pythonParsing.ParseResults(parsedResult, timer.postureNotificationAllowed(), (resultatos) => {
+            pythonParsing.ParseResults(parsedResult, timer.postureNotificationAllowed, (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
-                
-            api.sendEmotion(resultObject)
-               .then(() => {})
-               .catch(error => console.log(error))
         }
     });
 
@@ -140,7 +139,7 @@ const createSettingsWindow = () => {
 const startup = () => {
     const measureValues = {
         posture: 1,
-        fatigue: 0.5,
+        fatigue: 0.8,
         emotions: {
             anger: 0,
             neutral: 1,
@@ -166,8 +165,7 @@ const startup = () => {
             currentUser = dataObject;
             api.login(dataObject.mail, dataObject.password)
                 .then(() => {
-                    createWindow()
-                    setName(currentUser.name);
+                    createWindow();
                 })
                 .catch(error => console.log(error));
         }
@@ -217,18 +215,38 @@ const selectPort = () => {
 };
 
 const pythonExec = path.join(__dirname, 'python_modules', 'env', 'bin', 'python');
-const script = path.join(__dirname, 'python_modules', 'api.py')
 
 const createPyProc = () => {
-    let port = '' + selectPort()
+    let script = getScriptPath();
+    let port = '' + selectPort();
 
-    pyProc = require('child_process').spawn(pythonExec, [script, port]);
+    if (guessPackaged()) {
+        pyProc = require('child_process').execFile(script, [port])
+    } else {
+        pyProc = require('child_process').spawn(pythonExec, [script, port])
+    }
+
     if (pyPort != null) {
         console.log('child process success')
     }
 
     client.start();
 };
+
+const guessPackaged = () => {
+    const fullPath = path.join(__dirname, PY_DIST_FOLDER);
+    return require('fs').existsSync(fullPath);
+}
+
+const getScriptPath = () => {
+    if (!guessPackaged()) {
+        return path.join(__dirname, 'python_modules', PY_FOLDER + '.py')
+    }
+    if (process.platform === 'win32') {
+        return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE + '.exe')
+    }
+    return path.join(__dirname, PY_DIST_FOLDER, PY_MODULE, PY_MODULE)
+}
 
 const exitPyProc = () => {
     pyProc.kill();
@@ -296,12 +314,30 @@ ipcMain.on('start_camera', (event) => {
 
 ipcMain.on('capture', (event) => {
     client.capture().then(() => {
-        event.sender.send('proceed_login');
+        settingsExists(() => {
+            event.sender.send('proceed_login');
+        });
     }).catch((error) => {
         console.log(error);
     });
 });
 
+function settingsExists(callback) {
+    fs.stat('settings.json', (err) => {
+        err ? settingsExists(callback) : callback(true);  
+    });
+}
+
 function setName(name) {
     mainWinow.webContents.send('settings:name', name);
+}
+
+function setPots() {
+    fs.readFile('measure.json', 'utf8', (err, data) => {
+        if (!err) {
+            pythonParsing.SetStatusDescription(JSON.parse(data), (result) => {
+                mainWinow.webContents.send("py:status", result);
+            });
+        }
+    });
 }

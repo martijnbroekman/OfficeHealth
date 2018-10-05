@@ -4,7 +4,9 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node_modules/electron/dist/electron ."
+    "start": "node_modules/electron/dist/electron .",
+    "windows-start": "node_modules\\electron\\dist\\electron.exe .",
+    "package-win": "electron-packager . pots --overwrite  --out=release-builds-windows --ignore=python_modules"
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,7 @@
   "homepage": "https://github.com/martijnbroekman/OfficeHeatlth#readme",
   "devDependencies": {
     "electron": "^2.0.9",
-    "electron-packager": "^12.1.1"
+    "electron-packager": "^12.1.2"
   },
   "dependencies": {
     "@aspnet/signalr": "^1.0.3",
