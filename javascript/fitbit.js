@@ -67,14 +67,17 @@ module.exports = {
             }
         });
     },
+    isSignedIn: function() {
+        return creditials !== null;
+    },
     getHeartBeat: function getHeartBeat(date, startTime, endTime) {
         return new Promise((resolve, reject) => {
             if (!moment(date, 'yyyy-MM-dd').isValid()) {
                 reject("date isn't a valid date use the yyyy-MM-dd format");
             } else if (!moment(startTime, 'HH:mm').isValid()) {
-                reject ("startTime isn't a valid time use the HH:mm format")
+                reject ("startTime isn't a valid time use the HH:mm format");
             } else if (!moment(endTime, 'HH:mm').isValid()) {
-                reject ("endTime isn't a valid time use the HH:mm format")
+                reject ("endTime isn't a valid time use the HH:mm format");
             } else {
                 let heartbeatUrl = `https://api.fitbit.com/1/user/-/activities/heart/date/${date}/1d/1min/time/${startTime}/${endTime}.json`;
                 
@@ -115,6 +118,23 @@ module.exports = {
             }
             
         })
+    },
+    getStepsToday: function getStepsToday() {
+        let date = moment(new Date()).format('YYYY-MM-DD');
+        let stepsUrl = `https://api.fitbit.com/1/user/-/activities/steps/date/${date}/1d.json`;
+
+        return new Promise((resolve, reject) => {
+            axios.get(stepsUrl, {
+                headers: {
+                    Authorization: 'Bearer ' + creditials.access_token 
+                }
+            }).then((response) => {
+                resolve(response.data['activities-steps'][0].value);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+                
     }
 }
 

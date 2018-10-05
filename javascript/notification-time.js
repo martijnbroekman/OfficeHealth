@@ -72,25 +72,28 @@ let postureTrigger = null;
 let activityTrigger = null;
 
 const start = () => {
-    console.log('started')
-    fs.readFile(jsonPath, 'utf8', (err, data) => {
-        if (err) {
-            timing = {
-                exercise: 3600000,
-                drowsiness: 3600000,
-                posture: 3600000,
-                activity: 3600000
+    return new Promise((resolve, reject) => {
+        fs.readFile(jsonPath, 'utf8', (err, data) => {
+            if (err) {
+                timing = {
+                    exercise: 3600000,
+                    drowsiness: 3600000,
+                    posture: 3600000,
+                    activity: 3600000
+                }
+                saveTiming();
+            } else {
+                timing = JSON.parse(data);
             }
-            saveTiming();
-        } else {
-            timing = JSON.parse(data);
-        }
+    
+            exerciseTrigger = new Trigger('exercise', timing.exercise);
+            drowsinessTrigger = new Trigger('drowsiness', timing.drowsiness);
+            postureTrigger = new Trigger('posture', timing.posture);
+            activityTrigger = new Trigger('activity', timing.activity);
 
-        exerciseTrigger = new Trigger('exercise', timing.exercise);
-        drowsinessTrigger = new Trigger('drowsiness', timing.drowsiness);
-        postureTrigger = new Trigger('posture', timing.posture);
-        activityTrigger = new Trigger('activity', timing.activity);
-    });
+            resolve();
+        });
+    })
 }
 
 function saveTiming() {
@@ -105,6 +108,7 @@ module.exports = {
     drowsinessNotificationAllowed: () => drowsinessTrigger.notificationAllowed,
     postureNotificationAllowed: () => postureTrigger.notificationAllowed,
     activityNotificationAllowed: () => activityTrigger.notificationAllowed,
+    setExerciseCallback: (callback) => exerciseTrigger.callback = callback,
     setActivityCallback: (callback) => activityTrigger.callback = callback
 }
 

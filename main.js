@@ -57,13 +57,13 @@ const createWindow = () => {
             .catch(error => console.log(error));
     });
 
-    //Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
-    // client.startMeasure(emitter);
-    // setInterval(() => {
-    //     client.startMeasure(emitter);
-    // }, 8000);
+    client.startMeasure(emitter);
+    setInterval(() => {
+        client.startMeasure(emitter);
+    }, 8000);
 
     emitter.on('measure_result', (result) => {
         let parsedResult = JSON.parse(result);
@@ -74,9 +74,10 @@ const createWindow = () => {
             pythonParsing.ParseResults(parsedResult, timer.postureNotificationAllowed(), (resultatos) => {
                 mainWinow.webContents.send("py:status", resultatos);
             });
-            //api.sendEmotion(resultObject)
-            //    .then(() => {})
-            //    .catch(error => console.log(error))
+                
+            api.sendEmotion(resultObject)
+               .then(() => {})
+               .catch(error => console.log(error))
         }
     });
 
@@ -84,10 +85,28 @@ const createWindow = () => {
         mainWinow.webContents.send('py:measure_error', error);
     });
 
-    timer.start();
-    timer.setActivityCallback(() => {
-        api.changeNotificationStatus(true);
-    });
+    timer.start()
+        .then(() => {
+            timer.setActivityCallback(() => {
+                api.changeNotificationStatus(true);
+            });
+            timer.setExerciseCallback(() => {
+                if (fitbit.isSignedIn()) {
+                    fitbit.getStepsToday()
+                        .then(res => {
+                            mainWinow.webContents.send('fitbit:steps', res);
+                            // send notification
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                } else {
+                    // check steps or move this no notification time js
+                    notification.pushNotificationWithoutActions("Time to move it move it", "it has been a while since you last moved a bit");
+                }
+                
+            });
+        });
 };
 
 let settingsWindow = null;
@@ -203,16 +222,16 @@ const script = path.join(__dirname, 'python_modules', 'api.py')
 const createPyProc = () => {
     let port = '' + selectPort()
 
-    //pyProc = require('child_process').spawn(pythonExec, [script, port]);
+    pyProc = require('child_process').spawn(pythonExec, [script, port]);
     if (pyPort != null) {
         console.log('child process success')
     }
 
-    //client.start();
+    client.start();
 };
 
 const exitPyProc = () => {
-    //pyProc.kill();
+    pyProc.kill();
     pyProc = null;
     pyPort = null;
 };
@@ -220,10 +239,20 @@ const exitPyProc = () => {
 app.on('ready', createPyProc);
 app.on('will-quit', exitPyProc);
 
+const sendSteps = () => {
+    fitbit.getStepsToday()
+    .then(steps => {
+        mainWinow.webContents.send('fitbit:steps', steps);
+    })
+    .catch(error => {});
+}
+
 ipcMain.on('fitbit:signin', (event) => {
     fitbit.fitbitSignIn()
         .then((res) => {
-            console.log(res);
+            sendSteps();
+            setInterval(sendSteps, 60000);
+            
         }).catch((error) => {
             console.log(error);
         })

@@ -228,10 +228,18 @@ body {
 
 #mood {
     background-image: url("../icons/png/stress.png");
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
 }
 
 #fatigue {
     background-image: url("../icons/png/tired.png");
+}
+
+#steps {
+    background-image: url("../icons/png/steps.png");
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
 }
 
 .status-col {

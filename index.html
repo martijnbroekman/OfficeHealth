@@ -71,6 +71,10 @@
                     <div class="col-4 status-col"><div class="status" id="mood"></div></div>
                     <div class="col-8 statusText"><h3 id="moodText"></h3></div>
                 </div>
+                <div style="display: none" class="row" id="stepsContainer">
+                    <div class="col-4 status-col"><div class="status" id="steps"></div></div>
+                    <div class="col-8 statusText"><h3 id="stepsText"></h3></div>
+                </div>
                 <hr>
             </div>
         </div>
@@ -152,6 +156,7 @@
             <div id="settingsSettings">
                 <h2>General settings</h2>
                 <p class="cursor-pointer"><u>reset posture</u></p>
+                <p class="cursor-pointer"><u onclick="fetbitSiginIn()">fitbit sign in</u></p>
                 <h2 id="notificationSettings">Notifications settings</h2>
                 <div id="settingsLeft">
                     <p>Stress</p>
