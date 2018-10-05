@@ -48,6 +48,10 @@ const pushNotificationWithoutActions = (title, message) => {
     notif.push();
 };
 
+const getGifURL = (activity) => {
+    
+}
+
 let notificationWindow = null;
 const createNotificationWindow = (gifPath, message) => {
     let notificationWidth = 320;

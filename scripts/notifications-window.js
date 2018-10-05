@@ -1,8 +1,6 @@
 const electron = require('electron');
 const {ipcRenderer} = electron;
 
-
-
 const clickYes = () => {
     ipcRenderer.send('notification:yes');
 };

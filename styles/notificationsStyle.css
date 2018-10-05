@@ -6,15 +6,21 @@
     padding-top: 15px;
 } */
 
-.media-column {
+.media-row {
     background-color: #22343E;
 }
 
-.message-column {
+.message-row {
     /* border-top-left-radius: 5px; */
     background-color: whitesmoke;
     padding-top: 15px;
     height: 100%;
+}
+
+.button-row {
+    position: fixed;
+    bottom: 0;
+
 }
 
 .top-header {
