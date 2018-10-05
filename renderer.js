@@ -17,6 +17,7 @@ ipcRenderer.on('py:status', (e, result) => {
     const orange = '#e67616';
     const yellow = '#f1bb33';
     const green = '#09a38c';
+    const blue = '#8396f1';
 
     let posture = document.getElementById('posture');
     let fatigue = document.getElementById('fatigue');
@@ -40,7 +41,7 @@ ipcRenderer.on('py:status', (e, result) => {
     if (result.emotions.anger > 0) mood.style.borderColor = red;
     else if (result.emotions.happy > 0) mood.style.borderColor = green;
     else if (result.emotions.sadness > 0) mood.style.borderColor = orange;
-    else if (result.emotions.neutral > 0) mood.style.borderColor = yellow;
+    else if (result.emotions.neutral > 0) mood.style.borderColor = blue;
     document.getElementById('moodText').innerText = result.moodText;
 });
 
