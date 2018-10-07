@@ -176,7 +176,7 @@ const startup = () => {
 //     notification.PushNotification(data.title, data.description)
 //         .then(res => {
 //             api.responseOnNotification(data.id, res === 'yes');
-//             api.changeNotificationStatus(false);
+//             api.changeNotificationStatus(false);\
 //         })
 //         .catch(error => { 
 //             api.responseOnNotification(data.id, false);
