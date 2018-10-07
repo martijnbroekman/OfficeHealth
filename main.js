@@ -23,27 +23,27 @@ const PY_MODULE = 'api';
 
 let currentUser = {};
 
-let mainWinow = null;
+let mainWindow = null;
 
 const createWindow = () => {
-    mainWinow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 320,
         height: 390,
         resizable: false,
         icon: path.join(__dirname, 'icons/png/dark-icon-pngs/64x64.png')
     });
 
-    mainWinow.loadURL(require('url').format({
+    mainWindow.loadURL(require('url').format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file',
         slashes: true
     }));
 
-    mainWinow.on('closed', () => {
-        mainWinow = null
+    mainWindow.on('closed', () => {
+        mainWindow = null
     });
 
-    mainWinow.webContents.once('dom-ready', () => {
+    mainWindow.webContents.once('dom-ready', () => {
         setName(currentUser.name);
         setPots();
         api.getUser()
@@ -57,7 +57,7 @@ const createWindow = () => {
                         });
                     }
                 });
-                mainWinow.webContents.send('canReceiveNotification', res.canReceiveNotification);
+                mainWindow.webContents.send('canReceiveNotification', res.canReceiveNotification);
             })
             .catch(error => console.log(error));
     });
@@ -75,13 +75,13 @@ const createWindow = () => {
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
             pythonParsing.ParseResults(parsedResult, timer.postureNotificationAllowed, (resultatos) => {
-                mainWinow.webContents.send("py:status", resultatos);
+                mainWindow.webContents.send("py:status", resultatos);
             });
         }
     });
 
     emitter.on('error', (error) => {
-        mainWinow.webContents.send('py:measure_error', error);
+        mainWindow.webContents.send('py:measure_error', error);
     });
 
     timer.start()
@@ -93,7 +93,7 @@ const createWindow = () => {
                 if (fitbit.isSignedIn()) {
                     fitbit.getStepsToday()
                         .then(res => {
-                            mainWinow.webContents.send('fitbit:steps', res);
+                            mainWindow.webContents.send('fitbit:steps', res);
                             // send notification
                         })
                         .catch(error => {
@@ -172,17 +172,33 @@ const startup = () => {
     });
 }
 
+// api.onNotification(data => {
+//     notification.PushNotification(data.title, data.description)
+//         .then(res => {
+//             api.responseOnNotification(data.id, res === 'yes');
+//             api.changeNotificationStatus(false);
+//         })
+//         .catch(error => { 
+//             api.responseOnNotification(data.id, false);
+//             api.changeNotificationStatus(false);
+//         });
+// });
+
+let lastNotificationId;
+
 api.onNotification(data => {
-    notification.PushNotification(data.title, data.description)
-        .then(res => {
-            api.responseOnNotification(data.id, res === 'yes');
-            api.changeNotificationStatus(false);
-        })
-        .catch(error => { 
-            api.responseOnNotification(data.id, false);
-            api.changeNotificationStatus(false);
-        });
-    
+    lastNotificationId = data.id 
+    notification.pushNotificationWindow('../gifs/pingpong.gif', data.description);
+});
+
+ipcMain.on('notification:yes', (event) => {
+    api.responseOnNotification(lastNotificationId, true);
+    api.changeNotificationStatus(false);
+});
+
+ipcMain.on('notification:no', (event) => {
+    api.responseOnNotification(lastNotificationId, false);
+    api.changeNotificationStatus(false);
 });
 
 api.onAccept(data => {
@@ -201,7 +217,7 @@ app.on('window-all-closed', () => {
     }
 });
 app.on('activate', () => {
-    if (mainWinow === null) {
+    if (mainWindow === null) {
         initApp();
     }
 });
@@ -260,7 +276,7 @@ app.on('will-quit', exitPyProc);
 const sendSteps = () => {
     fitbit.getStepsToday()
     .then(steps => {
-        mainWinow.webContents.send('fitbit:steps', steps);
+        mainWindow.webContents.send('fitbit:steps', steps);
     })
     .catch(error => {});
 }
@@ -329,14 +345,14 @@ function settingsExists(callback) {
 }
 
 function setName(name) {
-    mainWinow.webContents.send('settings:name', name);
+    mainWindow.webContents.send('settings:name', name);
 }
 
 function setPots() {
     fs.readFile('measure.json', 'utf8', (err, data) => {
         if (!err) {
             pythonParsing.SetStatusDescription(JSON.parse(data), (result) => {
-                mainWinow.webContents.send("py:status", result);
+                mainWindow.webContents.send("py:status", result);
             });
         }
     });
