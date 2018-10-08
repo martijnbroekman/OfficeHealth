@@ -74,7 +74,7 @@ const createWindow = () => {
         let parsedResult = JSON.parse(result);
 
         if (parsedResult !== null && parsedResult.face_detected !== false) {
-            pythonParsing.ParseResults(parsedResult, timer.postureNotificationAllowed, (resultatos) => {
+            pythonParsing.ParseResults(parsedResult, timer.postureNotificationAllowed(), (resultatos) => {
                 mainWindow.webContents.send("py:status", resultatos);
             });
         }
@@ -187,8 +187,8 @@ const startup = () => {
 let lastNotificationId;
 
 api.onNotification(data => {
-    lastNotificationId = data.id 
-    notification.pushNotificationWindow('../gifs/pingpong.gif', data.description);
+    lastNotificationId = data.id;
+    notification.pushNotificationWindow(data.gifs[Math.floor(Math.random() * data.gifs.length)].gifUrl, data.description);
 });
 
 ipcMain.on('notification:yes', (event) => {

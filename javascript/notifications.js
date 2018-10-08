@@ -55,7 +55,7 @@ const getGifURL = (activity) => {
 let notificationWindow = null;
 const createNotificationWindow = (gifPath, message) => {
     let notificationWidth = 320;
-    let notificationHeight = 320;
+    let notificationHeight = 400;
     let xPosition = electron.screen.getPrimaryDisplay().bounds.width - notificationWidth - 15;
     let yPosition = electron.screen.getPrimaryDisplay().bounds.height - notificationHeight - 15;
     
