@@ -28,9 +28,7 @@ const parseResults = (results, notificationAllowed, callback) => {
         }
 
         if (notificationAllowed) {
-            if (!err && JSON.parse(data).canReceiveNotfications) {
-                postureNotification(currentValues.posture);
-            }
+            postureNotification(currentValues.posture);
         }
 
         // Calculate new fatigue score
