@@ -46,23 +46,34 @@ const createWindow = () => {
     mainWindow.webContents.once('dom-ready', () => {
         setName(currentUser.name);
         setPots();
-        api.getUser()
-            .then(res => {
-                fs.readFile('settings.json', 'utf8', (err, data) => {
-                    if (!err) {
-                        let settings = JSON.parse(data);
-                        settings.canReceiveNotfications = res.canReceiveNotification;
-                        fs.writeFile('settings.json', JSON.stringify(settings), (err) => {
-                            if (err) throw err;
-                        });
-                    }
+        
+            timer.start()
+                .then((timing) => {
+                    mainWindow.webContents.send('goals:timing', timing);
+
+                    timer.setActivityCallback(() => {
+                        api.changeNotificationStatus(true);
+                    });
+                    timer.setExerciseCallback(() => {
+                        if (fitbit.isSignedIn()) {
+                            fitbit.getStepsToday()
+                                .then(res => {
+                                    mainWindow.webContents.send('fitbit:steps', res);
+                                    // send notification
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                });
+                        } else {
+                            // check steps or move this no notification time js
+                            notification.pushNotificationWithoutActions("Time to move it move it", "it has been a while since you last moved a bit");
+                        }
+                        
+                    });
                 });
-                mainWindow.webContents.send('canReceiveNotification', res.canReceiveNotification);
-            })
-            .catch(error => console.log(error));
     });
 
-    Menu.setApplicationMenu(null);
+    //Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
     client.startMeasure(emitter);
@@ -83,29 +94,6 @@ const createWindow = () => {
     emitter.on('error', (error) => {
         mainWindow.webContents.send('py:measure_error', error);
     });
-
-    timer.start()
-        .then(() => {
-            timer.setActivityCallback(() => {
-                api.changeNotificationStatus(true);
-            });
-            timer.setExerciseCallback(() => {
-                if (fitbit.isSignedIn()) {
-                    fitbit.getStepsToday()
-                        .then(res => {
-                            mainWindow.webContents.send('fitbit:steps', res);
-                            // send notification
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                } else {
-                    // check steps or move this no notification time js
-                    notification.pushNotificationWithoutActions("Time to move it move it", "it has been a while since you last moved a bit");
-                }
-                
-            });
-        });
 };
 
 let settingsWindow = null;
@@ -307,20 +295,6 @@ ipcMain.on('settings:login', (event, creditials) => {
             console.log(error)
             settingsWindow.webContents.send('settings:failed', error.response.data);
         })
-});
-
-ipcMain.on('mute', (event, arg) => {
-    api.changeNotificationStatus(arg);
-
-    fs.readFile('settings.json', 'utf8', (err, data) => {
-        if (!err) {
-            let settings = JSON.parse(data);
-            settings.canReceiveNotfications = arg;
-            fs.writeFile('settings.json', JSON.stringify(settings), (err) => {
-                if (err) throw err;
-            });
-        }
-    });
 });
 
 ipcMain.on('start_camera', (event) => {

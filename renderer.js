@@ -17,7 +17,7 @@ module.exports = {
 }
 
 ipcRenderer.on('py:measure', function(e, result){
-    console.log(result)
+    console.log(result);
 });
 
 ipcRenderer.on('py:status', (e, result) => {
@@ -74,16 +74,6 @@ ipcRenderer.on('py:measure_error', function(e, error){
 ipcRenderer.on('settings:name', function(e, name) {
     console.log(name)
     document.getElementById('profileName').innerText = name;
-});
-
-ipcRenderer.on('canReceiveNotification', function(e, canReceiveNotification) {
-    if (!canReceiveNotification) {
-        ipcRenderer.send("mute", false);
-        document.getElementById('notifications').src = "icons/png/notifcations-muted.png";
-    } else {
-        ipcRenderer.send("mute", true);
-        document.getElementById('notifications').src = "icons/png/notifcations.png";
-    }
 });
 
 function between(x, min, max) {

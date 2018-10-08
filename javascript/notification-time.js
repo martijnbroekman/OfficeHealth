@@ -91,7 +91,7 @@ const start = () => {
             postureTrigger = new Trigger('posture', timing.posture);
             activityTrigger = new Trigger('activity', timing.activity);
 
-            resolve();
+            resolve(timing);
         });
     })
 }

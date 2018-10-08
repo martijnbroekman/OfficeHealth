@@ -17,10 +17,7 @@
         <section id="settingsBar">
             <div class="containter">
                 <div class="row">
-                    <div class="col-2">
-                        <span><img id="notifications" onclick="clicker()" class="cursor-pointer not-selectable" src="icons/png/notifcations.png" /></span>
-                    </div>
-                    <div class="col-8">
+                    <div class="col-8 offset-2">
                         <span id="profile" onclick="showmodal(this.id); closeTabs()">
                             <img id="profilePicture" class="cursor-pointer not-selectable" src="img/profile-scott.png" />
                             <h1 id="profileName" class="cursor-pointer not-selectable"></h1>
@@ -91,7 +88,7 @@
                     </div>
                     <div class="col-7">
                         <div class="slidecontainer">
-                            <input type="range" name="exerciseRange" min="1" max="5" value="3" step="1" class="slider" id="exerciseRange">
+                            <input type="range" name="exerciseRange" min="1" max="5" step="1" class="slider" id="exerciseRange">
                             <output id="exerciseRangeOutput"></output>
                         </div>
                     </div>
@@ -105,7 +102,7 @@
                     </div>
                     <div class="col-7">
                         <div class="slidecontainer">
-                            <input type="range" name="drowsinessRange" min="1" max="5" value="3" step="1" class="slider" id="drowsinessRange">
+                            <input type="range" name="drowsinessRange" min="1" max="5" step="1" class="slider" id="drowsinessRange">
                             <output id="drowsinessRangeOutput"></output>
                         </div>
                     </div>
@@ -119,7 +116,7 @@
                     </div>
                     <div class="col-7">
                         <div class="slidecontainer">
-                            <input type="range" min="1" max="5" value="3" step="1" class="slider" id="postureRange">
+                            <input type="range" min="1" max="5" step="1" class="slider" id="postureRange">
                             <output id="postureRangeOutput"></output>
                         </div>
                     </div>
@@ -133,7 +130,7 @@
                     </div>
                     <div class="col-7">
                         <div class="slidecontainer">
-                            <input type="range" min="1" max="5" value="3" step="1" class="slider" id="activityRange">
+                            <input type="range" min="1" max="5" step="1" class="slider" id="activityRange">
                             <output id="activityRangeOutput"></output>
                         </div>
                     </div>

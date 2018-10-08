@@ -1,8 +1,14 @@
 electron = require('electron');
 
 const { ipcRenderer } = electron;
+let currentTiming;
 
 const setupSliders = () => {
+    setValue(currentTiming.exercise, 'exerciseRange');
+    setValue(currentTiming.drowsiness, 'drowsinessRange');
+    setValue(currentTiming.posture, 'postureRange');
+    setValue(currentTiming.activity, 'activityRange');
+
     let exerciseSlider = document.getElementById("exerciseRange");
     let drowsinessSlider = document.getElementById("drowsinessRange");
     let postureSlider = document.getElementById("postureRange");
@@ -55,8 +61,40 @@ const handleOnChange = (e) => {
         default:
             text = value;
     }
+
+    currentTiming[name] = text;
     output.innerText = text;
 }
+
+ipcRenderer.on('goals:timing', function(e, timing){
+    currentTiming = timing;
+});
+
+function setValue(value, id) {
+    let element = document.getElementById(id);
+
+    switch (value) {
+        case 'off':
+            element.value = 1;
+        break;
+        case 1000://7200000
+            element.value = 2;
+        break;
+        case 3600000:
+            console.log('test');
+            element.value = 3;
+        break;
+        case 1800000:
+            element.value = 4;
+        break;
+        case 'on':
+            element.value = 5;
+        break;
+        default:
+            element.value = 3;
+    }
+}
+
 
 module.exports = {
     setupSliders: setupSliders

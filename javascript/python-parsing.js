@@ -28,11 +28,9 @@ const parseResults = (results, notificationAllowed, callback) => {
         }
 
         if (notificationAllowed) {
-            fs.readFile('settings.json', 'utf8', (err, data) => {
-                if (!err && JSON.parse(data).canReceiveNotfications) {
-                    postureNotification(currentValues.posture);
-                }
-            });
+            if (!err && JSON.parse(data).canReceiveNotfications) {
+                postureNotification(currentValues.posture);
+            }
         }
 
         // Calculate new fatigue score

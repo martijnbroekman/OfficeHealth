@@ -13,17 +13,6 @@ function showmodal(id) {
     slider.setupSliders();
 }
 
-function clicker() {
-    let image = document.getElementById('notifications').getAttribute("src");
-    if (image == "icons/png/notifcations.png") {
-        ipcRenderer.send("mute", false);
-        document.getElementById('notifications').src = "icons/png/notifcations-muted.png";
-    } else {
-        ipcRenderer.send("mute", true);
-        document.getElementById('notifications').src = "icons/png/notifcations.png";
-    }
-}
-
 function checkClick1() {
     let image1 = document.getElementById('check1').getAttribute("src");
     console.log(image1);
