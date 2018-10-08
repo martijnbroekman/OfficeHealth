@@ -73,7 +73,7 @@ const createWindow = () => {
                 });
     });
 
-    //Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
 
     const emitter = new EventEmitter();
     client.startMeasure(emitter);
