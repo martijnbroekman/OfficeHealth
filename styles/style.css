@@ -130,7 +130,6 @@ body {
     font-family: 'Raleway', sans-serif;
     font-weight: 500;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.83);
     display: block;
     min-height: 26px;
     padding-top: 0px;
@@ -257,6 +256,17 @@ body {
     border: solid 4px #09a38c;
     width: 55px;
     height: 55px;
+}
+
+#status {
+    background-color: #FCFAF8;
+    color: #22343E;
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+}
+
+#goals {
+    color: rgba(255, 255, 255, 0.83);
 }
 
 .statusText h3 {
