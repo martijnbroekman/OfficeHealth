@@ -18,7 +18,9 @@ class Trigger {
         this._type = type;
         this._timing = timing;
         this._notificationAllowed = timing === 'on';
-        this._interval = setInterval(this.trigger.bind(this), timing)
+        if (timing != 'off') {
+            this._interval = setInterval(this.trigger.bind(this), timing)
+        }
     }
 
     get notificationAllowed() {
@@ -42,6 +44,9 @@ class Trigger {
         clearInterval(this._interval);
         if (timing === 'on') {
             this.notificationAllowed = true;
+            if (this._callback != undefined) {
+                this._callback();
+            }
         } else if (timing === 'off') {
             this.notificationAllowed = false;
         } else {
@@ -52,11 +57,14 @@ class Trigger {
 
     set callback(callback) {
         this._callback = callback;
+        if (this._timing === 'on') {
+            callback();
+        }
     }
 
     trigger() {
         this.notificationAllowed = true;
-        if (this._callback != undefined) {
+        if (this._callback != undefined && this._timing != 'on') { // even testen
             this._callback();
         }
     }
@@ -109,7 +117,8 @@ module.exports = {
     postureNotificationAllowed: () => postureTrigger.notificationAllowed,
     activityNotificationAllowed: () => activityTrigger.notificationAllowed,
     setExerciseCallback: (callback) => exerciseTrigger.callback = callback,
-    setActivityCallback: (callback) => activityTrigger.callback = callback
+    setActivityCallback: (callback) => activityTrigger.callback = callback,
+    getActivityTimer: () => activityTrigger.timing
 }
 
 ipcMain.on('goals:exercise', (event, miliseconds) => {
@@ -132,7 +141,7 @@ ipcMain.on('goals:posture', (event, miliseconds) => {
 
 ipcMain.on('goals:activity', (event, miliseconds) => {
     activityTrigger.timing = miliseconds
-    timing.posture = miliseconds;
+    timing.activity = miliseconds;
     saveTiming();
 });
 

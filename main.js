@@ -52,6 +52,7 @@ const createWindow = () => {
                     mainWindow.webContents.send('goals:timing', timing);
 
                     timer.setActivityCallback(() => {
+                        
                         api.changeNotificationStatus(true);
                     });
                     timer.setExerciseCallback(() => {
@@ -181,12 +182,16 @@ api.onNotification(data => {
 
 ipcMain.on('notification:yes', (event) => {
     api.responseOnNotification(lastNotificationId, true);
-    api.changeNotificationStatus(false);
+    if (timer.getActivityTimer() != 'on') {
+        api.changeNotificationStatus(false);
+    }
 });
 
 ipcMain.on('notification:no', (event) => {
     api.responseOnNotification(lastNotificationId, false);
-    api.changeNotificationStatus(false);
+    if (timer.getActivityTimer() != 'on') {
+        api.changeNotificationStatus(false);
+    }
 });
 
 api.onAccept(data => {
